@@ -1,0 +1,1413 @@
+2018-05-04 14:43:06+0300 [-] Loading buildbot.tac...
+2018-05-04 14:43:07+0300 [-] Loaded.
+2018-05-04 14:43:07+0300 [-] twistd 18.4.0 (/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/bin/python3 3.5.2) starting up.
+2018-05-04 14:43:07+0300 [-] reactor class: twisted.internet.epollreactor.EPollReactor.
+2018-05-04 14:43:07+0300 [-] Starting BuildMaster -- buildbot.version: 1.1.1
+2018-05-04 14:43:07+0300 [-] Loading configuration from '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/master.cfg'
+2018-05-04 14:43:07+0300 [-] /home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/config.py:102: buildbot.config.ConfigWarning: [0.9.0 and later] `buildbotNetUsageData` is not configured and defaults to basic.
+	This parameter helps the buildbot development team to understand the installation base.
+	No personal information is collected.
+	Only installation software version info and plugin usage is sent.
+	You can `opt-out` by setting this variable to None.
+	Or `opt-in` for more information by setting it to "full".
+	
+2018-05-04 14:43:07+0300 [-] Setting up database with URL 'sqlite:/state.sqlite'
+2018-05-04 14:43:07+0300 [-] setting database journal mode to 'wal'
+2018-05-04 14:43:07+0300 [-] doing housekeeping for master 1 vlasovy-ubuntu:/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master
+2018-05-04 14:43:08+0300 [-] adding 1 new change_sources, removing 0
+2018-05-04 14:43:08+0300 [-] gitpoller: using workdir '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/gitpoller-workdir'
+2018-05-04 14:43:08+0300 [-] adding 1 new builders, removing 0
+2018-05-04 14:43:08+0300 [-] adding 2 new schedulers, removing 0
+2018-05-04 14:43:09+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 14:43:09+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 14:43:09+0300 [-] initializing www plugin 'console_view'
+2018-05-04 14:43:09+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 14:43:09+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 14:43:09+0300 [-] initializing www plugin 'console_view'
+2018-05-04 14:43:09+0300 [-] BuildbotSite starting on 8010
+2018-05-04 14:43:09+0300 [-] Starting factory <buildbot.www.service.BuildbotSite object at 0x7f7cda839198>
+2018-05-04 14:43:09+0300 [-] adding 1 new workers, removing 0
+2018-05-04 14:43:09+0300 [-] PBServerFactory starting on 9989
+2018-05-04 14:43:09+0300 [-] Starting factory <twisted.spread.pb.PBServerFactory object at 0x7f7cdb0715f8>
+2018-05-04 14:43:10+0300 [-] BuildMaster is running
+2018-05-04 14:43:10+0300 [-] buildbotNetUsageData: sending {'platform': {'python_implementation': 'CPython', 'platform': 'Linux-4.4.0-121-generic-x86_64-with-Ubuntu-16.04-xenial', 'system': 'Linux', 'processor': 'x86_64', 'machine': 'x86_64', 'distro': 'ubuntu:16.04', 'version': '#145-Ubuntu SMP Fri Apr'}, 'mq': 'simple', 'www_plugins': ['grid_view', 'waterfall_view', 'console_view'], 'versions': {'Python': '3.5.2', 'Twisted': '18.4.0', 'Buildbot': '1.1.1'}, 'installid': '993c3c2639a6b1775a115b090c3fbf5f51aa2c5a', 'db': 'sqlite', 'plugins': {'buildbot/worker/base/Worker': 1, 'buildbot/schedulers/basic/SingleBranchScheduler': 1, 'buildbot/config/BuilderConfig': 1, 'buildbot/changes/gitpoller/GitPoller': 1, 'buildbot/steps/source/git/Git': 1, 'buildbot/schedulers/forcesched/ForceScheduler': 1, 'buildbot/steps/shell/ShellCommand': 1}}
+2018-05-04 14:43:11+0300 [-] buildbotNetUsageData: buildbot.net said: ok
+2018-05-04 14:43:13+0300 [_GenericHTTPChannelProtocol,0,127.0.0.1] while decoding JWT session
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/web/server.py", line 480, in getSession
+	    session = self.site.getSession(sessionCookie)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/www/service.py", line 174, in getSession
+	    return BuildbotSession(self, uid)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/www/service.py", line 74, in __init__
+	    self._fromToken(token)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/www/service.py", line 88, in _fromToken
+	    log.err(e, "while decoding JWT session")
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/www/service.py", line 84, in _fromToken
+	    SESSION_SECRET_ALGORITHM])
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/jwt/api_jwt.py", line 77, in decode
+	    jwt, key=key, algorithms=algorithms, options=options, **kwargs
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/jwt/api_jws.py", line 142, in decode
+	    key, algorithms)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/jwt/api_jws.py", line 209, in _verify_signature
+	    raise InvalidSignatureError('Signature verification failed')
+	jwt.exceptions.InvalidSignatureError: Signature verification failed
+	
+2018-05-04 14:44:13+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36250)
+2018-05-04 14:44:13+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36254)
+2018-05-04 14:44:13+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36242)
+2018-05-04 14:44:13+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36246)
+2018-05-04 14:48:09+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 14:50:56+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36346)
+2018-05-04 14:50:58+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36354)
+2018-05-04 14:50:58+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36350)
+2018-05-04 14:50:58+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36342)
+2018-05-04 14:53:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 14:53:58+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 36562)
+2018-05-04 14:58:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 15:03:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 15:08:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 15:13:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 15:18:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 15:23:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:18:07+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:18:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:23:08+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:23:09+0300 [Broker,0,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:09+0300 [Broker,0,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:09+0300 [Broker,0,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:12+0300 [Broker,1,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:12+0300 [Broker,1,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:12+0300 [Broker,1,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:15+0300 [Broker,2,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:15+0300 [Broker,2,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:15+0300 [Broker,2,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:18+0300 [Broker,3,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:18+0300 [Broker,3,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:18+0300 [Broker,3,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:20+0300 [Broker,4,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:20+0300 [Broker,4,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:20+0300 [Broker,4,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:24+0300 [Broker,5,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:24+0300 [Broker,5,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:24+0300 [Broker,5,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:26+0300 [Broker,6,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:26+0300 [Broker,6,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:26+0300 [Broker,6,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:29+0300 [Broker,7,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:29+0300 [Broker,7,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:29+0300 [Broker,7,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:31+0300 [Broker,8,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:31+0300 [Broker,8,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:31+0300 [Broker,8,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:33+0300 [Broker,9,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:33+0300 [Broker,9,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:33+0300 [Broker,9,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:36+0300 [Broker,10,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:36+0300 [Broker,10,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:36+0300 [Broker,10,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:39+0300 [Broker,11,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:39+0300 [Broker,11,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:39+0300 [Broker,11,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:41+0300 [Broker,12,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:41+0300 [Broker,12,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:41+0300 [Broker,12,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:44+0300 [Broker,13,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:44+0300 [Broker,13,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:44+0300 [Broker,13,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:47+0300 [Broker,14,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:47+0300 [Broker,14,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:47+0300 [Broker,14,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:49+0300 [Broker,15,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:49+0300 [Broker,15,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:49+0300 [Broker,15,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:53+0300 [Broker,16,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:53+0300 [Broker,16,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:53+0300 [Broker,16,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:55+0300 [Broker,17,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:55+0300 [Broker,17,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:55+0300 [Broker,17,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:23:57+0300 [Broker,18,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:23:57+0300 [Broker,18,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:23:57+0300 [Broker,18,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:00+0300 [Broker,19,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:00+0300 [Broker,19,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:00+0300 [Broker,19,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:02+0300 [-] beginning configuration update
+2018-05-04 17:24:02+0300 [-] Loading configuration from '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/master.cfg'
+2018-05-04 17:24:02+0300 [-] /home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/config.py:102: buildbot.config.ConfigWarning: [0.9.0 and later] `buildbotNetUsageData` is not configured and defaults to basic.
+	This parameter helps the buildbot development team to understand the installation base.
+	No personal information is collected.
+	Only installation software version info and plugin usage is sent.
+	You can `opt-out` by setting this variable to None.
+	Or `opt-in` for more information by setting it to "full".
+	
+2018-05-04 17:24:02+0300 [-] builder 'runtests' uses unknown workers 'example-worker'
+2018-05-04 17:24:02+0300 [-] reconfig aborted without making any changes
+2018-05-04 17:24:02+0300 [Broker,20,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:02+0300 [Broker,20,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:02+0300 [Broker,20,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:05+0300 [Broker,21,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:05+0300 [Broker,21,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:05+0300 [Broker,21,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:08+0300 [Broker,22,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:08+0300 [Broker,22,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:08+0300 [Broker,22,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:11+0300 [Broker,23,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:11+0300 [Broker,23,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:11+0300 [Broker,23,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:12+0300 [Broker,24,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:12+0300 [Broker,24,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:12+0300 [Broker,24,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:15+0300 [Broker,25,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:15+0300 [Broker,25,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:15+0300 [Broker,25,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:17+0300 [Broker,26,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:17+0300 [Broker,26,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:17+0300 [Broker,26,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:20+0300 [Broker,27,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:20+0300 [Broker,27,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:20+0300 [Broker,27,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:23+0300 [Broker,28,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:23+0300 [Broker,28,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:23+0300 [Broker,28,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:25+0300 [Broker,29,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:25+0300 [Broker,29,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:25+0300 [Broker,29,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:28+0300 [Broker,30,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:28+0300 [Broker,30,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:28+0300 [Broker,30,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:31+0300 [Broker,31,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:31+0300 [Broker,31,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:31+0300 [Broker,31,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:33+0300 [Broker,32,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:33+0300 [Broker,32,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:33+0300 [Broker,32,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:36+0300 [Broker,33,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:36+0300 [Broker,33,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:36+0300 [Broker,33,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:39+0300 [Broker,34,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:39+0300 [Broker,34,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:39+0300 [Broker,34,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:42+0300 [Broker,35,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:42+0300 [Broker,35,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:42+0300 [Broker,35,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:44+0300 [Broker,36,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:44+0300 [Broker,36,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:44+0300 [Broker,36,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:47+0300 [Broker,37,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:47+0300 [Broker,37,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:47+0300 [Broker,37,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:50+0300 [Broker,38,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:50+0300 [Broker,38,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:50+0300 [Broker,38,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:52+0300 [Broker,39,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:52+0300 [Broker,39,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:52+0300 [Broker,39,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:55+0300 [Broker,40,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:55+0300 [Broker,40,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:55+0300 [Broker,40,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:24:58+0300 [Broker,41,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:24:58+0300 [Broker,41,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:24:58+0300 [Broker,41,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:01+0300 [Broker,42,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:01+0300 [Broker,42,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:01+0300 [Broker,42,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:03+0300 [Broker,43,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:03+0300 [Broker,43,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:03+0300 [Broker,43,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:06+0300 [Broker,44,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:06+0300 [Broker,44,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:06+0300 [Broker,44,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:08+0300 [Broker,45,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:08+0300 [Broker,45,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:08+0300 [Broker,45,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:11+0300 [Broker,46,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:11+0300 [Broker,46,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:11+0300 [Broker,46,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:14+0300 [Broker,47,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:14+0300 [Broker,47,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:14+0300 [Broker,47,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:16+0300 [Broker,48,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:16+0300 [Broker,48,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:16+0300 [Broker,48,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:19+0300 [Broker,49,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:19+0300 [Broker,49,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:19+0300 [Broker,49,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:21+0300 [Broker,50,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:21+0300 [Broker,50,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:21+0300 [Broker,50,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:24+0300 [Broker,51,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:24+0300 [Broker,51,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:24+0300 [Broker,51,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:26+0300 [Broker,52,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:26+0300 [Broker,52,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:26+0300 [Broker,52,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:28+0300 [Broker,53,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:28+0300 [Broker,53,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:28+0300 [Broker,53,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:31+0300 [Broker,54,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:31+0300 [Broker,54,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:31+0300 [Broker,54,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:34+0300 [Broker,55,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:34+0300 [Broker,55,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:34+0300 [Broker,55,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:37+0300 [Broker,56,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:37+0300 [Broker,56,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:37+0300 [Broker,56,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:40+0300 [Broker,57,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:40+0300 [Broker,57,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:40+0300 [Broker,57,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:43+0300 [Broker,58,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:43+0300 [Broker,58,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:43+0300 [Broker,58,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:45+0300 [Broker,59,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:45+0300 [Broker,59,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:45+0300 [Broker,59,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:48+0300 [Broker,60,127.0.0.1] invalid login from unknown user 'b'worker1''
+2018-05-04 17:25:48+0300 [Broker,60,127.0.0.1] Peer will receive following PB traceback:
+2018-05-04 17:25:48+0300 [Broker,60,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/spread/pb.py", line 1631, in remote_respond
+	    d = self.portal.login(self, mind, IPerspective)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/cred/portal.py", line 119, in login
+	    return maybeDeferred(self.checkers[i].requestAvatarId, credentials
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 150, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1532, in unwindGenerator
+	    return _inlineCallbacks(None, gen, Deferred())
+	--- <exception caught here> ---
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/twisted/internet/defer.py", line 1386, in _inlineCallbacks
+	    result = g.send(result)
+	  File "/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/pbmanager.py", line 215, in requestAvatarId
+	    raise error.UnauthorizedLogin()
+	twisted.cred.error.UnauthorizedLogin: 
+	
+2018-05-04 17:25:50+0300 [-] beginning configuration update
+2018-05-04 17:25:50+0300 [-] Loading configuration from '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/master.cfg'
+2018-05-04 17:25:50+0300 [-] gitpoller: using workdir '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/gitpoller-workdir'
+2018-05-04 17:25:50+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 17:25:50+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 17:25:50+0300 [-] initializing www plugin 'console_view'
+2018-05-04 17:25:50+0300 [-] adding 1 new workers, removing 1
+2018-05-04 17:25:50+0300 [-] (TCP Port 9989 Closed)
+2018-05-04 17:25:50+0300 [-] Stopping factory <twisted.spread.pb.PBServerFactory object at 0x7f7cdb0715f8>
+2018-05-04 17:25:50+0300 [-] PBServerFactory starting on 9989
+2018-05-04 17:25:50+0300 [-] Starting factory <twisted.spread.pb.PBServerFactory object at 0x7f7cda0ea828>
+2018-05-04 17:25:51+0300 [-] worker 'worker1' attaching from IPv4Address(TCP, '127.0.0.1', 47962)
+2018-05-04 17:25:51+0300 [-] configuration update complete
+2018-05-04 17:25:51+0300 [Broker,0,127.0.0.1] Got workerinfo from 'worker1'
+2018-05-04 17:25:51+0300 [-] bot attached
+2018-05-04 17:25:51+0300 [Broker,0,127.0.0.1] Worker worker1 attached to runtests
+2018-05-04 17:26:24+0300 [-] Received SIGTERM, shutting down.
+2018-05-04 17:26:24+0300 [-] doing housekeeping for master 1 vlasovy-ubuntu:/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master
+2018-05-04 17:26:25+0300 [-] Initiating clean shutdown
+2018-05-04 17:26:25+0300 [-] No running jobs, starting shutdown immediately
+2018-05-04 17:26:25+0300 [-] (TCP Port 8010 Closed)
+2018-05-04 17:26:25+0300 [-] Stopping factory <buildbot.www.service.BuildbotSite object at 0x7f7cda839198>
+2018-05-04 17:26:25+0300 [-] (TCP Port 9989 Closed)
+2018-05-04 17:26:25+0300 [-] Stopping factory <twisted.spread.pb.PBServerFactory object at 0x7f7cda0ea828>
+2018-05-04 17:26:25+0300 [-] BuildMaster is stopped
+2018-05-04 17:26:25+0300 [Broker,0,127.0.0.1] Worker.detached(worker1)
+2018-05-04 17:26:25+0300 [Broker,0,127.0.0.1] releaseLocks(<Worker 'worker1'>): []
+2018-05-04 17:26:25+0300 [Broker,0,127.0.0.1] Worker worker1 detached from runtests
+2018-05-04 17:26:25+0300 [-] Main loop terminated.
+2018-05-04 17:26:25+0300 [-] Server Shut Down.
+2018-05-04 17:26:25+0300 [-] Loading buildbot.tac...
+2018-05-04 17:26:26+0300 [-] Loaded.
+2018-05-04 17:26:26+0300 [-] twistd 18.4.0 (/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/bin/python3 3.5.2) starting up.
+2018-05-04 17:26:26+0300 [-] reactor class: twisted.internet.epollreactor.EPollReactor.
+2018-05-04 17:26:26+0300 [-] Starting BuildMaster -- buildbot.version: 1.1.1
+2018-05-04 17:26:26+0300 [-] Loading configuration from '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/master.cfg'
+2018-05-04 17:26:27+0300 [-] /home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/config.py:102: buildbot.config.ConfigWarning: [0.9.0 and later] `buildbotNetUsageData` is not configured and defaults to basic.
+	This parameter helps the buildbot development team to understand the installation base.
+	No personal information is collected.
+	Only installation software version info and plugin usage is sent.
+	You can `opt-out` by setting this variable to None.
+	Or `opt-in` for more information by setting it to "full".
+	
+2018-05-04 17:26:27+0300 [-] Setting up database with URL 'sqlite:/state.sqlite'
+2018-05-04 17:26:27+0300 [-] setting database journal mode to 'wal'
+2018-05-04 17:26:27+0300 [-] doing housekeeping for master 1 vlasovy-ubuntu:/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master
+2018-05-04 17:26:27+0300 [-] adding 1 new change_sources, removing 0
+2018-05-04 17:26:27+0300 [-] gitpoller: using workdir '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/gitpoller-workdir'
+2018-05-04 17:26:27+0300 [-] adding 1 new builders, removing 0
+2018-05-04 17:26:27+0300 [-] adding 2 new schedulers, removing 0
+2018-05-04 17:26:27+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 17:26:27+0300 [-] initializing www plugin 'console_view'
+2018-05-04 17:26:27+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 17:26:27+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 17:26:27+0300 [-] initializing www plugin 'console_view'
+2018-05-04 17:26:27+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 17:26:28+0300 [-] BuildbotSite starting on 8010
+2018-05-04 17:26:28+0300 [-] Starting factory <buildbot.www.service.BuildbotSite object at 0x7f0fb21a4b70>
+2018-05-04 17:26:28+0300 [-] adding 1 new workers, removing 0
+2018-05-04 17:26:28+0300 [-] PBServerFactory starting on 9989
+2018-05-04 17:26:28+0300 [-] Starting factory <twisted.spread.pb.PBServerFactory object at 0x7f0fb21a00f0>
+2018-05-04 17:26:28+0300 [-] BuildMaster is running
+2018-05-04 17:26:28+0300 [-] buildbotNetUsageData: sending {'db': 'sqlite', 'plugins': {'buildbot/steps/source/git/Git': 1, 'buildbot/steps/shell/ShellCommand': 1, 'buildbot/worker/base/Worker': 1, 'buildbot/config/BuilderConfig': 1, 'buildbot/schedulers/basic/SingleBranchScheduler': 1, 'buildbot/schedulers/forcesched/ForceScheduler': 1, 'buildbot/changes/gitpoller/GitPoller': 1}, 'installid': '993c3c2639a6b1775a115b090c3fbf5f51aa2c5a', 'platform': {'machine': 'x86_64', 'processor': 'x86_64', 'version': '#145-Ubuntu SMP Fri Apr', 'distro': 'ubuntu:16.04', 'system': 'Linux', 'platform': 'Linux-4.4.0-121-generic-x86_64-with-Ubuntu-16.04-xenial', 'python_implementation': 'CPython'}, 'www_plugins': ['grid_view', 'console_view', 'waterfall_view'], 'versions': {'Twisted': '18.4.0', 'Buildbot': '1.1.1', 'Python': '3.5.2'}, 'mq': 'simple'}
+2018-05-04 17:26:28+0300 [-] worker 'worker1' attaching from IPv4Address(TCP, '127.0.0.1', 47970)
+2018-05-04 17:26:28+0300 [Broker,0,127.0.0.1] Got workerinfo from 'worker1'
+2018-05-04 17:26:28+0300 [-] bot attached
+2018-05-04 17:26:28+0300 [Broker,0,127.0.0.1] Worker worker1 attached to runtests
+2018-05-04 17:26:32+0300 [-] buildbotNetUsageData: buildbot.net said: ok
+2018-05-04 17:31:27+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:36:27+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:37:00+0300 [-] Received SIGTERM, shutting down.
+2018-05-04 17:37:00+0300 [-] doing housekeeping for master 1 vlasovy-ubuntu:/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master
+2018-05-04 17:37:00+0300 [-] Initiating clean shutdown
+2018-05-04 17:37:00+0300 [-] No running jobs, starting shutdown immediately
+2018-05-04 17:37:00+0300 [-] (TCP Port 8010 Closed)
+2018-05-04 17:37:00+0300 [-] Stopping factory <buildbot.www.service.BuildbotSite object at 0x7f0fb21a4b70>
+2018-05-04 17:37:00+0300 [-] (TCP Port 9989 Closed)
+2018-05-04 17:37:00+0300 [-] Stopping factory <twisted.spread.pb.PBServerFactory object at 0x7f0fb21a00f0>
+2018-05-04 17:37:00+0300 [-] BuildMaster is stopped
+2018-05-04 17:37:00+0300 [Broker,0,127.0.0.1] Worker.detached(worker1)
+2018-05-04 17:37:00+0300 [Broker,0,127.0.0.1] releaseLocks(<Worker 'worker1'>): []
+2018-05-04 17:37:00+0300 [Broker,0,127.0.0.1] Worker worker1 detached from runtests
+2018-05-04 17:37:00+0300 [-] Main loop terminated.
+2018-05-04 17:37:00+0300 [-] Server Shut Down.
+2018-05-04 17:37:17+0300 [-] Loading buildbot.tac...
+2018-05-04 17:37:18+0300 [-] Loaded.
+2018-05-04 17:37:18+0300 [-] twistd 18.4.0 (/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/bin/python3 3.5.2) starting up.
+2018-05-04 17:37:18+0300 [-] reactor class: twisted.internet.epollreactor.EPollReactor.
+2018-05-04 17:37:18+0300 [-] Starting BuildMaster -- buildbot.version: 1.1.1
+2018-05-04 17:37:18+0300 [-] Loading configuration from '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/master.cfg'
+2018-05-04 17:37:18+0300 [-] /home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/v-env/lib/python3.5/site-packages/buildbot/config.py:102: buildbot.config.ConfigWarning: [0.9.0 and later] `buildbotNetUsageData` is not configured and defaults to basic.
+	This parameter helps the buildbot development team to understand the installation base.
+	No personal information is collected.
+	Only installation software version info and plugin usage is sent.
+	You can `opt-out` by setting this variable to None.
+	Or `opt-in` for more information by setting it to "full".
+	
+2018-05-04 17:37:18+0300 [-] Setting up database with URL 'sqlite:/state.sqlite'
+2018-05-04 17:37:18+0300 [-] setting database journal mode to 'wal'
+2018-05-04 17:37:19+0300 [-] doing housekeeping for master 1 vlasovy-ubuntu:/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master
+2018-05-04 17:37:19+0300 [-] adding 1 new change_sources, removing 0
+2018-05-04 17:37:19+0300 [-] gitpoller: using workdir '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-master/master/gitpoller-workdir'
+2018-05-04 17:37:19+0300 [-] adding 1 new builders, removing 0
+2018-05-04 17:37:19+0300 [-] adding 2 new schedulers, removing 0
+2018-05-04 17:37:19+0300 [-] initializing www plugin 'console_view'
+2018-05-04 17:37:19+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 17:37:19+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 17:37:19+0300 [-] initializing www plugin 'console_view'
+2018-05-04 17:37:19+0300 [-] initializing www plugin 'grid_view'
+2018-05-04 17:37:19+0300 [-] initializing www plugin 'waterfall_view'
+2018-05-04 17:37:19+0300 [-] BuildbotSite starting on 8010
+2018-05-04 17:37:19+0300 [-] Starting factory <buildbot.www.service.BuildbotSite object at 0x7fb344754240>
+2018-05-04 17:37:19+0300 [-] adding 1 new workers, removing 0
+2018-05-04 17:37:19+0300 [-] PBServerFactory starting on 9989
+2018-05-04 17:37:19+0300 [-] Starting factory <twisted.spread.pb.PBServerFactory object at 0x7fb344747be0>
+2018-05-04 17:37:19+0300 [-] BuildMaster is running
+2018-05-04 17:37:19+0300 [-] buildbotNetUsageData: sending {'versions': {'Buildbot': '1.1.1', 'Python': '3.5.2', 'Twisted': '18.4.0'}, 'installid': '993c3c2639a6b1775a115b090c3fbf5f51aa2c5a', 'www_plugins': ['console_view', 'grid_view', 'waterfall_view'], 'platform': {'system': 'Linux', 'distro': 'ubuntu:16.04', 'platform': 'Linux-4.4.0-121-generic-x86_64-with-Ubuntu-16.04-xenial', 'python_implementation': 'CPython', 'processor': 'x86_64', 'version': '#145-Ubuntu SMP Fri Apr', 'machine': 'x86_64'}, 'mq': 'simple', 'plugins': {'buildbot/steps/source/git/Git': 1, 'buildbot/schedulers/basic/SingleBranchScheduler': 1, 'buildbot/worker/base/Worker': 1, 'buildbot/schedulers/forcesched/ForceScheduler': 1, 'buildbot/changes/gitpoller/GitPoller': 1, 'buildbot/steps/shell/ShellCommand': 1, 'buildbot/config/BuilderConfig': 1}, 'db': 'sqlite'}
+2018-05-04 17:37:21+0300 [-] buildbotNetUsageData: buildbot.net said: ok
+2018-05-04 17:37:26+0300 [Broker,0,127.0.0.1] worker 'worker1' attaching from IPv4Address(TCP, '127.0.0.1', 48288)
+2018-05-04 17:37:26+0300 [Broker,0,127.0.0.1] Got workerinfo from 'worker1'
+2018-05-04 17:37:27+0300 [-] bot attached
+2018-05-04 17:37:27+0300 [Broker,0,127.0.0.1] Worker worker1 attached to runtests
+2018-05-04 17:37:57+0300 [-] added buildset 1 to database
+2018-05-04 17:37:57+0300 [-] starting build <Build runtests number:None results:success> using worker <WorkerForBuilder builder='runtests' worker='worker1' state=AVAILABLE>
+2018-05-04 17:37:57+0300 [-] <Build runtests number:None results:success>.startBuild
+2018-05-04 17:37:59+0300 [-] acquireLocks(worker <Worker 'worker1'>, locks [])
+2018-05-04 17:37:59+0300 [-] starting build <Build runtests number:1 results:success>.. pinging the worker <WorkerForBuilder builder='runtests' worker='worker1' state=BUILDING>
+2018-05-04 17:37:59+0300 [-] sending ping
+2018-05-04 17:37:59+0300 [Broker,0,127.0.0.1] ping finished: success
+2018-05-04 17:38:00+0300 [-] <RemoteShellCommand '['git', '--version']'>: RemoteCommand.run [0]
+2018-05-04 17:38:00+0300 [-] command '['git', '--version']' in dir 'build'
+2018-05-04 17:38:00+0300 [Broker,0,127.0.0.1] <RemoteShellCommand '['git', '--version']'> rc=0
+2018-05-04 17:38:01+0300 [-] <RemoteCommand 'stat' at 140407917494848>: RemoteCommand.run [1]
+2018-05-04 17:38:01+0300 [Broker,0,127.0.0.1] <RemoteCommand 'stat' at 140407917494848> rc=2
+2018-05-04 17:38:01+0300 [-] <RemoteCommand 'listdir' at 140407917497984>: RemoteCommand.run [2]
+2018-05-04 17:38:01+0300 [Broker,0,127.0.0.1] <RemoteCommand 'listdir' at 140407917497984> rc=0
+2018-05-04 17:38:01+0300 [-] No git repo present, making full clone
+2018-05-04 17:38:01+0300 [-] <RemoteShellCommand '['git', 'clone', 'git://github.com/buildbot/hello-world.git', '.']'>: RemoteCommand.run [3]
+2018-05-04 17:38:01+0300 [-] command '['git', 'clone', 'git://github.com/buildbot/hello-world.git', '.']' in dir 'build'
+2018-05-04 17:38:02+0300 [Broker,0,127.0.0.1] <RemoteShellCommand '['git', 'clone', 'git://github.com/buildbot/hello-world.git', '.']'> rc=0
+2018-05-04 17:38:02+0300 [-] <RemoteShellCommand '['git', 'rev-parse', 'HEAD']'>: RemoteCommand.run [4]
+2018-05-04 17:38:02+0300 [-] command '['git', 'rev-parse', 'HEAD']' in dir 'build'
+2018-05-04 17:38:02+0300 [Broker,0,127.0.0.1] <RemoteShellCommand '['git', 'rev-parse', 'HEAD']'> rc=0
+2018-05-04 17:38:02+0300 [-] Got Git revision 7f8e719e30f3f6b98558541d21dc8b589a4131be
+2018-05-04 17:38:02+0300 [-] Closing log, sending result of the command None 
+2018-05-04 17:38:03+0300 [-] releaseLocks(Git(mode='incremental', repourl='git://github.com/buildbot/hello-world.git')): []
+2018-05-04 17:38:04+0300 [-]  step 'git' complete: success (None)
+2018-05-04 17:38:04+0300 [-] ShellCommand.startCommand(cmd=<RemoteShellCommand '['trial', 'hello']'>)
+2018-05-04 17:38:04+0300 [-]   cmd.args = {'env': {'PYTHONPATH': '.'}, 'sigtermTime': None, 'timeout': 1200, 'usePTY': None, 'maxTime': None, 'want_stderr': 1, 'initial_stdin': None, 'logEnviron': True, 'want_stdout': 1, 'workdir': 'build', 'logfiles': {}}
+2018-05-04 17:38:04+0300 [-] <RemoteShellCommand '['trial', 'hello']'>: RemoteCommand.run [5]
+2018-05-04 17:38:04+0300 [-] command '['trial', 'hello']' in dir 'build'
+2018-05-04 17:38:04+0300 [Broker,0,127.0.0.1] <RemoteShellCommand '['trial', 'hello']'> rc=0
+2018-05-04 17:38:04+0300 [-] closing log <buildbot.process.buildstep.SyncLogFileWrapper object at 0x7fb3440c08d0>
+2018-05-04 17:38:05+0300 [-] releaseLocks(ShellCommand(env={'PYTHONPATH': '.'}, command=['trial', 'hello'])): []
+2018-05-04 17:38:05+0300 [-]  step 'shell' complete: success (None)
+2018-05-04 17:38:05+0300 [-]  <Build runtests number:1 results:success>: build finished
+2018-05-04 17:38:06+0300 [-] releaseLocks(<Worker 'worker1'>): []
+2018-05-04 17:38:23+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 38350)
+2018-05-04 17:39:06+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 38342)
+2018-05-04 17:39:12+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 38334)
+2018-05-04 17:39:12+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 38338)
+2018-05-04 17:39:12+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 38328)
+2018-05-04 17:39:12+0300 [-] Timing out client: IPv4Address(TCP, '127.0.0.1', 38346)
+2018-05-04 17:42:19+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:47:19+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:52:19+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 17:57:19+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"
+2018-05-04 18:02:19+0300 [-] gitpoller: processing changes from "git://github.com/buildbot/hello-world.git"

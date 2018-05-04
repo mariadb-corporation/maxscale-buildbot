@@ -1,0 +1,2 @@
+buildbot[bundle]
+buildbot-worker==1.1.1
