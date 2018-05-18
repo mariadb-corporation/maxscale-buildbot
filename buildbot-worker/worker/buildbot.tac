@@ -1,10 +1,9 @@
-
 import os
 
 from buildbot_worker.bot import Worker
 from twisted.application import service
 
-basedir = '/home/vlasovy/projects/roman/maxscale-buildbot/buildbot-worker/worker'
+basedir = '.'
 rotateLength = 10000000
 maxRotatedFiles = 10
 
