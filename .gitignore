@@ -3,3 +3,4 @@ v-env/
 *.log
 *.pid
 wokrspace/
+state.sqlite
