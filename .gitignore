@@ -1,2 +1,4 @@
 v-env/
 .idea/
+*.log
+*.pid
