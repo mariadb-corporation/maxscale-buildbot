@@ -4,3 +4,5 @@ v-env/
 *.pid
 workspace/
 state.sqlite
+/buildbot-master/master/config/mailer_config_local.py
+__pycache__/

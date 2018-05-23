@@ -1,2 +1,3 @@
 buildbot[bundle]==1.1.2
 buildbot-worker==1.1.2
+pyOpenSSL==18.0.0
