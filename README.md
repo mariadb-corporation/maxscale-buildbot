@@ -1,4 +1,4 @@
-# maxscale-buildbot
+# Maxscale BuildBot
 
 BuildBot configuration for Maxscale
 
@@ -27,3 +27,10 @@ If you have installed BuildBot into the virtual environment, then you should eit
 
 1. Update the repository configuration.
 2. Reload buildbot configuration: `buildbot reconfig master`
+
+# Development notes
+
+The common development tasks are automated using the [Paver](https://github.com/paver/paver). There are two common tasks automated:
+
+* `paver check_code` - check Python source code with static code linters.
+* `paver check_config` - check BuildBot master configuration.
