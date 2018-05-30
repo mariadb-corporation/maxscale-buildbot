@@ -1,9 +1,8 @@
-from buildbot.schedulers.forcesched import ForceScheduler
-from buildbot.plugins import util
+from buildbot.plugins import util, schedulers
 from maxscale.config import constants
 
 
-MANUAL_SCHEDULER = ForceScheduler(
+MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test",
     label="Build and test",
     builderNames=["build_and_test"],

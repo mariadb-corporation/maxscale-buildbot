@@ -1,14 +1,9 @@
 import os
-from buildbot.schedulers.forcesched import ChoiceStringParameter
-from buildbot.schedulers.forcesched import CodebaseParameter
-from buildbot.schedulers.forcesched import FixedParameter
-from buildbot.schedulers.forcesched import ForceScheduler
-from buildbot.schedulers.forcesched import StringParameter
-from buildbot.schedulers.triggerable import Triggerable
+from buildbot.plugins import util, schedulers
 from maxscale.config import constants
 
 
-REPOSITORY_SCHEDULER = Triggerable(
+REPOSITORY_SCHEDULER = schedulers.Triggerable(
     name="run_test",
     builderNames=["run_test"],
     properties={
@@ -32,78 +27,78 @@ REPOSITORY_SCHEDULER = Triggerable(
     }
 )
 
-MANUAL_SCHEDULER = ForceScheduler(
+MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="run_test_force",
     builderNames=["run_test"],
     codebases=[
-        CodebaseParameter(
+        util.CodebaseParameter(
             "",
             label="Main repository",
-            branch=StringParameter(name="branch", default="develop"),
-            revision=FixedParameter(name="revision", default=""),
-            project=FixedParameter(name="project", default=""),
-            repository=StringParameter(name="repository",
-                                       default=constants.MAXSCALE_REPOSITORY),
+            branch=util.StringParameter(name="branch", default="develop"),
+            revision=util.FixedParameter(name="revision", default=""),
+            project=util.FixedParameter(name="project", default=""),
+            repository=util.StringParameter(name="repository",
+                                            default=constants.MAXSCALE_REPOSITORY),
         ),
     ],
     properties=[
-        StringParameter(name="name", label="Name of this build", size=50, default="test01"),
-        StringParameter(name="target", label="Target", size=50, default="develop"),
-        ChoiceStringParameter(
+        util.StringParameter(name="name", label="Name of this build", size=50, default="test01"),
+        util.StringParameter(name="target", label="Target", size=50, default="develop"),
+        util.ChoiceStringParameter(
             name="box",
             label="Box",
             choices=constants.BOXES,
             default=constants.BOXES[0]),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="product",
             label="Product",
             choices=['mariadb', 'mysql'],
             default='mariadb'),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="version",
             label="Version",
             choices=constants.DB_VERSIONS,
             default=constants.DB_VERSIONS[0]),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="do_not_destroy_vm",
             label="Do not destroy vm",
             choices=['no', 'yes'],
             default='no'),
-        StringParameter(name="test_set", label="Test set", size=50, default="-LE HEAVY"),
-        StringParameter(name="ci_url", label="ci url", size=50,
-                        default=constants.CI_SERVER_URL),
-        ChoiceStringParameter(
+        util.StringParameter(name="test_set", label="Test set", size=50, default="-LE HEAVY"),
+        util.StringParameter(name="ci_url", label="ci url", size=50,
+                             default=constants.CI_SERVER_URL),
+        util.ChoiceStringParameter(
             name="smoke",
             label="Run fast versions of every test",
             choices=["yes", "no"],
             default="yes"),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="big",
             label="Use larger number of VMs",
             choices=["yes", "no"],
             default="yes"),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="backend_ssl",
             label="Backend ssl",
             choices=["no", "yes"],
             default="no"),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="use_snapshots",
             label="Use snapshots",
             choices=["no", "yes"],
             default="no"),
-        StringParameter(name="logs_dir", label="Logs dir", size=50, default=os.environ['HOME'] + "/LOGS"),
-        ChoiceStringParameter(
+        util.StringParameter(name="logs_dir", label="Logs dir", size=50, default=os.environ['HOME'] + "/LOGS"),
+        util.ChoiceStringParameter(
             name="no_vm_revert",
             label="No vm revert",
             choices=["no", "yes"],
             default="no"),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="template",
             label="Template",
             choices=['default', 'nogalera', 'twomaxscales'],
             default='default'),
-        StringParameter(name="config_to_clone", label="Config to clone", size=50),
+        util.StringParameter(name="config_to_clone", label="Config to clone", size=50),
     ]
 )
 

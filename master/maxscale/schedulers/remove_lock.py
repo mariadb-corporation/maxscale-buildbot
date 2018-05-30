@@ -1,15 +1,13 @@
-from buildbot.schedulers.forcesched import ForceScheduler
-from buildbot.schedulers.triggerable import Triggerable
-from buildbot.plugins import util
+from buildbot.plugins import util, schedulers
 from maxscale.config import constants
 
 
-TRIGGERABLE_SCHEDULER = Triggerable(
+TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="remove_lock",
     builderNames=["remove_lock"]
 )
 
-MANUAL_SCHEDULER = ForceScheduler(
+MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="remove_lock_force",
     builderNames=["remove_lock"],
     codebases=[

@@ -1,14 +1,9 @@
 import os
-from buildbot.schedulers.forcesched import ChoiceStringParameter
-from buildbot.schedulers.forcesched import CodebaseParameter
-from buildbot.schedulers.forcesched import FixedParameter
-from buildbot.schedulers.forcesched import ForceScheduler
-from buildbot.schedulers.forcesched import StringParameter
-from buildbot.schedulers.triggerable import Triggerable
+from buildbot.plugins import util, schedulers
 from maxscale.config import constants
 
 
-TRIGGERABLE_SCHEDULER = Triggerable(
+TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="build",
     builderNames=["build"],
     properties={
@@ -27,54 +22,54 @@ TRIGGERABLE_SCHEDULER = Triggerable(
     }
 )
 
-MANUAL_SCHEDULER = ForceScheduler(
+MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_force",
     label="Force build",
     builderNames=["build"],
     codebases=[
-        CodebaseParameter(
+        util.CodebaseParameter(
             "",
             label="Main repository",
-            branch=StringParameter(name="branch", default="develop"),
-            revision=FixedParameter(name="revision", default=""),
-            project=FixedParameter(name="project", default=""),
-            repository=StringParameter(name="repository",
-                                       default=constants.MAXSCALE_REPOSITORY),
+            branch=util.StringParameter(name="branch", default="develop"),
+            revision=util.FixedParameter(name="revision", default=""),
+            project=util.FixedParameter(name="project", default=""),
+            repository=util.StringParameter(name="repository",
+                                            default=constants.MAXSCALE_REPOSITORY),
         ),
     ],
     properties=[
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="box",
             label="Box",
             choices=constants.BOXES,
             default=constants.BOXES[0]),
-        StringParameter(name="target", label="Target", size=50, default="develop"),
-        StringParameter(name="cmake_flags", label="CMake flags", size=50,
-                        default=constants.DEFAULT_CMAKE_FLAGS),
-        ChoiceStringParameter(
+        util.StringParameter(name="target", label="Target", size=50, default="develop"),
+        util.StringParameter(name="cmake_flags", label="CMake flags", size=50,
+                             default=constants.DEFAULT_CMAKE_FLAGS),
+        util.ChoiceStringParameter(
             name="do_not_destroy_vm",
             label="Do not destroy vm",
             choices=['no', 'yes'],
             default='no'),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="build_experimental",
             label="Build experimental",
             choices=["yes", "no"],
             default="yes"),
-        StringParameter(name="repo_path", label="Repo path", size=50, default=os.environ['HOME'] + "/repository"),
-        ChoiceStringParameter(
+        util.StringParameter(name="repo_path", label="Repo path", size=50, default=os.environ['HOME'] + "/repository"),
+        util.ChoiceStringParameter(
             name="try_already_running",
             label="Try already running",
             choices=["no", "yes"],
             default="no"),
-        ChoiceStringParameter(
+        util.ChoiceStringParameter(
             name="run_upgrade_test",
             label="Run upgrade test",
             choices=["no", "yes"],
             default="no"),
-        StringParameter(name="old_target", label="Old target", size=50, default="2.1.9"),
-        StringParameter(name="ci_url", label="ci url", size=50,
-                        default=constants.CI_SERVER_URL),
+        util.StringParameter(name="old_target", label="Old target", size=50, default="2.1.9"),
+        util.StringParameter(name="ci_url", label="ci url", size=50,
+                             default=constants.CI_SERVER_URL),
 
     ]
 )
