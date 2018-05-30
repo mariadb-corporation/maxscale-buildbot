@@ -6,6 +6,7 @@ from . import destroy
 from . import remove_lock
 from . import smart_remove_lock
 from . import cleanup
+from . import build_and_test
 
 MAXSCALE_BUILDERS = list(itertools.chain(
     build.BUILDERS,
@@ -14,5 +15,6 @@ MAXSCALE_BUILDERS = list(itertools.chain(
     destroy.BUILDERS,
     remove_lock.BUILDERS,
     smart_remove_lock.BUILDERS,
-    cleanup.BUILDERS
+    cleanup.BUILDERS,
+    build_and_test.BUILDERS
 ))
