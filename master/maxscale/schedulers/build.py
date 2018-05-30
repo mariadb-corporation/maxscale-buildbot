@@ -1,10 +1,14 @@
-from maxscale.config import constants
-from buildbot.schedulers.triggerable import Triggerable
-from buildbot.schedulers.forcesched import *
 import os
+from buildbot.schedulers.forcesched import ChoiceStringParameter
+from buildbot.schedulers.forcesched import CodebaseParameter
+from buildbot.schedulers.forcesched import FixedParameter
+from buildbot.schedulers.forcesched import ForceScheduler
+from buildbot.schedulers.forcesched import StringParameter
+from buildbot.schedulers.triggerable import Triggerable
+from maxscale.config import constants
 
 
-repository_scheduler = Triggerable(
+REPOSITORY_SCHEDULER = Triggerable(
     name="build",
     builderNames=["build"],
     properties={
@@ -23,7 +27,7 @@ repository_scheduler = Triggerable(
     }
 )
 
-manual_scheduler = ForceScheduler(
+MANUAL_SCHEDULER = ForceScheduler(
     name="build_force",
     label="Force build",
     builderNames=["build"],
@@ -35,7 +39,7 @@ manual_scheduler = ForceScheduler(
             revision=FixedParameter(name="revision", default=""),
             project=FixedParameter(name="project", default=""),
             repository=StringParameter(name="repository",
-                                            default=constants.MAXSCALE_REPOSITORY),
+                                       default=constants.MAXSCALE_REPOSITORY),
         ),
     ],
     properties=[
@@ -46,7 +50,7 @@ manual_scheduler = ForceScheduler(
             default=constants.BOXES[0]),
         StringParameter(name="target", label="Target", size=50, default="develop"),
         StringParameter(name="cmake_flags", label="CMake flags", size=50,
-                             default=constants.DEFAULT_CMAKE_FLAGS),
+                        default=constants.DEFAULT_CMAKE_FLAGS),
         ChoiceStringParameter(
             name="do_not_destroy_vm",
             label="Do not destroy vm",
@@ -70,9 +74,9 @@ manual_scheduler = ForceScheduler(
             default="no"),
         StringParameter(name="old_target", label="Old target", size=50, default="2.1.9"),
         StringParameter(name="ci_url", label="ci url", size=50,
-                             default=constants.CI_SERVER_URL),
+                        default=constants.CI_SERVER_URL),
 
     ]
 )
 
-schedulers = [repository_scheduler, manual_scheduler]
+SCHEDULERS = [REPOSITORY_SCHEDULER, MANUAL_SCHEDULER]

@@ -1,4 +1,6 @@
 import itertools
-import maxscale.schedulers.build
+from . import build
+from . import run_test
 
-MAXSCALE_SCHEDULERS = list(itertools.chain(build.schedulers))
+MAXSCALE_SCHEDULERS = list(itertools.chain(build.SCHEDULERS,
+                                           run_test.SCHEDULERS))
