@@ -52,7 +52,7 @@ def create_factory():
 
 BUILDERS = [
     BuilderConfig(
-        name="destroy",
+        name="smart_remove_lock",
         workernames=["worker1"],
         factory=create_factory(),
         tags=['axilary'],
