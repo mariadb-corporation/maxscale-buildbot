@@ -19,10 +19,11 @@ If you have installed BuildBot into the virtual environment, then you should eit
 1. Clone repository or get a repository slice.
 2. Install packages that are reqired to build Python dependencies: `sudo apt install -y build-essential python3-dev`
 2. Install all Python dependencies that are needed by the buildmaster: `pip3 install -r requirements.txt`.
-3. Create or update buildmaster configuration: `buildbot upgrade-master buildbot-master/master`
-4. Start the buildmaster service: `buildbot start buildbot-master/master`
+3. Create or update buildmaster configuration: `buildbot upgrade-master master`
+4. Configure mail client in `config/mailer_config.py` file. The template for this file can be found in `config/mailer_config_example.py` file.
+5. Start the buildmaster service: `buildbot start master`
 
 ## Updating Buildmaster configuration
 
 1. Update the repository configuration.
-2. Reload buildbot configuration: `buildbot reconfig buildbot-master/master`
+2. Reload buildbot configuration: `buildbot reconfig master`
