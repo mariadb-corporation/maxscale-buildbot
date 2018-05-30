@@ -1,4 +1,4 @@
-boxes_all = [
+BOXES = [
     'centos_7_libvirt',
     'centos_6_libvirt',
     'centos_5_libvirt',
@@ -38,7 +38,7 @@ boxes_all = [
     'fedora_23_aws'
 ]
 
-versions = [
+DB_VERSIONS = [
     '10.2',
     '10.3',
     '10.0',
@@ -51,8 +51,4 @@ versions = [
     '10.3.7'
 ]
 
-default_cmake_debug = '-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y -DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'
-
-from config import mailer_config_local as mailer_config_module
-
-mailer_config = mailer_config_module.mailer_config
+DEFAULT_CMAKE_FLAGS = '-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y -DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'
