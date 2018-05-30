@@ -58,6 +58,6 @@ MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
 
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
-
 WORKER_SHELL_SCRIPTS_RELATIVE_PATH = '../shell_scripts'
+
 WORKER_WORKSPACE_RELATIVE_PATH = '../workspace'
