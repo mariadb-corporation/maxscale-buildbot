@@ -4,5 +4,5 @@ v-env/
 *.pid
 workspace/
 state.sqlite
-master/config/mailer_config.py
+master/maxscale/config/mailer_config.py
 __pycache__/

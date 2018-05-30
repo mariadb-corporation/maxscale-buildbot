@@ -1,4 +1,4 @@
-from config import constants
+from maxscale.config import constants
 from buildbot.schedulers.triggerable import Triggerable
 from buildbot.schedulers.forcesched import *
 import os
