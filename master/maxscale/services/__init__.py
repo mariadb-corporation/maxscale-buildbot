@@ -1,4 +1,4 @@
 import itertools
-from . import build
+from . import build, run_test
 
-MAXSCALE_SERVICES = list(itertools.chain(build.SERVICES))
+MAXSCALE_SERVICES = list(itertools.chain(build.SERVICES, run_test.SERVICES))

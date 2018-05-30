@@ -1,3 +1,6 @@
+from buildbot.plugins import util
+
+
 def save_env_to_property(rc, stdout, stderr):
     ''' Function used as the extrat_fn function for SetProperty class
         This takes the output from env command and creates a dictionary of
@@ -8,3 +11,15 @@ def save_env_to_property(rc, stdout, stderr):
         env_dict = {l.split('=', 1)[0]: l.split('=', 1)[1] for l in
                     env_list if len(l.split('=', 1)) == 2}
         return {'env': env_dict}
+
+
+@util.renderer
+def create_workspace_command(props):
+    command = 'mkdir -p ' + str(props.getProperty('WORKSPACE'))
+    return command
+
+
+@util.renderer
+def clean_workspace_command(props):
+    command = 'rm -rf ' + str(props.getProperty('WORKSPACE') + "/*")
+    return command

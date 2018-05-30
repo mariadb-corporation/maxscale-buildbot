@@ -15,12 +15,35 @@ def create_mail_notifier():
     <br>
 
     <h4>Build results:</h4>
-    <blockquote><pre>{{ build['properties']['build_results_content'][0] if 'build_results_content' in build['properties'] else '-'}}</pre></blockquote>
+    <blockquote>
+        <pre>
+            {% if 'build_results_content' in build['properties'] %}
+                {{ build['properties']['build_results_content'][0] }}
+            {% else %}
+                -
+            {% endif %}
+        </pre>
+    </blockquote>
 
     <h4>Coredumps:</h4>
-    <blockquote><pre>{{ build['properties']['coredumps_results_content'][0] if 'coredumps_results_content' in build['properties'] else '-'}}</pre></blockquote>
+    <blockquote>
+        <pre>
+            {% if 'coredumps_results_content' in build['properties'] %}
+                {{ build['properties']['coredumps_results_content'][0] }}
+            {% else %}
+                -
+            {% endif %}
+        </pre>
+    </blockquote>
 
-    <a href="http://max-tst-01.mariadb.com/LOGS/{{ build['properties']['JOB_NAME'][0] }}-{{ build['properties']['BUILD_ID'][0] }}/LOGS/"> Logs(ctest logs) for each test </a>
+    <a href="{{
+            'http://max-tst-01.mariadb.com/LOGS/{}-{}/LOGS/'.format(
+                build['properties']['JOB_NAME'][0],
+                build['properties']['BUILD_ID'][0]
+            )
+        }}">
+        Logs(ctest logs) for each test
+    </a>
 
     <p><b> -- The Buildbot</b></p>
     '''
