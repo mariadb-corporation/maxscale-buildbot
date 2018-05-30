@@ -8,7 +8,7 @@ from buildbot.schedulers.triggerable import Triggerable
 from maxscale.config import constants
 
 
-REPOSITORY_SCHEDULER = Triggerable(
+TRIGGERABLE_SCHEDULER = Triggerable(
     name="build",
     builderNames=["build"],
     properties={
@@ -79,4 +79,4 @@ MANUAL_SCHEDULER = ForceScheduler(
     ]
 )
 
-SCHEDULERS = [REPOSITORY_SCHEDULER, MANUAL_SCHEDULER]
+SCHEDULERS = [TRIGGERABLE_SCHEDULER, MANUAL_SCHEDULER]
