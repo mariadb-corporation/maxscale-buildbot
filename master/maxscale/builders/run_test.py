@@ -35,7 +35,7 @@ class RunTestSetPropertiesStep(ShellMixin, BuildStep):
         self.setProperty('SHELL_SCRIPTS_PATH', cmd.stdout[0:-1], 'setProperties')
         # WORKSPACE property
         cmd = yield self.makeRemoteShellCommand(
-                            command='echo "`pwd`/{}"'.format(constants.WORKER_WORKSPACE_RELATIVE_PATH),
+                            command='pwd',
                             collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('WORKSPACE', cmd.stdout[0:-1], 'setProperties')
@@ -90,13 +90,6 @@ def create_factory():
             "config_to_clone": util.Property('config_to_clone'),
             "test_branch": util.Property('branch'),
         }))
-
-    # Create workspace
-    factory.addStep(steps.ShellCommand(
-        name="Create workspace directory",
-        command=common.create_workspace_command,
-        alwaysRun=True,
-        env=util.Property('env')))
 
     factory.addStep(steps.Git(
         repourl=util.Property('repository'),

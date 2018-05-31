@@ -31,7 +31,7 @@ class BuildSetPropertiesStep(ShellMixin, BuildStep):
         self.setProperty('SHELL_SCRIPTS_PATH', cmd.stdout[0:-1], 'setProperties')
         # WORKSPACE property
         cmd = yield self.makeRemoteShellCommand(
-            command='echo "`pwd`/{}"'.format(constants.WORKER_WORKSPACE_RELATIVE_PATH),
+            command='pwd',
             collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('WORKSPACE', cmd.stdout[0:-1], 'setProperties')
@@ -79,15 +79,6 @@ def create_factory():
             "ci_url": util.Property('ci_url')
         }))
 
-    # Create workspace
-    factory.addStep(ShellCommand(
-        name="Create workspace directory",
-        command=['mkdir',
-                 '-p',
-                 util.Interpolate('%(prop:WORKSPACE)s')],
-        alwaysRun=True,
-        env=util.Property('env')))
-
     factory.addStep(Git(
         repourl=util.Property('repository'),
         mode='incremental',
@@ -103,9 +94,7 @@ def create_factory():
     # Workspace cleanup
     factory.addStep(ShellCommand(
         name="Workspace cleanup",
-        command=['rm',
-                 '-rf',
-                 util.Interpolate('%(prop:WORKSPACE)s/*')],
+        command=common.clean_workspace_command,
         alwaysRun=True,
         env=util.Property('env')))
 
