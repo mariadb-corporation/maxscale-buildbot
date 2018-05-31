@@ -6,3 +6,4 @@ workspace/
 state.sqlite
 master/maxscale/config/mailer_config.py
 __pycache__/
+*.pyc
