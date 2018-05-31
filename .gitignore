@@ -5,5 +5,7 @@ v-env/
 workspace/
 state.sqlite
 master/maxscale/config/mailer_config.py
+master/maxscale/config/github_client_config.py
+master/maxscale/config/auth_config.py
 __pycache__/
 *.pyc
