@@ -2,22 +2,19 @@ import os
 
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from buildbot.process.buildstep import BuildStep
 from buildbot.process.buildstep import ShellMixin
-from buildbot.process.factory import BuildFactory
-from buildbot.steps.trigger import Trigger
 from buildbot.steps import shell
 from twisted.internet import defer
 from . import builders_config
 from . import common
 
 
-class RunTestSetPropertiesStep(ShellMixin, BuildStep):
+class RunTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
 
     def __init__(self, **kwargs):
         kwargs = self.setupShellMixin(kwargs, prohibitArgs=['command'])
-        BuildStep.__init__(self, **kwargs)
+        steps.BuildStep.__init__(self, **kwargs)
 
     @defer.inlineCallbacks
     def run(self):
@@ -50,10 +47,10 @@ class RunTestSetPropertiesStep(ShellMixin, BuildStep):
 
 
 def create_factory():
-    factory = BuildFactory()
+    factory = util.BuildFactory()
 
     factory.addStep(RunTestSetPropertiesStep(haltOnFailure=True))
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'download_shell_scripts' scheduler",
         schedulerNames=['download_shell_scripts'],
         waitForFinish=True,
@@ -153,7 +150,7 @@ def create_factory():
         alwaysRun=True,
         env=util.Property('env')))
 
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'cleanup' scheduler",
         schedulerNames=['cleanup'],
         waitForFinish=True,

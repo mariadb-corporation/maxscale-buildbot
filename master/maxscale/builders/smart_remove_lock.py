@@ -2,21 +2,19 @@ import os
 
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from buildbot.process.factory import BuildFactory
-from buildbot.steps.trigger import Trigger
 from buildbot.steps import shell
 from . import common
 
 
 def create_factory():
-    factory = BuildFactory()
+    factory = util.BuildFactory()
 
     factory.addStep(steps.SetPropertyFromCommand(
         name="Set the 'SHELL_SCRIPTS_PATH' property",
         command='echo "`pwd`/../shell_scripts"',
         property="SHELL_SCRIPTS_PATH",
         haltOnFailure=True, ))
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'download_shell_scripts' scheduler",
         schedulerNames=['download_shell_scripts'],
         waitForFinish=True,
@@ -38,7 +36,7 @@ def create_factory():
         command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/run_smart_remove_lock_wrapper.sh')],
         haltOnFailure=True,
         env=util.Property('env')))
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'remove_lock' scheduler",
         schedulerNames=['remove_lock'], waitForFinish=True,
         alwaysRun=True,

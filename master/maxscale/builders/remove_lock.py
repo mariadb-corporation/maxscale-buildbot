@@ -2,21 +2,19 @@ import os
 
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from buildbot.process.factory import BuildFactory
-from buildbot.steps.trigger import Trigger
 from buildbot.steps import shell
 from . import common
 
 
 def create_factory():
-    factory = BuildFactory()
+    factory = util.BuildFactory()
 
     factory.addStep(steps.SetPropertyFromCommand(
         name="Set the 'SHELL_SCRIPTS_PATH' property",
         command='echo "`pwd`/../shell_scripts"',
         property="SHELL_SCRIPTS_PATH",
         haltOnFailure=True, ))
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'download_shell_scripts' scheduler",
         schedulerNames=['download_shell_scripts'],
         waitForFinish=True,

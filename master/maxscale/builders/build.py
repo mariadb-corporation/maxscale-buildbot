@@ -1,25 +1,19 @@
 import os
 
 from buildbot.config import BuilderConfig
-from buildbot.plugins import util
-from buildbot.process.buildstep import BuildStep
+from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
-from buildbot.process.factory import BuildFactory
-from buildbot.steps.shell import SetPropertyFromCommand
-from buildbot.steps.shell import ShellCommand
-from buildbot.steps.source.git import Git
-from buildbot.steps.trigger import Trigger
 from twisted.internet import defer
 from . import builders_config
 from . import common
 
 
-class BuildSetPropertiesStep(ShellMixin, BuildStep):
+class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
 
     def __init__(self, **kwargs):
         kwargs = self.setupShellMixin(kwargs, prohibitArgs=['command'])
-        BuildStep.__init__(self, **kwargs)
+        steps.BuildStep.__init__(self, **kwargs)
 
     @defer.inlineCallbacks
     def run(self):
@@ -46,11 +40,11 @@ class BuildSetPropertiesStep(ShellMixin, BuildStep):
 
 
 def create_factory():
-    factory = BuildFactory()
+    factory = util.BuildFactory()
 
     factory.addStep(BuildSetPropertiesStep(haltOnFailure=True))
 
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'download_shell_scripts' scheduler",
         schedulerNames=['download_shell_scripts'],
         waitForFinish=True,
@@ -58,7 +52,7 @@ def create_factory():
         copy_properties=['SHELL_SCRIPTS_PATH']
     ))
 
-    factory.addStep(SetPropertyFromCommand(
+    factory.addStep(steps.SetPropertyFromCommand(
         name="Set the 'env' property",
         command="bash -c env",
         haltOnFailure=True,
@@ -79,26 +73,26 @@ def create_factory():
             "ci_url": util.Property('ci_url')
         }))
 
-    factory.addStep(Git(
+    factory.addStep(steps.Git(
         repourl=util.Property('repository'),
         mode='incremental',
         branch=util.Property('branch'),
         haltOnFailure=True))
 
-    factory.addStep(ShellCommand(
+    factory.addStep(steps.ShellCommand(
         name="Run the 'run_build.sh' script",
         command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/run_build.sh')],
         haltOnFailure=True,
         env=util.Property('env')))
 
     # Workspace cleanup
-    factory.addStep(ShellCommand(
+    factory.addStep(steps.ShellCommand(
         name="Workspace cleanup",
         command=common.clean_workspace_command,
         alwaysRun=True,
         env=util.Property('env')))
 
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'cleanup' scheduler",
         schedulerNames=['cleanup'],
         waitForFinish=True,

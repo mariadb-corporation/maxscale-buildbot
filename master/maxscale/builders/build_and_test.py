@@ -1,15 +1,14 @@
 import os
 
-from buildbot.plugins import util
+from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
-from buildbot.steps.trigger import Trigger
 
 
 def create_factory():
     factory = BuildFactory()
 
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler",
         schedulerNames=['build'],
         waitForFinish=True,
@@ -31,7 +30,7 @@ def create_factory():
             "big"]
     ))
 
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
         waitForFinish=True,

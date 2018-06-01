@@ -1,9 +1,8 @@
 import os
 
-from buildbot.plugins import util
+from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
-from buildbot.steps.trigger import Trigger
 from buildbot.steps import shell
 from . import common
 
@@ -23,7 +22,7 @@ def create_factory():
             "try_already_running": util.Property('try_already_running'),
             "box": util.Property('box'),
         }))
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'destroy' scheduler",
         schedulerNames=['destroy'],
         waitForFinish=True,
@@ -32,7 +31,7 @@ def create_factory():
             "do_not_destroy_vm",
             "try_already_running",
         ]))
-    factory.addStep(Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'smart_remove_lock' scheduler",
         schedulerNames=['smart_remove_lock'],
         waitForFinish=True,

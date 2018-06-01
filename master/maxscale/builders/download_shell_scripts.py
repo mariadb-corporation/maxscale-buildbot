@@ -2,13 +2,12 @@ import os
 
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from buildbot.process.factory import BuildFactory
 from os import listdir
 from os.path import isfile, join, basename
 
 
 def create_factory():
-    factory = BuildFactory()
+    factory = util.BuildFactory()
 
     shell_scripts_files = [join(os.getcwd(), "shell_scripts", f)
                            for f in listdir(join(os.getcwd(), "shell_scripts"))
