@@ -1,0 +1,1 @@
+WORKER_SHELL_SCRIPTS_RELATIVE_PATH = '../shell_scripts'

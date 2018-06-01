@@ -10,7 +10,7 @@ from buildbot.steps.shell import ShellCommand
 from buildbot.steps.source.git import Git
 from buildbot.steps.trigger import Trigger
 from twisted.internet import defer
-from maxscale.config import constants
+from . import builders_config
 from . import common
 
 
@@ -25,7 +25,7 @@ class BuildSetPropertiesStep(ShellMixin, BuildStep):
     def run(self):
         # SHELL_SCRIPTS_PATH property
         cmd = yield self.makeRemoteShellCommand(
-            command='echo "`pwd`/{}"'.format(constants.WORKER_SHELL_SCRIPTS_RELATIVE_PATH),
+            command='echo "`pwd`/{}"'.format(builders_config.WORKER_SHELL_SCRIPTS_RELATIVE_PATH),
             collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('SHELL_SCRIPTS_PATH', cmd.stdout[0:-1], 'setProperties')
