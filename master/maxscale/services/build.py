@@ -16,7 +16,7 @@ def create_mail_notifier():
     <p><b> -- The Buildbot</b></p>
     '''
 
-    config = mailer_config.mailer_config
+    config = mailer_config.MAILER_CONFIG
 
     return reporters.MailNotifier(
         fromaddr=config['fromaddr'],
