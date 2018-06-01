@@ -20,20 +20,20 @@ class RunTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     def run(self):
         # BUILD_TIMESTAMP property
         cmd = yield self.makeRemoteShellCommand(
-                            command=['date', "+%Y-%m-%d %H-%M-%S"],
-                            collectStdout=True)
+            command=['date', "+%Y-%m-%d %H-%M-%S"],
+            collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('BUILD_TIMESTAMP', cmd.stdout[0:-1], 'setProperties')
         # SHELL_SCRIPTS_PATH property
         cmd = yield self.makeRemoteShellCommand(
-                            command='echo "`pwd`/{}"'.format(builders_config.WORKER_SHELL_SCRIPTS_RELATIVE_PATH),
-                            collectStdout=True)
+            command='echo "`pwd`/{}"'.format(builders_config.WORKER_SHELL_SCRIPTS_RELATIVE_PATH),
+            collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('SHELL_SCRIPTS_PATH', cmd.stdout[0:-1], 'setProperties')
         # WORKSPACE property
         cmd = yield self.makeRemoteShellCommand(
-                            command='pwd',
-                            collectStdout=True)
+            command='pwd',
+            collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('WORKSPACE', cmd.stdout[0:-1], 'setProperties')
         # JOB_NAME property
@@ -41,8 +41,12 @@ class RunTestSetPropertiesStep(ShellMixin, steps.BuildStep):
         # custom_builder_id property
         self.setProperty('custom_builder_id', '101', 'setProperties')
         # BUILD_ID property
-        self.setProperty('BUILD_ID', "{}{}".format(self.getProperty('custom_builder_id'),
-                                                   self.getProperty('buildnumber')), 'setProperties')
+        self.setProperty(
+            'BUILD_ID',
+            "{}{}".format(self.getProperty('custom_builder_id'),
+                          self.getProperty('buildnumber')),
+            'setProperties'
+        )
         defer.returnValue(0)
 
 
@@ -125,7 +129,10 @@ def create_factory():
     # Publish report portal
     factory.addStep(steps.ShellCommand(
         name="Run the 'publish_report_portal.sh' script",
-        command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/publish_report_portal.sh')],
+        command=[
+            'sh',
+            util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/publish_report_portal.sh')
+        ],
         haltOnFailure=True,
         env=util.Property('env')))
 

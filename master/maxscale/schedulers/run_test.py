@@ -87,7 +87,10 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
             label="Use snapshots",
             choices=["no", "yes"],
             default="no"),
-        util.StringParameter(name="logs_dir", label="Logs dir", size=50, default=os.environ['HOME'] + "/LOGS"),
+        util.StringParameter(name="logs_dir",
+                             label="Logs dir",
+                             size=50,
+                             default=os.environ['HOME'] + "/LOGS"),
         util.ChoiceStringParameter(
             name="no_vm_revert",
             label="No vm revert",

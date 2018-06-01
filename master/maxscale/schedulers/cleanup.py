@@ -27,7 +27,9 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
             label="Do not destroy vm",
             choices=['no', 'yes'],
             default='no'),
-        util.StringParameter(name="build_full_name", label="Build full name ('JOB_NAME-BUILD_ID')", size=50),
+        util.StringParameter(name="build_full_name",
+                             label="Build full name ('JOB_NAME-BUILD_ID')",
+                             size=50),
         util.ChoiceStringParameter(
             name="try_already_running",
             label="Try already running",

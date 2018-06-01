@@ -33,7 +33,10 @@ def create_factory():
         }))
     factory.addStep(steps.ShellCommand(
         name="Run the 'run_smart_remove_lock_wrapper.sh' script",
-        command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/run_smart_remove_lock_wrapper.sh')],
+        command=[
+            'sh',
+            util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/run_smart_remove_lock_wrapper.sh')
+        ],
         haltOnFailure=True,
         env=util.Property('env')))
     factory.addStep(steps.Trigger(

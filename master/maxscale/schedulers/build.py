@@ -56,7 +56,10 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
             label="Build experimental",
             choices=["yes", "no"],
             default="yes"),
-        util.StringParameter(name="repo_path", label="Repo path", size=50, default=os.environ['HOME'] + "/repository"),
+        util.StringParameter(name="repo_path",
+                             label="Repo path",
+                             size=50,
+                             default=os.environ['HOME'] + "/repository"),
         util.ChoiceStringParameter(
             name="try_already_running",
             label="Try already running",

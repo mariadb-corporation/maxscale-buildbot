@@ -21,7 +21,9 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
         ),
     ],
     properties=[
-        util.StringParameter(name="build_full_name", label="Build full name ('JOB_NAME-BUILD_ID')", size=50),
+        util.StringParameter(name="build_full_name",
+                             label="Build full name ('JOB_NAME-BUILD_ID')",
+                             size=50),
         util.ChoiceStringParameter(
             name="try_already_running",
             label="Try already running",

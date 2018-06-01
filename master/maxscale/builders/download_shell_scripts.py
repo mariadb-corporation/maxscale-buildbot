@@ -1,9 +1,9 @@
 import os
+from os import listdir
+from os.path import isfile, join, basename
 
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from os import listdir
-from os.path import isfile, join, basename
 
 
 def create_factory():

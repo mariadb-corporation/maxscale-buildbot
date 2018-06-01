@@ -34,8 +34,12 @@ class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
         # custom_builder_id property
         self.setProperty('custom_builder_id', '100', 'setProperties')
         # BUILD_ID property
-        self.setProperty('BUILD_ID', "{}{}".format(self.getProperty('custom_builder_id'),
-                                                   self.getProperty('buildnumber')), 'setProperties')
+        self.setProperty(
+            'BUILD_ID',
+            "{}{}".format(self.getProperty('custom_builder_id'),
+                          self.getProperty('buildnumber')),
+            'setProperties'
+        )
         defer.returnValue(0)
 
 
