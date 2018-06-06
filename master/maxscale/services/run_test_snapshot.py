@@ -12,7 +12,7 @@ def create_mail_notifier():
         fromaddr=config['fromaddr'],
         mode=('failing', 'passing', 'warnings', 'cancelled'),
         extraRecipients=config['extraRecipients'],
-        builders=('run_test'),
+        builders=('run_test_snapshot'),
         messageFormatter=reporters.MessageFormatter(template=template_test, template_type='html',
                                                     wantProperties=True, wantSteps=True),
         sendToInterestedUsers=False,

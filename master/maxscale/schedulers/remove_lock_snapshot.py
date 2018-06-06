@@ -1,18 +1,14 @@
 from buildbot.plugins import util, schedulers
-from maxscale.config import constants
 
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
-    name="remove_lock",
-    builderNames=["remove_lock"],
-    properties={
-        'try_already_running': 'no',
-    }
+    name="remove_lock_snapshot",
+    builderNames=["remove_lock_snapshot"],
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
-    name="remove_lock_force",
-    builderNames=["remove_lock"],
+    name="remove_lock_snapshot_force",
+    builderNames=["remove_lock_snapshot"],
     codebases=[
         util.CodebaseParameter(
             "",
@@ -24,16 +20,10 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
         ),
     ],
     properties=[
-        util.ChoiceStringParameter(
-            name="try_already_running",
-            label="Try already running",
-            choices=["no", "yes"],
-            default="no"),
-        util.ChoiceStringParameter(
-            name="box",
-            label="Box",
-            choices=constants.BOXES,
-            default=constants.BOXES[0]),
+        util.StringParameter(name="name",
+                             label="Name of this build",
+                             default="test01",
+                             size=50),
     ]
 )
 
