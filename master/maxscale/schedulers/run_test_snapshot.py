@@ -6,24 +6,6 @@ from maxscale.config import constants
 REPOSITORY_SCHEDULER = schedulers.Triggerable(
     name="run_test_snapshot",
     builderNames=["run_test_snapshot"],
-    properties={
-        "name": "test01",
-        "branch": "master",
-        "repository": constants.MAXSCALE_REPOSITORY,
-        "target": "develop",
-        "box": constants.BOXES[0],
-        "product": 'mariadb',
-        "version": constants.DB_VERSIONS[0],
-        "test_set": "-LE HEAVY",
-        "ci_url": constants.CI_SERVER_URL,
-        "smoke": "yes",
-        "big": "yes",
-        "backend_ssl": 'no',
-        "logs_dir": os.environ['HOME'] + "/LOGS",
-        "template": 'default',
-        "snapshot_name": 'clean',
-        "test_branch": 'master',
-    }
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(

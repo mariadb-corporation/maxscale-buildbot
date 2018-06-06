@@ -1,4 +1,6 @@
-from buildbot.plugins import util
+from buildbot.plugins import util, steps
+from buildbot.process.buildstep import ShellMixin
+from twisted.internet import defer
 
 
 def save_env_to_property(rc, stdout, stderr):
@@ -17,3 +19,26 @@ def save_env_to_property(rc, stdout, stderr):
 def clean_workspace_command(props):
     command = util.Interpolate('rm -rf %(prop:WORKSPACE)s/*')
     return command
+
+
+class SetDefaultPropertiesStep(ShellMixin, steps.BuildStep):
+    name = 'Set default properties'
+
+    def __init__(self, default_properties, **kwargs):
+        self.default_properties = default_properties
+        kwargs = self.setupShellMixin(kwargs, prohibitArgs=['command'])
+        steps.BuildStep.__init__(self, **kwargs)
+
+    @defer.inlineCallbacks
+    def run(self):
+        for property_name, value in self.default_properties.items():
+            if self.getProperty(property_name) is None:
+                self.setProperty(
+                    property_name,
+                    value,
+                    'setDefaultProperties'
+                )
+                cmd = yield self.makeRemoteShellCommand(
+                    command=['echo', "Set default property: {}={}".format(property_name, value)])
+                yield self.runCommand(cmd)
+        defer.returnValue(0)

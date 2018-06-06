@@ -6,7 +6,22 @@ from buildbot.process.buildstep import ShellMixin
 from twisted.internet import defer
 from . import builders_config
 from . import common
+from maxscale.config import constants
 
+DEFAULT_PROPERTIES = {
+    "repository": constants.MAXSCALE_REPOSITORY,
+    "branch": "develop",
+    "box": constants.BOXES[0],
+    "target": 'develop',
+    "cmake_flags": constants.DEFAULT_CMAKE_FLAGS,
+    "do_not_destroy_vm": 'no',
+    "build_experimental": 'yes',
+    "repo_path": os.environ['HOME'] + "/repository",
+    "try_already_running": 'no',
+    "run_upgrade_test": 'no',
+    "old_target": "2.1.9",
+    "ci_url": constants.CI_SERVER_URL
+}
 
 class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -45,6 +60,8 @@ class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
 
 def create_factory():
     factory = util.BuildFactory()
+
+    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
 
     factory.addStep(BuildSetPropertiesStep(haltOnFailure=True))
 

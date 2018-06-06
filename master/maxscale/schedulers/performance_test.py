@@ -5,13 +5,6 @@ from maxscale.config import constants
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="performance_test",
     builderNames=["performance_test"],
-    properties={
-        "repository": constants.MAXSCALE_REPOSITORY,
-        "branch": "develop",
-        "target": "develop",
-        "maxscale_threads": "8",
-        "sysbench_threads": "128"
-    }
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(

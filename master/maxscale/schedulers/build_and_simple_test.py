@@ -7,17 +7,6 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     change_filter=util.ChangeFilter(project='maxscale', branch_fn=check_branch_fn),
     treeStableTimer=60,
     builderNames=["build_and_simple_test"],
-    properties={
-        "build_experimental": "yes",
-        "product": "mariadb",
-        "version": constants.DB_VERSIONS[0],
-        "do_not_destroy_vm": "no",
-        "ci_url": constants.CI_SERVER_URL,
-        "backend_ssl": "no",
-        "try_already_running": "yes",
-        "maxscale_threads": "8",
-        "sysbench_threads": "128"
-    }
 )
 
 
@@ -58,6 +47,11 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
             label="Do not destroy vm",
             choices=['no', 'yes'],
             default='no'),
+        util.ChoiceStringParameter(
+            name="try_already_running",
+            label="Do not destroy vm",
+            choices=['no', 'yes'],
+            default='yes'),
         util.StringParameter(name="test_set", label="Test set", size=50, default="-LE HEAVY"),
         util.StringParameter(name="ci_url", label="ci url", size=50,
                              default=constants.CI_SERVER_URL),

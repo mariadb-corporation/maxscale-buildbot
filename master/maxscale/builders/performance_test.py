@@ -7,7 +7,15 @@ from buildbot.steps import shell
 from twisted.internet import defer
 from . import builders_config
 from . import common
+from maxscale.config import constants
 
+DEFAULT_PROPERTIES = {
+    "repository": constants.MAXSCALE_REPOSITORY,
+    "branch": "develop",
+    "target": "develop",
+    "maxscale_threads": "8",
+    "sysbench_threads": "128"
+}
 
 class PerformanceTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -55,7 +63,10 @@ class PerformanceTestSetPropertiesStep(ShellMixin, steps.BuildStep):
 def create_factory():
     factory = util.BuildFactory()
 
+    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
+
     factory.addStep(PerformanceTestSetPropertiesStep(haltOnFailure=True))
+
     factory.addStep(steps.Trigger(
         name="Call the 'download_shell_scripts' scheduler",
         schedulerNames=['download_shell_scripts'],

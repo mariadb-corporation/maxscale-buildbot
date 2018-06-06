@@ -5,9 +5,6 @@ from maxscale.config import constants
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="remove_lock",
     builderNames=["remove_lock"],
-    properties={
-        'try_already_running': 'no',
-    }
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(

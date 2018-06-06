@@ -5,9 +5,14 @@ from buildbot.config import BuilderConfig
 from buildbot.steps import shell
 from . import common
 
+DEFAULT_PROPERTIES = {
+    'try_already_running': 'no',
+}
 
 def create_factory():
     factory = util.BuildFactory()
+
+    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
 
     factory.addStep(steps.SetPropertyFromCommand(
         name="Set the 'SHELL_SCRIPTS_PATH' property",

@@ -7,7 +7,26 @@ from buildbot.steps import shell
 from twisted.internet import defer
 from . import builders_config
 from . import common
+from maxscale.config import constants
 
+DEFAULT_PROPERTIES = {
+    "name": "test01",
+    "branch": "master",
+    "repository": constants.MAXSCALE_REPOSITORY,
+    "target": "develop",
+    "box": constants.BOXES[0],
+    "product": 'mariadb',
+    "version": constants.DB_VERSIONS[0],
+    "test_set": "-LE HEAVY",
+    "ci_url": constants.CI_SERVER_URL,
+    "smoke": "yes",
+    "big": "yes",
+    "backend_ssl": 'no',
+    "logs_dir": os.environ['HOME'] + "/LOGS",
+    "template": 'default',
+    "snapshot_name": 'clean',
+    "test_branch": 'master',
+}
 
 class RunTestSnapshotSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -53,7 +72,10 @@ class RunTestSnapshotSetPropertiesStep(ShellMixin, steps.BuildStep):
 def create_factory():
     factory = util.BuildFactory()
 
+    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
+
     factory.addStep(RunTestSnapshotSetPropertiesStep(haltOnFailure=True))
+
     factory.addStep(steps.Trigger(
         name="Call the 'download_shell_scripts' scheduler",
         schedulerNames=['download_shell_scripts'],

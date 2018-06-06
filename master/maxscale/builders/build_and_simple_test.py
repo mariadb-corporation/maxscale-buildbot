@@ -6,7 +6,21 @@ from buildbot.process.buildstep import ShellMixin
 from buildbot.process.factory import BuildFactory
 from twisted.internet import defer
 from maxscale.change_source.maxscale import get_test_set_by_branch
+from maxscale.config import constants
+from . import common
 
+
+DEFAULT_PROPERTIES = {
+        "build_experimental": "yes",
+        "product": "mariadb",
+        "version": constants.DB_VERSIONS[0],
+        "do_not_destroy_vm": "no",
+        "ci_url": constants.CI_SERVER_URL,
+        "backend_ssl": "no",
+        "try_already_running": "yes",
+        "maxscale_threads": "8",
+        "sysbench_threads": "128"
+    }
 
 class BuildAndSimpleTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -66,6 +80,8 @@ class BuildAndSimpleTestSetPropertiesStep(ShellMixin, steps.BuildStep):
 
 def create_factory():
     factory = BuildFactory()
+
+    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
 
     factory.addStep(BuildAndSimpleTestSetPropertiesStep(haltOnFailure=True))
 
