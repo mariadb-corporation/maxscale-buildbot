@@ -23,7 +23,7 @@ logfile = LogFile.fromFullPath(
     maxRotatedFiles=maxRotatedFiles)
 application.setComponent(ILogObserver, FileLogObserver(logfile).emit)
 
-buildmaster_host = 'localhost'
+buildmaster_host = 'maxscale-ci.mariadb.com'
 port = 9989
 workername = 'worker1'
 passwd = '0000'
