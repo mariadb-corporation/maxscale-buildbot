@@ -11,6 +11,14 @@ def build_box():
         default=constants.BOXES[0])
 
 
+def build_name():
+    return util.StringParameter(
+        name="name",
+        label="Name of this build",
+        size=50,
+        default="test01")
+
+
 def build_target():
     return util.StringParameter(
         name="target",
@@ -129,3 +137,19 @@ def sysbench_threads():
         label="Sysbench threads",
         size=4,
         default="128")
+
+
+def smoke_tests():
+    return util.ChoiceStringParameter(
+        name="smoke",
+        label="Run fast versions of every test",
+        choices=["yes", "no"],
+        default="yes")
+
+
+def big_number_of_vms():
+    return util.ChoiceStringParameter(
+        name="big",
+        label="Use larger number of VMs",
+        choices=["yes", "no"],
+        default="yes")
