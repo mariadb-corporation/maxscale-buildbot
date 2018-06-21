@@ -1,5 +1,6 @@
 # [[[section imports]]]
 from paver.easy import *
+import os
 # [[[endsection]]]
 
 
@@ -17,3 +18,21 @@ def check_code():
     """Check python code according to static code checkers"""
     sh("pycodestyle pavement.py master/master.cfg master/maxscale")
 # [[[endsection]]
+
+
+# [[[section run the buildbot in development mode]]
+@task
+@cmdopts([
+    ("command=", "c", "BuildBot master command to run, i.e. start, restart")
+])
+def buildbot(options, info):
+    """Run buildot master in the development environment"""
+    params = options["buildbot"]
+    if "command" not in params:
+        info("Please specify command to run with -c flag.")
+        return
+    buildbot_command = "buildbot {0} master".format(params["command"])
+    environment = os.environ.copy()
+    environment.update({"BUILDBOT_ENV": "development"})
+    sh(buildbot_command, env=environment)
+# [[[endsection]]]

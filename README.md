@@ -36,3 +36,4 @@ The common development tasks are automated using the [Paver](https://github.com/
 
 * `paver check_code` - check Python source code with static code linters.
 * `paver check_config` - check BuildBot master configuration.
+* `paver buildbot -c start` - run start command for buildbot in the development mode. You can pass all commands to the buildbot via this command and `-c` flag.
