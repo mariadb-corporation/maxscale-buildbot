@@ -1,7 +1,6 @@
-import os
-from buildbot.plugins import util, schedulers
-from maxscale.config import constants
+from buildbot.plugins import schedulers
 from . import properties
+from . import common
 
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
@@ -14,15 +13,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     buttonName="Force build",
     builderNames=["build"],
     codebases=[
-        util.CodebaseParameter(
-            "",
-            label="Main repository",
-            branch=util.StringParameter(name="branch", default="develop"),
-            revision=util.FixedParameter(name="revision", default=""),
-            project=util.FixedParameter(name="project", default=""),
-            repository=util.StringParameter(name="repository",
-                                            default=constants.MAXSCALE_REPOSITORY),
-        )
+        common.maxscale_codebase()
     ],
     properties=[
         properties.build_box(),
