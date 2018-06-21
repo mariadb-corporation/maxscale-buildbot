@@ -81,3 +81,51 @@ def ci_url():
         label="ci url",
         size=50,
         default=constants.CI_SERVER_URL)
+
+
+def backend_database():
+    return util.ChoiceStringParameter(
+        name="product",
+        label="Product",
+        choices=['mariadb', 'mysql'],
+        default='mariadb')
+
+
+def database_version():
+    return util.ChoiceStringParameter(
+        name="version",
+        label="Version",
+        choices=constants.DB_VERSIONS,
+        default=constants.DB_VERSIONS[0])
+
+
+def test_set():
+    return util.StringParameter(
+        name="test_set",
+        label="Test set",
+        size=50,
+        default="-LE HEAVY")
+
+
+def backend_use_ssl():
+    return util.ChoiceStringParameter(
+        name="backend_ssl",
+        label="Backend ssl",
+        choices=["no", "yes"],
+        default="no")
+
+
+def maxscale_threads():
+    return util.StringParameter(
+        name="maxscale_threads",
+        label="Maxscale threads",
+        size=4,
+        default="8")
+
+
+def sysbench_threads():
+    return util.StringParameter(
+        name="sysbench_threads",
+        label="Sysbench threads",
+        size=4,
+        default="128")
