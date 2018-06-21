@@ -1,5 +1,6 @@
-from buildbot.plugins import util, schedulers
-from maxscale.config import constants
+from buildbot.plugins import schedulers
+from . import common
+from . import properties
 
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
@@ -9,28 +10,16 @@ TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="performance_test_force",
-    label="Performance test",
+    buttonName="Performance test",
     builderNames=["performance_test"],
     codebases=[
-        util.CodebaseParameter(
-            "",
-            label="Main repository",
-            branch=util.StringParameter(name="branch", default="develop"),
-            revision=util.FixedParameter(name="revision", default=""),
-            project=util.FixedParameter(name="project", default=""),
-            repository=util.StringParameter(name="repository",
-                                            default=constants.MAXSCALE_REPOSITORY),
-        ),
+        common.maxscale_codebase(),
     ],
     properties=[
-        util.StringParameter(name="target", label="Target", size=50, default="develop"),
-        util.ChoiceStringParameter(
-            name="version",
-            label="Version",
-            choices=constants.DB_VERSIONS,
-            default=constants.DB_VERSIONS[0]),
-        util.StringParameter(name="maxscale_threads", label="Maxscale threads", size=4, default="8"),
-        util.StringParameter(name="sysbench_threads", label="Sysbench threads", size=4, default="128")
+        properties.build_target(),
+        properties.database_version(),
+        properties.maxscale_threads(),
+        properties.sysbench_threads(),
     ]
 )
 
