@@ -162,6 +162,14 @@ def big_number_of_vms():
         default="yes")
 
 
+def snapshot_name():
+    return util.StringParameter(
+        name="snapshot_name",
+        label="Snapshot name",
+        size=50,
+        default="clean")
+
+
 def use_snapshots():
     return util.ChoiceStringParameter(
         name="use_snapshots",
@@ -184,6 +192,14 @@ def do_not_revert_virtual_machines():
         label="No vm revert",
         choices=["no", "yes"],
         default="no")
+
+
+def test_branch():
+    return util.StringParameter(
+        name="test_branch",
+        label="Test branch",
+        size=100,
+        default="master")
 
 
 def test_template():
