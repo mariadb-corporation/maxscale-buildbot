@@ -1,3 +1,7 @@
+from buildbot.plugins import reporters
+from maxscale.config import mailer_config
+
+
 TEST_TEMPLATE = u'''\
     <a href="{{ build_url }}">{{ buildername }}</a>
     <h4>Build status: {{ summary }}</h4>
@@ -42,3 +46,22 @@ TEST_TEMPLATE = u'''\
 
     <p><b> -- The Buildbot</b></p>
     '''
+
+
+def create_mail_notifier(template, builder_names):
+    config = mailer_config.MAILER_CONFIG
+
+    return reporters.MailNotifier(
+        fromaddr=config['fromaddr'],
+        mode=('failing', 'passing', 'warnings', 'cancelled'),
+        extraRecipients=config['extraRecipients'],
+        builders=builder_names,
+        messageFormatter=reporters.MessageFormatter(template=template, template_type='html',
+                                                    wantProperties=True, wantSteps=True),
+        sendToInterestedUsers=False,
+        relayhost=config['relayhost'],
+        smtpPort=config['smtpPort'],
+        useTls=config['useTls'],
+        smtpUser=config['smtpUser'],
+        smtpPassword=config['smtpPassword'],
+    )
