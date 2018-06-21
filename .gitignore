@@ -10,3 +10,4 @@ master/maxscale/config/auth_config.py
 __pycache__/
 *.pyc
 gitpoller-work
+master.cfg.sample
