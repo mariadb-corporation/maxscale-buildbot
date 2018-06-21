@@ -9,3 +9,4 @@ master/maxscale/config/github_client_config.py
 master/maxscale/config/auth_config.py
 __pycache__/
 *.pyc
+gitpoller-work
