@@ -1,6 +1,7 @@
 import os
 from buildbot.plugins import util, schedulers
 from maxscale.config import constants
+from . import properties
 
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
@@ -10,7 +11,7 @@ TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_force",
-    label="Force build",
+    buttonName="Force build",
     builderNames=["build"],
     codebases=[
         util.CodebaseParameter(
@@ -21,45 +22,19 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
             project=util.FixedParameter(name="project", default=""),
             repository=util.StringParameter(name="repository",
                                             default=constants.MAXSCALE_REPOSITORY),
-        ),
+        )
     ],
     properties=[
-        util.ChoiceStringParameter(
-            name="box",
-            label="Box",
-            choices=constants.BOXES,
-            default=constants.BOXES[0]),
-        util.StringParameter(name="target", label="Target", size=50, default="develop"),
-        util.StringParameter(name="cmake_flags", label="CMake flags", size=50,
-                             default=constants.DEFAULT_CMAKE_FLAGS),
-        util.ChoiceStringParameter(
-            name="do_not_destroy_vm",
-            label="Do not destroy vm",
-            choices=['no', 'yes'],
-            default='no'),
-        util.ChoiceStringParameter(
-            name="build_experimental",
-            label="Build experimental",
-            choices=["yes", "no"],
-            default="yes"),
-        util.StringParameter(name="repo_path",
-                             label="Repo path",
-                             size=50,
-                             default=os.environ['HOME'] + "/repository"),
-        util.ChoiceStringParameter(
-            name="try_already_running",
-            label="Try already running",
-            choices=["no", "yes"],
-            default="no"),
-        util.ChoiceStringParameter(
-            name="run_upgrade_test",
-            label="Run upgrade test",
-            choices=["no", "yes"],
-            default="no"),
-        util.StringParameter(name="old_target", label="Old target", size=50, default="2.1.9"),
-        util.StringParameter(name="ci_url", label="ci url", size=50,
-                             default=constants.CI_SERVER_URL),
-
+        properties.build_box(),
+        properties.build_target(),
+        properties.cmake_flags(),
+        properties.keep_virtual_machines(),
+        properties.build_experimental_features(),
+        properties.repository_path(),
+        properties.try_already_running(),
+        properties.run_upgrade_test(),
+        properties.old_target(),
+        properties.ci_url()
     ]
 )
 
