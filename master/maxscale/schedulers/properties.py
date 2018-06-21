@@ -11,6 +11,13 @@ def build_box():
         default=constants.BOXES[0])
 
 
+def build_full_name():
+    return util.StringParameter(
+        name="build_full_name",
+        label="Build full name ('JOB_NAME-BUILD_ID')",
+        size=50)
+
+
 def build_name():
     return util.StringParameter(
         name="name",
