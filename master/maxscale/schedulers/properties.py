@@ -160,3 +160,42 @@ def big_number_of_vms():
         label="Use larger number of VMs",
         choices=["yes", "no"],
         default="yes")
+
+
+def use_snapshots():
+    return util.ChoiceStringParameter(
+        name="use_snapshots",
+        label="Use snapshots",
+        choices=["no", "yes"],
+        default="no")
+
+
+def test_logs_directory():
+    return util.StringParameter(
+        name="logs_dir",
+        label="Logs dir",
+        size=50,
+        default=os.environ['HOME'] + "/LOGS")
+
+
+def do_not_revert_virtual_machines():
+    return util.ChoiceStringParameter(
+        name="no_vm_revert",
+        label="No vm revert",
+        choices=["no", "yes"],
+        default="no")
+
+
+def test_template():
+    return util.ChoiceStringParameter(
+        name="template",
+        label="Template",
+        choices=['default', 'nogalera', 'twomaxscales'],
+        default='default')
+
+
+def configuration_to_clone():
+    return util.StringParameter(
+        name="config_to_clone",
+        label="Config to clone",
+        size=50)
