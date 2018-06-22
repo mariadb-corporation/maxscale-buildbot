@@ -51,4 +51,5 @@ $ pyr -r requirements.txt
 When the `requirements.txt` file has been updated, the dependencies should be installed in the Python virtual environment.
 
 1. Activate the virtual environment: `source v-env/bin/activate`.
-2. Upgrade dependencies: `pip install -U requirements.txt`.
+2. Upgrade dependencies: `pip install -U -r requirements.txt`.
+3. Restart the BuildBot master in order to activate installed dependecsies: `buildbot restart master`.
