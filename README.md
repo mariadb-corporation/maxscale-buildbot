@@ -37,3 +37,18 @@ The common development tasks are automated using the [Paver](https://github.com/
 * `paver check_code` - check Python source code with static code linters.
 * `paver check_config` - check BuildBot master configuration.
 * `paver buildbot -c start` - run start command for buildbot in the development mode. You can pass all commands to the buildbot via this command and `-c` flag.
+
+## Upgrading the dependencies
+
+The list of Python packages that are required to install the BuildBot master is stored in [`requirements.txt`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/requirements.txt) file. In this file the tested and proved to work versions are specified.
+
+In orded to migrate to the newer versions you should either specify them directly in the file or use the [pur](https://pypi.org/project/pur/) utility. The latter one upgrades all dependencise to the latest version available. Be adviced, that it might not be the right approach. In order to use `pur`, launch it the following way:
+
+```bash
+$ pyr -r requirements.txt
+```
+
+When the `requirements.txt` file has been updated, the dependencies should be installed in the Python virtual environment.
+
+1. Activate the virtual environment: `source v-env/bin/activate`.
+2. Upgrade dependencies: `pip install -U requirements.txt`.
