@@ -37,6 +37,7 @@ The common development tasks are automated using the [Paver](https://github.com/
 * `paver check_code` - check Python source code with static code linters.
 * `paver check_config` - check BuildBot master configuration.
 * `paver buildbot -c start` - run start command for buildbot in the development mode. You can pass all commands to the buildbot via this command and `-c` flag.
+* `paver restart_buildbot` - restart the buildbot in the development mode and restart `worker-dev` associated with the environment. You should create the latter one by youself.
 
 ## Upgrading the dependencies
 

@@ -36,3 +36,12 @@ def buildbot(options, info):
     environment.update({"BUILDBOT_ENV": "development"})
     sh(buildbot_command, env=environment)
 # [[[endsection]]]
+
+# [[[section restart buildbot and development-worker]]]
+@task
+def restart_buildbot():
+    """Restart both buildbot and corresponding worker"""
+    call_task('check_config')
+    call_task("buildbot", options={"command": "restart"})
+    sh("buildbot-worker restart worker-dev")
+# [[[endsection]]]
