@@ -17,8 +17,7 @@ def save_env_to_property(rc, stdout, stderr):
 
 @util.renderer
 def clean_workspace_command(props):
-    command = util.Interpolate('rm -rf %(prop:WORKSPACE)s/*')
-    return command
+    return ['git', 'clean', '-fd']
 
 
 class SetDefaultPropertiesStep(ShellMixin, steps.BuildStep):

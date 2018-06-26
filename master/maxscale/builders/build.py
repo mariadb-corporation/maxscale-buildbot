@@ -6,22 +6,7 @@ from buildbot.process.buildstep import ShellMixin
 from twisted.internet import defer
 from . import builders_config
 from . import common
-from maxscale.config import constants
 
-DEFAULT_PROPERTIES = {
-    "repository": constants.MAXSCALE_REPOSITORY,
-    "branch": "develop",
-    "box": constants.BOXES[0],
-    "target": 'develop',
-    "cmake_flags": constants.DEFAULT_CMAKE_FLAGS,
-    "do_not_destroy_vm": 'no',
-    "build_experimental": 'yes',
-    "repo_path": os.environ['HOME'] + "/repository",
-    "try_already_running": 'no',
-    "run_upgrade_test": 'no',
-    "old_target": "2.1.9",
-    "ci_url": constants.CI_SERVER_URL
-}
 
 class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -38,12 +23,6 @@ class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
             collectStdout=True)
         yield self.runCommand(cmd)
         self.setProperty('SHELL_SCRIPTS_PATH', cmd.stdout[0:-1], 'setProperties')
-        # WORKSPACE property
-        cmd = yield self.makeRemoteShellCommand(
-            command='pwd',
-            collectStdout=True)
-        yield self.runCommand(cmd)
-        self.setProperty('WORKSPACE', cmd.stdout[0:-1], 'setProperties')
         # JOB_NAME property
         self.setProperty('JOB_NAME', 'build', 'setProperties')
         # custom_builder_id property
@@ -61,8 +40,6 @@ class BuildSetPropertiesStep(ShellMixin, steps.BuildStep):
 def create_factory():
     factory = util.BuildFactory()
 
-    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
-
     factory.addStep(BuildSetPropertiesStep(haltOnFailure=True))
 
     factory.addStep(steps.Trigger(
@@ -73,45 +50,22 @@ def create_factory():
         copy_properties=['SHELL_SCRIPTS_PATH']
     ))
 
-    factory.addStep(steps.SetPropertyFromCommand(
-        name="Set the 'env' property",
-        command="bash -c env",
-        haltOnFailure=True,
-        extract_fn=common.save_env_to_property,
-        env={
-            "WORKSPACE": util.Property('WORKSPACE'),
-            "JOB_NAME": util.Property('JOB_NAME'),
-            "BUILD_ID": util.Property('BUILD_ID'),
-            "BUILD_NUMBER": util.Property('BUILD_ID'),
-            "box": util.Property('box'),
-            "target": util.Property('target'),
-            "cmake_flags": util.Property('cmake_flags'),
-            "do_not_destroy_vm": util.Property('do_not_destroy_vm'),
-            "build_experimental": util.Property('build_experimental'),
-            "try_already_running": util.Property('try_already_running'),
-            "run_upgrade_test": util.Property('run_upgrade_test'),
-            "old_target": util.Property('old_target'),
-            "ci_url": util.Property('ci_url')
-        }))
-
     factory.addStep(steps.Git(
         repourl=util.Property('repository'),
-        mode='incremental',
         branch=util.Property('branch'),
+        mode='incremental',
         haltOnFailure=True))
 
     factory.addStep(steps.ShellCommand(
         name="Run the 'run_build.sh' script",
         command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/run_build.sh')],
-        haltOnFailure=True,
-        env=util.Property('env')))
+        haltOnFailure=True))
 
     # Workspace cleanup
     factory.addStep(steps.ShellCommand(
         name="Workspace cleanup",
         command=common.clean_workspace_command,
-        alwaysRun=True,
-        env=util.Property('env')))
+        alwaysRun=True))
 
     factory.addStep(steps.Trigger(
         name="Call the 'cleanup' scheduler",
@@ -137,5 +91,20 @@ BUILDERS = [
         workernames=["worker1"],
         factory=create_factory(),
         tags=['build'],
-        env=dict(os.environ))
+        env={
+            "WORKSPACE": util.Property('builddir'),
+            "JOB_NAME": util.Property('JOB_NAME'),
+            "BUILD_ID": util.Property('BUILD_ID'),
+            "BUILD_NUMBER": util.Property('BUILD_ID'),
+            "box": util.Property('box'),
+            "target": util.Property('target'),
+            "cmake_flags": util.Property('cmake_flags'),
+            "do_not_destroy_vm": util.Property('do_not_destroy_vm'),
+            "build_experimental": util.Property('build_experimental'),
+            "try_already_running": util.Property('try_already_running'),
+            "run_upgrade_test": util.Property('run_upgrade_test'),
+            "old_target": util.Property('old_target'),
+            "ci_url": util.Property('ci_url')
+        }
+    )
 ]

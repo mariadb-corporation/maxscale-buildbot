@@ -9,6 +9,6 @@ if [ ! -d ./BUILD ] ; then
     cp -r default-maxscale-branch/MaxScale/BUILD .
 fi
 if [ ! -d ./BUILD/mdbci ] ; then
-    cp -r  default-maxscale-branch/MaxScale/BUILD/mdbci BUILD/
+    cp -r default-maxscale-branch/MaxScale/BUILD/mdbci BUILD/
 fi
 ./BUILD/mdbci/build.sh

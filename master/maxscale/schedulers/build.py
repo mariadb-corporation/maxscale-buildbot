@@ -1,11 +1,27 @@
+import os
 from buildbot.plugins import schedulers
 from . import properties
 from . import common
+from maxscale.config import constants
 
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="build",
-    builderNames=["build"]
+    builderNames=["build"],
+    properties={
+        "repository": constants.MAXSCALE_REPOSITORY,
+        "branch": "develop",
+        "box": constants.BOXES[0],
+        "target": 'develop',
+        "cmake_flags": constants.DEFAULT_CMAKE_FLAGS,
+        "do_not_destroy_vm": 'no',
+        "build_experimental": 'yes',
+        "repo_path": os.environ['HOME'] + "/repository",
+        "try_already_running": 'no',
+        "run_upgrade_test": 'no',
+        "old_target": "2.1.9",
+        "ci_url": constants.CI_SERVER_URL
+    }
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
