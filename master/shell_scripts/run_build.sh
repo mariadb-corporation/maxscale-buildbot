@@ -1,4 +1,5 @@
 #!/bin/bash
+set -xe
 if [ ! -d ./BUILD/mdbci ] ; then
     mkdir default-maxscale-branch
     cd default-maxscale-branch

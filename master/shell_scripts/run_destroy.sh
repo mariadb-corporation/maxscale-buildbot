@@ -1,4 +1,5 @@
 #!/bin/bash
+set -xe
 if [ "$do_not_destroy_vm" = "yes" ]; then
     echo "Config marked as undestroyable, exiting"
     exit 1
