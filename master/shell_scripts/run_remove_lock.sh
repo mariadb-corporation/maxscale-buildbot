@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xe
+
 rm -f $HOME/vagrant_lock
 if [ "$try_already_running" = "yes" ] ; then
     MDBCI_VM_PATH=${MDBCI_VM_PATH:-$HOME/vms}
