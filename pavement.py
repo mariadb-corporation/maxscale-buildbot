@@ -37,6 +37,7 @@ def buildbot(options, info):
     sh(buildbot_command, env=environment)
 # [[[endsection]]]
 
+
 # [[[section restart buildbot and development-worker]]]
 @task
 def restart_buildbot():
