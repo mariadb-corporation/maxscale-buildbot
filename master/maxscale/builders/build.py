@@ -35,13 +35,15 @@ def configure_build_properties(properties):
         "build_full_name": util.Interpolate('%(kw:job_name)s-%(kw:build_id)s',
                                             job_name=job_name, build_id=build_id),
         "name": util.Interpolate('%(prop:box)s-%(kw:job_name)s-%(kw:build_id)s',
-                                 job_name=job_name, build_id=build_id)
-
+                                 job_name=job_name, build_id=build_id),
+        "MDBCI_VM_PATH": util.Interpolate("%(prop:HOME)s/vms")
     }
 
 
 def create_build_factory():
     factory = util.BuildFactory()
+
+    factory.addStep(support.get_worker_home_directory())
 
     factory.addStep(steps.SetProperties(properties=configure_build_properties))
 

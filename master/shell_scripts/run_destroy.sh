@@ -9,4 +9,9 @@ if [ "$try_already_running" = "yes" ]; then
     exit 1
 fi
 
-$HOME/mdbci/mdbci destroy $name
+mdbci_config=$MDBCI_VM_PATH/$name
+if [ ! -e "$mdbci_config" ]; then
+    exit 0
+fi
+
+$HOME/mdbci/mdbci destroy $mdbci_config

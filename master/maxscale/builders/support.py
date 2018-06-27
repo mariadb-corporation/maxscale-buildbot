@@ -13,6 +13,11 @@ def clone_repository():
         haltOnFailure=True)
 
 
+def get_worker_home_directory():
+    """Capture worker home directory into the HOME property"""
+    return steps.SetPropertiesFromEnv(variables=["HOME"])
+
+
 def execute_shell_script(file_name, halt_on_failure=True, always_run=False, env={}):
     """Download shell script to the worker and execute it"""
     shell_script_path = util.Interpolate("%(prop:builddir)s/%(kw:path)s/%(kw:file_name)s",
@@ -32,7 +37,7 @@ def execute_shell_script(file_name, halt_on_failure=True, always_run=False, env=
         command=["sh", shell_script_path],
         haltOnFailure=halt_on_failure,
         alwaysRun=always_run,
-        env={})
+        env=env)
 
     return [download_step, run_step]
 
@@ -50,33 +55,31 @@ def clean_build_intermediates():
     steps = []
     steps.extend(destroy_virtual_machine())
     steps.extend(smart_remove_lock())
-    steps.extend(remove_lock())
     return steps
 
 
 def destroy_virtual_machine():
     """Run the VM destroy script"""
     return execute_shell_script("run_destroy.sh",
-                                halt_on_failure=True,
+                                halt_on_failure=False,
                                 always_run=True,
-                                env=env_properties("name", "do_not_destroy_vm",
-                                                   "try_already_running"))
+                                env=env_properties("name", "MDBCI_VM_PATH"))
 
 
 def smart_remove_lock():
     """Try to smartly remove lock"""
     return execute_shell_script("run_smart_remove_lock.sh",
-                                halt_on_failure=True,
+                                halt_on_failure=False,
                                 always_run=True,
-                                env=env_properties("build_full_name"))
+                                env=env_properties("build_full_name", "MDBCI_VM_PATH"))
 
 
 def remove_lock():
     """Remove lock manually"""
     return execute_shell_script("run_remove_lock.sh",
-                                halt_on_failure=True,
+                                halt_on_failure=False,
                                 always_run=True,
-                                env=env_properties("try_already_running"))
+                                env=env_properties("MDBCI_VM_PATH"))
 
 
 def env_properties(*keys):
