@@ -1,6 +1,15 @@
 #!/bin/bash
 set -xe
+
+if [ "$try_already_running" = "yes" ] ; then
+    snapshot_lock_file=${MDBCI_VM_PATH}/${box}_snapshot_lock
+    echo "Release lock for already running VM"
+    rm -f $snapshot_lock_file
+    exit 0
+fi
+
 lock_file=$HOME/vagrant_lock
+
 if [ ! -e "$lock_file" ]; then
     exit 0
 fi
@@ -12,9 +21,3 @@ if [ "$build_full_name" != "$locker" ]; then
 fi
 
 rm $HOME/vagrant_lock
-if [ "$try_already_running" = "yes" ] ; then
-    MDBCI_VM_PATH=${MDBCI_VM_PATH:-$HOME/vms}
-    snapshot_lock_file=${MDBCI_VM_PATH}/${box}_snapshot_lock
-    echo "Release lock for already running VM"
-    rm -f $snapshot_lock_file
-fi

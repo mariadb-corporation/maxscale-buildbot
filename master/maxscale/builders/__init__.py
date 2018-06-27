@@ -1,5 +1,6 @@
 import itertools
 from . import build
+from . import build_new
 from . import run_test
 from . import download_shell_scripts
 from . import destroy
@@ -15,6 +16,7 @@ from . import smart_remove_lock_snapshot
 
 MAXSCALE_BUILDERS = list(itertools.chain(
     build.BUILDERS,
+    build_new.BUILDERS,
     run_test.BUILDERS,
     download_shell_scripts.BUILDERS,
     destroy.BUILDERS,

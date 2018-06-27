@@ -1,4 +1,5 @@
 import os
+import uuid
 from buildbot.plugins import steps, util
 from . import builders_config
 
@@ -6,7 +7,7 @@ from . import builders_config
 def clone_repository():
     """Clone MaxScale repository using default configuration options"""
     return steps.Git(
-        name=util.Interpolate("Clone data from repository '%(prop:repository)s', branch '%(prop:branch)s'"),
+        name=util.Interpolate("Clone repository '%(prop:repository)s', branch '%(prop:branch)s'"),
         repourl=util.Property('repository'),
         branch=util.Property('branch'),
         mode='incremental',
@@ -34,10 +35,34 @@ def execute_shell_script(file_name, halt_on_failure=True, always_run=False, env=
 
     run_step = steps.ShellCommand(
         name="Run the '{}' script".format(file_name),
-        command=["sh", shell_script_path],
+        command=['sh', shell_script_path],
         haltOnFailure=halt_on_failure,
         alwaysRun=always_run,
         env=env)
+
+    return [download_step, run_step]
+
+
+def execute_script(name, script, halt_on_failure=True, fluke_on_falilure=False, always_run=False, env={}):
+    """Download the executable script onto the worker and execute it"""
+    shell_script_path = util.Interpolate("%(prop:builddir)s/../scripts/%(kw:file_name)s",
+                                         file_name=str(uuid.uuid4()))
+
+    download_step = steps.StringDownload(
+        script,
+        workerdest=shell_script_path,
+        name="Download executable script '{}' to the worker".format(name),
+        mode=0o755,
+        hailtOnFailure=halt_on_failure,
+        flukeOnFailure=fluke_on_falilure,
+        alwaysRun=always_run)
+
+    run_step = steps.ShellCommand(
+        name="Run the '{}' script".format(name),
+        command=[shell_script_path],
+        hailtOnFailure=halt_on_failure,
+        flukeOnFailure=fluke_on_falilure,
+        alwaysRun=always_run)
 
     return [download_step, run_step]
 
@@ -88,3 +113,28 @@ def env_properties(*keys):
     for key in keys:
         env[key] = util.Property(key)
     return env
+
+
+def destroy_virtual_machine_script():
+    """Destroy virtual machine if it was not destroied after the build"""
+    code = util.Interpolate("""
+    #!/bin/bash
+    set -xe
+
+    if [ "%(prop:do_not_destroy_vm)s" = "yes" ]; then
+        echo "Config marked as undestroyable, exiting"
+        exit 0
+    fi
+
+    if [ "%(prop:try_already_running)" = "yes" ]; then
+        echo "Config uses permanent VM, exiting"
+        exit 0
+    fi
+
+    mdbci_config=$MDBCI_VM_PATH/$name
+    if [ ! -e "$mdbci_config" ]; then
+        exit 0
+    fi
+
+    $HOME/mdbci/mdbci destroy $mdbci_config
+    """,)
