@@ -31,7 +31,7 @@ If you have installed BuildBot into the virtual environment, then you should eit
 1. Update the repository configuration.
 2. Reload buildbot configuration: `buildbot reconfig master`.
 
-## Buldworker installation notes
+## Worker installation notes
 
 1. Clone the repository or get a repository slice.
 2. Install packages that are required to run the worker: `pip3 install -r requirements-worker.txt`.
