@@ -13,3 +13,4 @@ __pycache__/
 gitpoller-work
 master.cfg.sample
 worker-dev
+worker/
