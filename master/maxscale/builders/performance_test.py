@@ -7,6 +7,7 @@ from buildbot.steps import shell
 from twisted.internet import defer
 from . import builders_config
 from . import common
+from maxscale import workers
 from maxscale.config import constants
 
 DEFAULT_PROPERTIES = {
@@ -16,6 +17,7 @@ DEFAULT_PROPERTIES = {
     "maxscale_threads": "8",
     "sysbench_threads": "128"
 }
+
 
 class PerformanceTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -125,7 +127,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="performance_test",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['test'],
         env=dict(os.environ))

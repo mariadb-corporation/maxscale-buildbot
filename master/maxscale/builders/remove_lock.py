@@ -3,11 +3,13 @@ import os
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
 from buildbot.steps import shell
+from maxscale import workers
 from . import common
 
 DEFAULT_PROPERTIES = {
     'try_already_running': 'no',
 }
+
 
 def create_factory():
     factory = util.BuildFactory()
@@ -47,7 +49,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="remove_lock",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['axilary'],
         env=dict(os.environ))

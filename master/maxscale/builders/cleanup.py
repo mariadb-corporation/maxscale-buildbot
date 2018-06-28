@@ -4,6 +4,7 @@ from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from buildbot.steps import shell
+from maxscale import workers
 from . import common
 
 
@@ -47,7 +48,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="cleanup",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['cleanup'],
         env=dict(os.environ))

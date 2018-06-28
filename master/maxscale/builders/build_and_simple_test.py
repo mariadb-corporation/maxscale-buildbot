@@ -7,6 +7,7 @@ from buildbot.process.factory import BuildFactory
 from twisted.internet import defer
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale.config import constants
+from maxscale import workers
 from . import common
 
 
@@ -21,6 +22,7 @@ DEFAULT_PROPERTIES = {
         "maxscale_threads": "8",
         "sysbench_threads": "128"
     }
+
 
 class BuildAndSimpleTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -125,7 +127,8 @@ def create_factory():
         set_properties={
             'box': 'centos_7_libvirt',
             'try_already_running': 'yes',
-            'cmake_flags': '-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y -DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y',
+            'cmake_flags': ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y '
+                            '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'),
         }
     ))
 
@@ -180,7 +183,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="build_and_simple_test",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['build', 'test'],
         env=dict(os.environ))

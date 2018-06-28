@@ -7,6 +7,7 @@ from buildbot.steps import shell
 from twisted.internet import defer
 from . import builders_config
 from . import common
+from maxscale import workers
 from maxscale.config import constants
 
 DEFAULT_PROPERTIES = {
@@ -28,6 +29,7 @@ DEFAULT_PROPERTIES = {
     "no_vm_revert": 'no',
     "template": 'default',
 }
+
 
 class RunTestSetPropertiesStep(ShellMixin, steps.BuildStep):
     name = 'Set properties'
@@ -200,7 +202,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="run_test",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['test'],
         env=dict(os.environ))

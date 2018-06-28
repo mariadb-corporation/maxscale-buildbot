@@ -4,6 +4,7 @@ from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
 from buildbot.steps import shell
 from . import common
+from maxscale import workers
 
 
 def create_factory():
@@ -54,7 +55,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="smart_remove_lock",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['axilary'],
         env=dict(os.environ))

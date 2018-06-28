@@ -4,6 +4,7 @@ from os.path import isfile, join, basename
 
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
+from maxscale import workers
 
 
 def create_factory():
@@ -24,7 +25,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="download_shell_scripts",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=[],
         env=dict(os.environ))
