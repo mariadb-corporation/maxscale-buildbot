@@ -3,6 +3,7 @@ import os
 from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
+from maxscale import workers
 
 
 def create_factory():
@@ -58,7 +59,7 @@ def create_factory():
 BUILDERS = [
     BuilderConfig(
         name="build_and_test",
-        workernames=["worker1"],
+        workernames=workers.workerNames(),
         factory=create_factory(),
         tags=['build', 'test'],
         env=dict(os.environ))
