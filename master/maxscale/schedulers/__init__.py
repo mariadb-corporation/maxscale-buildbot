@@ -1,6 +1,5 @@
 import itertools
 from . import build
-from . import build_new
 from . import run_test
 from . import download_shell_scripts
 from . import destroy
@@ -17,7 +16,6 @@ from . import smart_remove_lock_snapshot
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
     build.SCHEDULERS,
-    build_new.SCHEDULERS,
     run_test.SCHEDULERS,
     download_shell_scripts.SCHEDULERS,
     destroy.SCHEDULERS,

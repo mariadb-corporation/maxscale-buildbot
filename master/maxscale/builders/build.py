@@ -1,16 +1,16 @@
 import os
 
 from buildbot.config import BuilderConfig
-from buildbot.plugins import util, steps
+from buildbot.plugins import util
 from maxscale import workers
 from . import support
 
 
 ENVIRONMENT = {
-    "WORKSPACE": util.Property('builddir'),
-    "JOB_NAME": util.Property('JOB_NAME'),
-    "BUILD_ID": util.Property('BUILD_ID'),
-    "BUILD_NUMBER": util.Property('BUILD_ID'),
+    "JOB_NAME": util.Property("buildername"),
+    "BUILD_ID": util.Interpolate('%(prop:buildnumber)s'),
+    "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
+    "MDBCI_VM_PATH": util.Property('MDBCI_VM_PATH'),
     "box": util.Property('box'),
     "target": util.Property('target'),
     "cmake_flags": util.Property('cmake_flags'),
@@ -23,39 +23,36 @@ ENVIRONMENT = {
 }
 
 
-@util.renderer
-def configure_build_properties(properties):
-    custom_builder_id = "100"
-    build_id = util.Interpolate("%(kw:builder_id)s%(prop:buildnumber)s",
-                                builder_id=custom_builder_id)
-    job_name = 'build'
-    return {
-        "JOB_NAME": job_name,
-        "custom_builder_id": custom_builder_id,
-        "BULDR_ID": build_id,
-        "build_full_name": util.Interpolate('%(kw:job_name)s-%(kw:build_id)s',
-                                            job_name=job_name, build_id=build_id),
-        "name": util.Interpolate('%(prop:box)s-%(kw:job_name)s-%(kw:build_id)s',
-                                 job_name=job_name, build_id=build_id),
-        "MDBCI_VM_PATH": util.Interpolate("%(prop:HOME)s/vms")
-    }
+def remoteBuildMaxscale():
+    """This script will be run on the worker"""
+    if not os.path.exists("BUILD/mdbci"):
+        os.mkdir("default-maxscale-branch")
+        os.chdir("default-maxscale-branch")
+        os.system("git clone {}".format(repository))
+        os.chdir("..")
+    if not os.path.isdir("BUILD"):
+        shutil.copytree("default-maxscale-branch/MaxScale/BUILD", ".")
+    if not os.path.isdir("BUILD/mdbci"):
+        shutil.copytree("default-maxscale-branch/MaxScale/BUILD/mdbci", "BUILD/")
+    buildScript = "./BUILD/mdbci/build.sh"
+    os.execl(buildScript, buildScript)
 
 
-def create_build_factory():
+def createBuildSteps():
+    buildSteps = []
+    buildSteps.extend(support.configureMdbciVmPathProperty())
+    buildSteps.extend(support.cloneRepository())
+    buildSteps.extend(support.executePythonScript(
+        "Build MaxScale using MDBCI", remoteBuildMaxscale))
+    buildSteps.extend(support.cleanBuildDir())
+    buildSteps.extend(support.cleanBuildIntermediates())
+    return buildSteps
+
+
+def createBuildFactory():
     factory = util.BuildFactory()
-
-    factory.addStep(support.get_worker_home_directory())
-
-    factory.addStep(steps.SetProperties(properties=configure_build_properties))
-
-    factory.addStep(support.clone_repository())
-
-    factory.addSteps(support.execute_shell_script('run_build.sh'))
-
-    factory.addStep(support.clean_build_dir())
-
-    factory.addSteps(support.clean_build_intermediates())
-
+    buildSteps = createBuildSteps()
+    factory.addSteps(buildSteps)
     return factory
 
 
@@ -63,8 +60,8 @@ BUILDERS = [
     BuilderConfig(
         name="build",
         workernames=workers.workerNames(),
-        factory=create_build_factory(),
-        tags=['build'],
+        factory=createBuildFactory(),
+        tags=["build"],
         env=ENVIRONMENT
     )
 ]
