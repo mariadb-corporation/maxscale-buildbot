@@ -29,14 +29,13 @@ def remoteBuildMaxscale():
     if not os.path.exists("BUILD/mdbci"):
         os.mkdir("default-maxscale-branch")
         os.chdir("default-maxscale-branch")
-        os.system("git clone {}".format(repository))
+        subprocess.run(["git", "clone", repository])
         os.chdir("..")
     if not os.path.isdir("BUILD"):
         shutil.copytree("default-maxscale-branch/MaxScale/BUILD", ".")
     if not os.path.isdir("BUILD/mdbci"):
         shutil.copytree("default-maxscale-branch/MaxScale/BUILD/mdbci", "BUILD/")
-    buildScript = "./BUILD/mdbci/build.sh"
-    os.execl(buildScript, buildScript)
+    subprocess.run(["BUILD/mdbci/build.sh"])
 
 
 def createBuildSteps():

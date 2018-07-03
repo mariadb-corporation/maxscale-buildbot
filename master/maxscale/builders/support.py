@@ -57,7 +57,7 @@ class PythonFunctionRenderer(object):
     This class converts the passed function to the self-sufficient Python application that
     can be transferred and run on the remote server.
     """
-    __defaultModules = set(["sys", "os", "os.path", "shutil"])
+    __defaultModules = set(["sys", "os", "os.path", "shutil", "subprocess"])
 
     def __init__(self, function, modules=()):
         self.__function = function
