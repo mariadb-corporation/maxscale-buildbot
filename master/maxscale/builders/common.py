@@ -3,6 +3,7 @@ from buildbot.process.buildstep import ShellMixin
 from twisted.internet import defer
 from . import support
 
+
 def cloneRepository():
     """Clone MaxScale repository using default configuration options"""
     return [steps.Git(
