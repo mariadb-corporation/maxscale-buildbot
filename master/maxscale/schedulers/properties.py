@@ -217,10 +217,9 @@ def configuration_to_clone():
         size=50)
 
 
-def extractDefaultProperties(properties):
+def extractDefaultValues(properties):
     """Create a dictionary of properties default values"""
     defaults = {}
     for propertyDefinition in properties:
-        if propertyDefinition.default != "":
-            defaults[propertyDefinition.name] = propertyDefinition.default
+        defaults[propertyDefinition.name] = propertyDefinition.default
     return defaults

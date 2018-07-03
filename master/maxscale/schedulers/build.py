@@ -1,8 +1,8 @@
 from buildbot.plugins import schedulers
-from . import properties
 from . import common
+from . import properties
 
-buildProperties = [
+BUILD_PROPERTIES = [
     properties.build_box(),
     properties.build_target(),
     properties.cmake_flags(),
@@ -15,23 +15,23 @@ buildProperties = [
     properties.ci_url()
 ]
 
-triggerableScheduler = schedulers.Triggerable(
+TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="build",
     builderNames=["build"],
     codebases=[
         common.maxscale_codebase()
     ],
-    properties=properties.extractDefaultProperties(buildProperties)
+    properties=properties.extractDefaultValues(BUILD_PROPERTIES)
 )
 
-manualScheduler = schedulers.ForceScheduler(
+MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_force",
     buttonName="Force build",
     builderNames=["build"],
     codebases=[
         common.maxscale_codebase()
     ],
-    properties=buildProperties
+    properties=BUILD_PROPERTIES
 )
 
-SCHEDULERS = [triggerableScheduler, manualScheduler]
+SCHEDULERS = [TRIGGERABLE_SCHEDULER, MANUAL_SCHEDULER]
