@@ -4,6 +4,7 @@ from buildbot.config import BuilderConfig
 from buildbot.plugins import util
 from maxscale import workers
 from . import support
+from . import common
 
 
 ENVIRONMENT = {
@@ -40,12 +41,12 @@ def remoteBuildMaxscale():
 
 def createBuildSteps():
     buildSteps = []
-    buildSteps.extend(support.configureMdbciVmPathProperty())
-    buildSteps.extend(support.cloneRepository())
+    buildSteps.extend(common.configureMdbciVmPathProperty())
+    buildSteps.extend(common.cloneRepository())
     buildSteps.extend(support.executePythonScript(
         "Build MaxScale using MDBCI", remoteBuildMaxscale))
-    buildSteps.extend(support.cleanBuildDir())
-    buildSteps.extend(support.cleanBuildIntermediates())
+    buildSteps.extend(common.cleanBuildDir())
+    buildSteps.extend(common.cleanBuildIntermediates())
     return buildSteps
 
 
