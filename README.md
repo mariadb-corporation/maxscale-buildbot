@@ -18,13 +18,13 @@ If you have installed BuildBot into the virtual environment, then you should eit
 
 1. Clone repository or get a repository slice.
 2. Install packages that are reqired to build Python dependencies: `sudo apt install -y build-essential python3-dev`
-2. Install all Python dependencies that are needed by the buildmaster: `pip3 install -r requirements.txt`.
-3. Create or update buildmaster configuration: `buildbot upgrade-master master`
+3. Install all Python dependencies that are needed by the buildmaster: `pip3 install -r requirements.txt`.
 4. Configure mail client in `master/maxscale/config/mailer_config.py` file. The template for this file can be found in `master/maxscale/config/mailer_config_example.py` file.
 5. Configure github client in `master/maxscale/config/github_client_config.py` file. The template for this file can be found in `master/maxscale/config/github_client_config_example.py` file.
 6. Configure authorization rights for users in `master/maxscale/config/auth_config.py` file. The template for this file can be found in `master/maxscale/config/auth_config_example.py` file.
 7. Configure the list of workers that are vaiable to access buildbot master in `master/maxscale/config/workers.py` file. The template for this file can be found in `master/maxscale/config/workers_example.py` file.
-8. Start the buildmaster service: `buildbot start master`.
+8. Create or update buildmaster configuration: `buildbot upgrade-master master`
+9. Start the buildmaster service: `buildbot start master`.
 
 ## Updating Buildmaster configuration
 
