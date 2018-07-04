@@ -1,201 +1,135 @@
-import os
-
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from buildbot.process.buildstep import ShellMixin
-from buildbot.steps import shell
-from twisted.internet import defer
-from . import builders_config
-from . import common
+from . import common, support
 from maxscale import workers
-from maxscale.config import constants
 
-DEFAULT_PROPERTIES = {
-    "name": "test01",
-    "branch": "master",
-    "repository": constants.MAXSCALE_REPOSITORY,
-    "target": "develop",
-    "box": constants.BOXES[0],
-    "product": 'mariadb',
-    "version": constants.DB_VERSIONS[0],
-    "do_not_destroy_vm": 'no',
-    "test_set": "-LE HEAVY",
-    "ci_url": constants.CI_SERVER_URL,
-    "smoke": "yes",
-    "big": "yes",
-    "backend_ssl": 'no',
-    "use_snapshots": 'no',
-    "logs_dir": os.environ['HOME'] + "/LOGS",
-    "no_vm_revert": 'no',
-    "template": 'default',
+
+ENVIRONMENT = {
+    "JOB_NAME": util.Property("buildername"),
+    "BUILD_NUMBER": util.Interpolate("%(prop:buildnumber)s"),
+    "name": util.Property("name"),
+    "target": util.Property("target"),
+    "box": util.Property("box"),
+    "product": util.Property("product"),
+    "version": util.Property("version"),
+    "do_not_destroy_vm": util.Property("do_not_destroy_vm"),
+    "test_set": util.Property("test_set"),
+    "ci_url": util.Property("ci_url"),
+    "smoke": util.Property("smoke"),
+    "big": util.Property("big"),
+    "backend_ssl": util.Property("backend_ssl"),
+    "use_snapshots": util.Property("use_snapshots"),
+    "logs_dir": util.Interpolate("%(prop:HOME)s/logs_dir"),
+    "no_vm_revert": util.Property("no_vm_revert"),
+    "template": util.Property("template"),
+    "config_to_clone": util.Property("config_to_clone"),
+    "test_branch": util.Property("branch"),
 }
 
 
-class RunTestSetPropertiesStep(ShellMixin, steps.BuildStep):
-    name = 'Set properties'
-
-    def __init__(self, **kwargs):
-        kwargs = self.setupShellMixin(kwargs, prohibitArgs=['command'])
-        steps.BuildStep.__init__(self, **kwargs)
-
-    @defer.inlineCallbacks
-    def run(self):
-        # BUILD_TIMESTAMP property
-        cmd = yield self.makeRemoteShellCommand(
-            command=['date', "+%Y-%m-%d %H-%M-%S"],
-            collectStdout=True)
-        yield self.runCommand(cmd)
-        self.setProperty('BUILD_TIMESTAMP', cmd.stdout[0:-1], 'setProperties')
-        # SHELL_SCRIPTS_PATH property
-        cmd = yield self.makeRemoteShellCommand(
-            command='echo "`pwd`/{}"'.format(builders_config.WORKER_SHELL_SCRIPTS_RELATIVE_PATH),
-            collectStdout=True)
-        yield self.runCommand(cmd)
-        self.setProperty('SHELL_SCRIPTS_PATH', cmd.stdout[0:-1], 'setProperties')
-        # WORKSPACE property
-        cmd = yield self.makeRemoteShellCommand(
-            command='pwd',
-            collectStdout=True)
-        yield self.runCommand(cmd)
-        self.setProperty('WORKSPACE', cmd.stdout[0:-1], 'setProperties')
-        # JOB_NAME property
-        self.setProperty('JOB_NAME', 'run_test', 'setProperties')
-        # custom_builder_id property
-        self.setProperty('custom_builder_id', '101', 'setProperties')
-        # BUILD_ID property
-        self.setProperty(
-            'BUILD_ID',
-            "{}{}".format(self.getProperty('custom_builder_id'),
-                          self.getProperty('buildnumber')),
-            'setProperties'
-        )
-        defer.returnValue(0)
+@util.renderer
+def configureCommonProperties(properties):
+    return {
+        "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
+        "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
+        "jsonResutlsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
+        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s")
+    }
 
 
-def create_factory():
+def remoteRunTestAndLog():
+    """Run tests and save results to the log file"""
+    if not os.path.exists("maxscale-system-test/mdbci"):
+        os.mkdir("default-maxscale-branch")
+        subprocess.run(["git", "clone", repository, "default-maxscale-branch/MaxScale"])
+        shutil.copytree("default-maxscale-branch/MaxScale/maxscale-system-test/mdbci", "maxscale-system-test")
+
+    logFile = open(buildLogFile, "w")
+    process = subprocess.Popen(["maxscale-system-test/mdbci/run_test.sh"], stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT, universal_newlines=True)
+    for line in process.stdout:
+        sys.stdout.write(line)
+        logFile.write(line)
+    process.wait()
+    logFile.close()
+
+    testLogFile = open(resultFile, "w")
+    testLogFile.write(str(process.returncode))
+    testLogFile.close()
+    sys.exit(process.returncode)
+
+
+def remoteParseCtestLogAndStoreIt():
+    """Parse ctest results and store them in the LOGS directory"""
+    buildId = "{}-{}".format(buildername, buildnumber)
+    outputDirectory = os.path.join(builddir, buildId, "ctest_sublogs")
+    subprocess.run([os.path.join(HOME, "/mdbci/scripts/build_parser/parse_ctest_log.rb"),
+                    "-l", buildLogFile,
+                    "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
+                    "-r", "-f",
+                    "-j", jsonResultsFile,
+                    "-s", outputDirectory])
+
+    storeDirectory = os.path.join(HOME, "LOGS", buildId, "LOGS")
+    for logDirectory in os.listdir(outputDirectory):
+        targetDirectory = os.path.join(storeDirectory, logDirectory)
+        os.makedirs(targetDirectory, exist_ok=True)
+        shutil.copy(os.path.join(outputDirectory, logDirectory, "ctest_sublog"), targetDirectory)
+
+
+def remoteStoreCoredumps():
+    """Find the coredumps and store them in the LOGS directory"""
+    result = subprocess.check_output(
+        [os.path.join(HOME, "/mdbci/scripts/build_parser/coredump_finder.sh"),
+         "{}-{}".format(buildername, buildnumber), "url"])
+    coredumpLogFile = open(os.path.join(builddir, "coredumps_{}".format(buildnumber)), "w")
+    coredumpLogFile.write("COREDUMPS \\\n")
+    if result == "":
+        coredumpLogFile.write("Coredumps were not found for build {}".format(buildnumber))
+    else:
+        for dump in result.split("\n"):
+            coredumpLogFile.write("{} \\\n".format(dump))
+    buildId = "{}-{}".format(buildername, buildnumber)
+    shutil.copy(buildLogFile, os.path.join(HOME, "LOGS", buildId))
+
+
+def writeBuildResultsToDatabase():
+    """Call the script to save results to the database"""
+    return steps.ShellCommand(
+        name="Save test results to the database",
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/write_build_results.rb"),
+                 "-f", util.Property("jsonResultsFile")])
+
+
+def uploadTestRunsToReportPortal():
+    """Save test results to the report portal"""
+    return steps.ShellCommand(
+        name="Send test results to the Report Portal",
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/report_portal/bin/upload_testrun.rb"),
+                 util.Property("jsonResultsFile"),
+                 util.Interpolate("%(prop:HOME)s/report-portal-config.yml")])
+
+
+def createRunTestSteps():
+    testSteps = []
+    testSteps.extend(common.configureMdbciVmPathProperty())
+    testSteps.extend(common.cloneRepository())
+    testSteps.append(steps.SetProperties(properties=configureCommonProperties))
+    testSteps.extend(support.executePythonScript(
+        "Run MaxScale tests using MDBCI", remoteRunTestAndLog))
+    testSteps.extend(support.executePythonScript(
+        "Parse ctest results log and save it to logs directory", remoteParseCtestLogAndStoreIt))
+    testSteps.append(writeBuildResultsToDatabase())
+    testSteps.append(uploadTestRunsToReportPortal())
+    testSteps.extend(common.destroyVirtualMachine())
+    testSteps.extend(common.removeLock())
+    return testSteps
+
+
+def createTestFactory():
     factory = util.BuildFactory()
-
-    factory.addStep(common.SetDefaultPropertiesStep(default_properties=DEFAULT_PROPERTIES, haltOnFailure=True))
-
-    factory.addStep(RunTestSetPropertiesStep(haltOnFailure=True))
-
-    factory.addStep(steps.Trigger(
-        name="Call the 'download_shell_scripts' scheduler",
-        schedulerNames=['download_shell_scripts'],
-        waitForFinish=True,
-        haltOnFailure=True,
-        copy_properties=['SHELL_SCRIPTS_PATH']
-    ))
-    factory.addStep(shell.SetProperty(
-        name="Set the 'env' property",
-        command="bash -c env",
-        haltOnFailure=True,
-        extract_fn=common.save_env_to_property,
-        env={
-            "WORKSPACE": util.Property('WORKSPACE'),
-            "JOB_NAME": util.Property('JOB_NAME'),
-            "BUILD_ID": util.Property('BUILD_ID'),
-            "BUILD_NUMBER": util.Property('BUILD_ID'),
-            "BUILD_TIMESTAMP": util.Property('BUILD_TIMESTAMP'),
-            "BUILD_LOG_PARSING_RESULT": 'Build log parsing finished with an error',
-            "name": util.Property('name'),
-            "target": util.Property('target'),
-            "box": util.Property('box'),
-            "product": util.Property('product'),
-            "version": util.Property('version'),
-            "do_not_destroy_vm": util.Property('do_not_destroy_vm'),
-            "test_set": util.Property('test_set'),
-            "ci_url": util.Property('ci_url'),
-            "smoke": util.Property('smoke'),
-            "big": util.Property('big'),
-            "backend_ssl": util.Property('backend_ssl'),
-            "use_snapshots": util.Property('use_snapshots'),
-            "logs_dir": util.Property('logs_dir'),
-            "no_vm_revert": util.Property('no_vm_revert'),
-            "template": util.Property('template'),
-            "config_to_clone": util.Property('config_to_clone'),
-            "test_branch": util.Property('branch'),
-        }))
-
-    factory.addStep(steps.Git(
-        repourl=util.Property('repository'),
-        mode='incremental',
-        branch=util.Property('branch'),
-        haltOnFailure=True))
-
-    # Run test and collect
-    factory.addStep(steps.ShellCommand(
-        name="Run the 'run_test_and_collect.sh' script",
-        command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/run_test_and_collect.sh')],
-        haltOnFailure=True,
-        env=util.Property('env')))
-
-    # Parse build log
-    factory.addStep(steps.ShellCommand(
-        name="Run the 'parse_build_log.sh' script",
-        command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/parse_build_log.sh')],
-        haltOnFailure=True,
-        env=util.Property('env')))
-
-    # Create env coredumps
-    factory.addStep(steps.ShellCommand(
-        name="Run the 'create_env_coredumps.sh' script",
-        command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/create_env_coredumps.sh')],
-        haltOnFailure=True,
-        env=util.Property('env')))
-
-    # Write build results
-    factory.addStep(steps.ShellCommand(
-        name="Run the 'write_build_results.sh' script",
-        command=['sh', util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/write_build_results.sh')],
-        haltOnFailure=True,
-        env=util.Property('env')))
-
-    # Publish report portal
-    factory.addStep(steps.ShellCommand(
-        name="Run the 'publish_report_portal.sh' script",
-        command=[
-            'sh',
-            util.Interpolate('%(prop:SHELL_SCRIPTS_PATH)s/publish_report_portal.sh')
-        ],
-        haltOnFailure=True,
-        env=util.Property('env')))
-
-    # Save the '$WORKSPACE/results_$BUILD_ID' content to the 'build_results_content' property
-    factory.addStep(shell.SetProperty(
-        name="Save the '$WORKSPACE/results_$BUILD_ID' content to the 'build_results_content' property",
-        property="build_results_content",
-        command=util.Interpolate("cat %(prop:WORKSPACE)s/results_%(prop:BUILD_ID)s"),
-        haltOnFailure=True, ))
-
-    # Save the '$WORKSPACE/coredumps_$BUILD_ID' content to the 'coredumps_results_content' property
-    factory.addStep(shell.SetProperty(
-        name="Save the '$WORKSPACE/coredumps_$BUILD_ID' content to the 'coredumps_results_content' property",
-        property="coredumps_results_content",
-        command=util.Interpolate("cat %(prop:WORKSPACE)s/coredumps_%(prop:BUILD_ID)s"),
-        haltOnFailure=True, ))
-
-    # Workspace cleanup
-    factory.addStep(steps.ShellCommand(
-        name="Workspace cleanup",
-        command=common.clean_workspace_command,
-        alwaysRun=True,
-        env=util.Property('env')))
-
-    factory.addStep(steps.Trigger(
-        name="Call the 'cleanup' scheduler",
-        schedulerNames=['cleanup'],
-        waitForFinish=True,
-        alwaysRun=True,
-        copy_properties=[
-            "name",
-            "do_not_destroy_vm",
-            "box",
-        ],
-        set_properties={
-            "build_full_name": util.Interpolate('%(prop:JOB_NAME)s-%(prop:BUILD_ID)s')}
-    ))
-
+    testSteps = createRunTestSteps()
+    factory.addSteps(testSteps)
     return factory
 
 
@@ -203,7 +137,7 @@ BUILDERS = [
     BuilderConfig(
         name="run_test",
         workernames=workers.workerNames(),
-        factory=create_factory(),
-        tags=['test'],
-        env=dict(os.environ))
+        factory=createTestFactory(),
+        tags=["test"],
+        env=ENVIRONMENT)
 ]
