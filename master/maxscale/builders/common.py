@@ -18,7 +18,7 @@ def cleanBuildDir():
     """Clean the build directory after the worker have completed the task"""
     return [steps.ShellCommand(
         name="Clean build directory using 'git clean -fd'",
-        command=["git", "clean", "-fd"],
+        command=["rm", "-rf", util.Property('builddir')],
         alwaysRun=True)]
 
 
