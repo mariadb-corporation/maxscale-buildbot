@@ -67,9 +67,17 @@ class PythonFunctionRenderer(object):
         """Construct remote Python script"""
         code = ["#!/usr/bin/env python3"]
         code.extend(self.__renderModules())
+        code.extend(self.__printScriptContents())
         code.extend(self.__renderProperties(properties))
         code.extend(self.__convertFunctionToStrings())
         return "\n".join(code)
+
+    def __printScriptContents(self):
+        """Method adds a code to print the script contents when running it"""
+        return ["__script = open(sys.argv[0], \"r\")",
+                "for number, line in enumerate(__script.readlines(), start=1):",
+                "    print(\"{:>5}: {}\".format(number, line.rstrip()))",
+                "__script.close()"]
 
     def __renderProperties(self, properties):
         """Get all the properties from the build and insert them into the remote code."""
