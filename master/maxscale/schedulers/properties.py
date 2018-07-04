@@ -63,7 +63,7 @@ def repository_path():
         name="repo_path",
         label="Repository path",
         size=50,
-        default=os.environ['HOME'] + "/repository")
+        default="repository")
 
 
 def try_already_running():
@@ -183,7 +183,7 @@ def test_logs_directory():
         name="logs_dir",
         label="Logs dir",
         size=50,
-        default=os.environ['HOME'] + "/LOGS")
+        default="LOGS")
 
 
 def do_not_revert_virtual_machines():
