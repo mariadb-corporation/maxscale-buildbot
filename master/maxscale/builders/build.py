@@ -1,7 +1,7 @@
 import os
 
 from buildbot.config import BuilderConfig
-from buildbot.plugins import util
+from buildbot.plugins import util, steps
 from maxscale import workers
 from . import support
 from . import common
@@ -24,6 +24,12 @@ ENVIRONMENT = {
 }
 
 
+@util.renderer
+def configureBuildProperties(properties):
+    return {
+        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s%(prop:buildnumber)s")
+    }
+
 def remoteBuildMaxscale():
     """This script will be run on the worker"""
     if not os.path.exists("BUILD/mdbci"):
@@ -35,17 +41,20 @@ def remoteBuildMaxscale():
         shutil.copytree("default-maxscale-branch/MaxScale/BUILD", ".")
     if not os.path.isdir("BUILD/mdbci"):
         shutil.copytree("default-maxscale-branch/MaxScale/BUILD/mdbci", "BUILD/")
-    subprocess.run(["BUILD/mdbci/build.sh"])
+    results = subprocess.run(["BUILD/mdbci/build.sh"])
+    sys.exit(results.returncode)
 
 
 def createBuildSteps():
     buildSteps = []
     buildSteps.extend(common.configureMdbciVmPathProperty())
+    buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
     buildSteps.extend(common.cloneRepository())
     buildSteps.extend(support.executePythonScript(
         "Build MaxScale using MDBCI", remoteBuildMaxscale))
     buildSteps.extend(common.cleanBuildDir())
-    buildSteps.extend(common.cleanBuildIntermediates())
+    buildSteps.extend(common.destroyVirtualMachine())
+    buildSteps.extend(common.removeSnapshotLock())
     return buildSteps
 
 

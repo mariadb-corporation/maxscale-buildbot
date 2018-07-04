@@ -52,27 +52,23 @@ def cleanBuildIntermediates():
 def destroyVirtualMachine():
     """Destroy virtual machine if it was not destroied after the build"""
     def remoteCode():
-        if do_not_destroy_vm == "yes":
-            print("Build VMs marked as undestroyable, doing nothing")
-            sys.exit(0)
-
-        if try_already_running == "yes":
-            print("Build uses permanent VMs, doing nothing")
-            sys.exit(0)
-
-        mdbciConfig = "{}/{}-{}{}".format(MDBCI_VM_PATH, box, buildername, buildnumber)
         if not os.path.exists(mdbciConfig):
             print("MDBCI configuration does not exist")
             sys.exit(0)
 
         os.system("$HOME/mdbci/mdbci destroy {}".format(mdbciConfig))
 
+    def shouldRun(step):
+        if step.getProperty("try_already_running") == "yes" or step.getProperty("do_not_destroy_vm") == "yes":
+            return False
+        return True
+
     return support.executePythonScript(
         "Destroy leftover virtual machines", remoteCode,
-        haltOnFailure=False, alwaysRun=True)
+        haltOnFailure=False, alwaysRun=True, doStepIf=shouldRun)
 
 
-def removeLock():
+def removeSnapshotLock():
     """Remove vagrant lock if it was left by the build script"""
     def remoteCode():
         if try_already_running == "yes":
@@ -80,6 +76,28 @@ def removeLock():
             os.remove("{}/{}_snpashot_lock".format(MDBCI_VM_PATH, box))
             sys.exit(0)
 
+        lockFile = "{}/vagrant_lock".format(HOME)
+        if not os.path.exists(lockFile):
+            print("Lock file {} does not exist, doing nothing".format(lockFile))
+            sys.exit(0)
+
+        buildFullName = "{}-{}".format(buildername, buildnumber)
+        lockerSource = open(lockFile).read()
+        if lockerSource != buildFullName:
+            print("Lock file was crated not by the current task, {} != {}, doing nothing".
+                  format(buildFullName, lockerSource))
+            sys.exit(0)
+
+        os.remove(lockFile)
+
+    return support.executePythonScript(
+        "Remove leftover vagrant locks", remoteCode,
+        haltOnFailure=False, alwaysRun=True)
+
+
+def removeLock():
+    """Remove vagrant lock if it was left by the build script"""
+    def remoteCode():
         lockFile = "{}/vagrant_lock".format(HOME)
         if not os.path.exists(lockFile):
             print("Lock file {} does not exist, doing nothing".format(lockFile))
