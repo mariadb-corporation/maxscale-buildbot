@@ -63,7 +63,7 @@ def remoteParseCtestLogAndStoreIt():
     """Parse ctest results and store them in the LOGS directory"""
     buildId = "{}-{}".format(buildername, buildnumber)
     outputDirectory = os.path.join(builddir, buildId, "ctest_sublogs")
-    subprocess.run([os.path.join(HOME, "/mdbci/scripts/build_parser/parse_ctest_log.rb"),
+    subprocess.run([os.path.join(HOME, "mdbci/scripts/build_parser/parse_ctest_log.rb"),
                     "-l", buildLogFile,
                     "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
                     "-r", "-f",
@@ -80,7 +80,7 @@ def remoteParseCtestLogAndStoreIt():
 def remoteStoreCoredumps():
     """Find the coredumps and store them in the LOGS directory"""
     result = subprocess.check_output(
-        [os.path.join(HOME, "/mdbci/scripts/build_parser/coredump_finder.sh"),
+        [os.path.join(HOME, "mdbci/scripts/build_parser/coredump_finder.sh"),
          "{}-{}".format(buildername, buildnumber), "url"])
     coredumpLogFile = open(os.path.join(builddir, "coredumps_{}".format(buildnumber)), "w")
     coredumpLogFile.write("COREDUMPS \\\n")
