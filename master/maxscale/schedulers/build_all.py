@@ -11,7 +11,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
         common.maxscale_codebase()
     ],
     properties=[
-        properties.nestedCheckboxes(),
+        properties.buildBoxCheckboxContainer(),
         properties.build_target(),
         properties.cmake_flags(),
         properties.keep_virtual_machines(),

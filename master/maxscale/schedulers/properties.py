@@ -225,9 +225,10 @@ def extractDefaultValues(properties):
     return defaults
 
 
-def nestedCheckboxes():
+def buildBoxCheckboxContainer():
+    """Creates a parameter which contains checkboxes for each OS presented in the BOXES array"""
     return util.NestedParameter(
-        name="nested_boxes",
+        name="build_box_checkbox_container",
         label="Build boxes",
         maxsize=300,
         columns=1,
@@ -235,6 +236,7 @@ def nestedCheckboxes():
 
 
 def buildBoxCheckbox(box):
+    """Creates a checkbox parameter for a given box"""
     return util.BooleanParameter(
         name="{}_box".format(box),
         label=box,

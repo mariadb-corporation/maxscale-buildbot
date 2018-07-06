@@ -20,16 +20,21 @@ ENVIRONMENT = {
 }
 
 
-def getCheckboxValue(box):
+def getCheckboxProperty(box):
+    """Returns Property object from a nested parameter for a given box"""
     @util.renderer
     def getCheckbox(properties):
-        nested_boxes = properties.getProperty("nested_boxes")
+        nested_boxes = properties.getProperty("build_box_checkbox_container")
         return nested_boxes["{}_box".format(box)]
 
     return getCheckbox
 
 
 def createBuildFactory():
+    """
+    Creates build factory containing steps
+    which triggers build scheduler for each chosen box
+    """
     factory = util.BuildFactory()
     for box in constants.BOXES:
         factory.addStep(steps.Trigger(
@@ -38,7 +43,7 @@ def createBuildFactory():
             haltOnFailure=True,
             alwaysRun=True,
             waitForFinish=False,
-            doStepIf=getCheckboxValue(box),
+            doStepIf=getCheckboxProperty(box),
             copy_properties=[
                 "name",
                 "repository",
