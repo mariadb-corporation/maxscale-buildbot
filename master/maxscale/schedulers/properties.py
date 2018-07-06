@@ -223,3 +223,19 @@ def extractDefaultValues(properties):
     for propertyDefinition in properties:
         defaults[propertyDefinition.name] = propertyDefinition.default
     return defaults
+
+
+def nestedCheckboxes():
+    return util.NestedParameter(
+        name="nested_boxes",
+        label="Build boxes",
+        maxsize=300,
+        columns=1,
+        fields=[buildBoxCheckbox(box) for box in constants.BOXES])
+
+
+def buildBoxCheckbox(box):
+    return util.BooleanParameter(
+        name="{}_box".format(box),
+        label=box,
+        default=True)
