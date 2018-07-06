@@ -36,7 +36,7 @@ def createBuildFactory():
     which triggers build scheduler for each chosen box
     """
     factory = util.BuildFactory()
-    for box in constants.BOXES:
+    for box in constants.BUILD_ALL_BOXES:
         factory.addStep(steps.Trigger(
             name=box,
             schedulerNames=['build_all_subtask'],

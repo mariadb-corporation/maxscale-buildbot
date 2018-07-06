@@ -226,13 +226,16 @@ def extractDefaultValues(properties):
 
 
 def buildBoxCheckboxContainer():
-    """Creates a parameter which contains checkboxes for each OS presented in the BOXES array"""
+    """
+    Creates a parameter which contains checkboxes
+    for each OS presented in the BUILD_ALL_BOXES array
+    """
     return util.NestedParameter(
         name="build_box_checkbox_container",
         label="Build boxes",
         maxsize=300,
         columns=1,
-        fields=[buildBoxCheckbox(box) for box in constants.BOXES])
+        fields=[buildBoxCheckbox(box) for box in constants.BUILD_ALL_BOXES])
 
 
 def buildBoxCheckbox(box):

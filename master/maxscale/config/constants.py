@@ -38,6 +38,20 @@ BOXES = [
     'fedora_23_aws'
 ]
 
+BUILD_ALL_BOXES = [
+    "centos_7_libvirt",
+    "centos_6_libvirt",
+    "ubuntu_trusty_libvirt",
+    "ubuntu_xenial_libvirt",
+    "ubuntu_bionic_libvirt",
+    "debian_wheezy_libvirt",
+    "debian_jessie_libvirt",
+    "debian_stretch_libvirt",
+    "sles_12_aws",
+    "rhel_6_aws",
+    "rhel_7_aws"
+]
+
 DB_VERSIONS = [
     '10.2',
     '10.3',
