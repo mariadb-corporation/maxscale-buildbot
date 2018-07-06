@@ -155,28 +155,6 @@ def create_factory():
         }
     ))
 
-    factory.addStep(steps.Trigger(
-        name="Call the 'performance_test' scheduler. Run performance tests",
-        schedulerNames=['performance_test'],
-        waitForFinish=True,
-        copy_properties=[
-            "repository",
-            "branch",
-            "build_experimental",
-            "product",
-            "version",
-            "do_not_destroy_vm",
-            "test_set",
-            "ci_url",
-            "backend_ssl",
-            "sysbench_threads",
-            "maxscale_threads",
-            "try_already_running"],
-        set_properties={
-            'target': util.Interpolate("%(prop:target)s-perf")
-        }
-    ))
-
     return factory
 
 

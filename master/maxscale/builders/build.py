@@ -30,6 +30,7 @@ def configureBuildProperties(properties):
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s%(prop:buildnumber)s")
     }
 
+
 def remoteBuildMaxscale():
     """This script will be run on the worker"""
     if not os.path.exists("BUILD/mdbci"):
