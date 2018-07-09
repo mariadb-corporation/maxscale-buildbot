@@ -29,8 +29,6 @@ def createBuildFactory():
     factory.addStep(BuildAllTrigger(
         name="build_all",
         schedulerNames=['build_all_subtask'],
-        haltOnFailure=True,
-        alwaysRun=True,
         waitForFinish=True,
         copy_properties=[
             "name",
