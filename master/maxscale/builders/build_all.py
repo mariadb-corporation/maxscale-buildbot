@@ -2,22 +2,7 @@ from buildbot.config import BuilderConfig
 from buildbot.plugins import util
 from maxscale import workers
 from .build_all_trigger import BuildAllTrigger
-
-
-ENVIRONMENT = {
-    "JOB_NAME": util.Property("buildername"),
-    "BUILD_ID": util.Interpolate('%(prop:buildnumber)s'),
-    "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
-    "MDBCI_VM_PATH": util.Property('MDBCI_VM_PATH'),
-    "target": util.Property('target'),
-    "cmake_flags": util.Property('cmake_flags'),
-    "do_not_destroy_vm": util.Property('do_not_destroy_vm'),
-    "build_experimental": util.Property('build_experimental'),
-    "try_already_running": util.Property('try_already_running'),
-    "run_upgrade_test": util.Property('run_upgrade_test'),
-    "old_target": util.Property('old_target'),
-    "ci_url": util.Property('ci_url')
-}
+from .build import ENVIRONMENT
 
 
 def createBuildFactory():
