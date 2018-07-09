@@ -241,6 +241,6 @@ def buildBoxCheckboxContainer():
 def buildBoxCheckbox(box):
     """Creates a checkbox parameter for a given box"""
     return util.BooleanParameter(
-        name="{}_box".format(box),
+        name=box,
         label=box,
         default=True)

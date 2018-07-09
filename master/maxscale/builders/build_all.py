@@ -1,7 +1,7 @@
 from buildbot.config import BuilderConfig
-from buildbot.plugins import util, steps
+from buildbot.plugins import util
 from maxscale import workers
-from maxscale.config import constants
+from .build_all_trigger import BuildAllTrigger
 
 
 ENVIRONMENT = {
@@ -20,47 +20,38 @@ ENVIRONMENT = {
 }
 
 
-def getCheckboxProperty(box):
-    """Returns Property object from a nested parameter for a given box"""
-    @util.renderer
-    def getCheckbox(properties):
-        nested_boxes = properties.getProperty("build_box_checkbox_container")
-        return nested_boxes["{}_box".format(box)]
-
-    return getCheckbox
-
-
 def createBuildFactory():
     """
     Creates build factory containing steps
     which triggers build scheduler for each chosen box
     """
     factory = util.BuildFactory()
-    for box in constants.BUILD_ALL_BOXES:
-        factory.addStep(steps.Trigger(
-            name=box,
-            schedulerNames=['build_all_subtask'],
-            haltOnFailure=True,
-            alwaysRun=True,
-            waitForFinish=False,
-            doStepIf=getCheckboxProperty(box),
-            copy_properties=[
-                "name",
-                "repository",
-                "branch",
-                "target",
-                "build_experimental",
-                "product",
-                "version",
-                "cmake_flags"
-                "do_not_destroy_vm",
-                "try_already_running",
-                "test_set",
-                "ci_url",
-                "smoke",
-                "big"],
-            set_properties={'box': box}
-        ))
+    factory.addStep(BuildAllTrigger(
+        name="build_all",
+        schedulerNames=['build_all_subtask'],
+        haltOnFailure=True,
+        alwaysRun=True,
+        waitForFinish=True,
+        copy_properties=[
+            "name",
+            "repository",
+            "branch",
+            "build_box_checkbox_container",
+            "target",
+            "build_experimental",
+            "product",
+            "version",
+            "cmake_flags"
+            "do_not_destroy_vm",
+            "try_already_running",
+            "test_set",
+            "ci_url",
+            "smoke",
+            "big"],
+        set_properties={
+            "virtual_builder_name": "virtual_build"
+        }
+    ))
     return factory
 
 
