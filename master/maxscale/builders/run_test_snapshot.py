@@ -6,7 +6,7 @@ from buildbot.process.buildstep import ShellMixin
 from buildbot.steps import shell
 from twisted.internet import defer
 from . import builders_config
-from . import common
+from maxscale.builders.support import common
 from maxscale import workers
 from maxscale.config import constants
 

@@ -1,7 +1,7 @@
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util
 from maxscale import workers
-from .build_all_trigger import BuildAllTrigger
+from maxscale.builders.support.support import BuildAllTrigger
 from .build import ENVIRONMENT
 
 

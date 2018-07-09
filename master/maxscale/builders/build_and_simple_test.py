@@ -8,8 +8,7 @@ from twisted.internet import defer
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale.config import constants
 from maxscale import workers
-from . import common
-
+from maxscale.builders.support import common
 
 DEFAULT_PROPERTIES = {
         "build_experimental": "yes",

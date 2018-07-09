@@ -3,9 +3,7 @@ import os
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
-from . import support
-from . import common
-
+from maxscale.builders.support import common, support
 
 ENVIRONMENT = {
     "JOB_NAME": util.Property("buildername"),

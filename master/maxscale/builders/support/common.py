@@ -1,7 +1,7 @@
 from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
 from twisted.internet import defer
-from . import support
+from maxscale.builders.support import support
 
 
 def cloneRepository():

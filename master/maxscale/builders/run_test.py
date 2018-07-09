@@ -1,6 +1,6 @@
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from . import common, support
+from maxscale.builders.support import common, support
 from maxscale import workers
 
 
