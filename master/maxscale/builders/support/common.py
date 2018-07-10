@@ -86,7 +86,7 @@ def removeSnapshotLock():
         if lockerSource.strip() != buildFullName:
             print("Lock file was crated not by the current task, {} != {}, doing nothing".
                   format(buildFullName, lockerSource))
-            sys.exit(1)
+            sys.exit(0)
 
         os.remove(lockFile)
 
