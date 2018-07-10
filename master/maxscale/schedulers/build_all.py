@@ -1,4 +1,5 @@
 from buildbot.plugins import schedulers
+from maxscale.schedulers.build import BUILD_PROPERTIES
 from . import properties
 from . import common
 
@@ -10,19 +11,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     codebases=[
         common.maxscale_codebase()
     ],
-    properties=[
-        properties.buildBoxCheckboxContainer(),
-        properties.build_target(),
-        properties.cmake_flags(),
-        properties.keep_virtual_machines(),
-        properties.build_experimental_features(),
-        properties.repository_path(),
-        properties.try_already_running(),
-        properties.run_upgrade_test(),
-        properties.old_target(),
-        properties.ci_url()
-    ]
+    properties=[properties.buildBoxCheckboxContainer()] + BUILD_PROPERTIES[1:]
 )
-
 
 SCHEDULERS = [MANUAL_SCHEDULER]
