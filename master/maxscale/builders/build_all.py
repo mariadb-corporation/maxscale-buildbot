@@ -32,7 +32,7 @@ def createBuildFactory():
             "smoke",
             "big"],
         set_properties={
-            "virtual_builder_name": "virtual_build"
+            "virtual_builder_name": "build"
         }
     ))
     return factory
