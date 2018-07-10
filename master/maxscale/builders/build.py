@@ -25,7 +25,7 @@ ENVIRONMENT = {
 @util.renderer
 def configureBuildProperties(properties):
     return {
-        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s%(prop:buildnumber)s")
+        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s")
     }
 
 
