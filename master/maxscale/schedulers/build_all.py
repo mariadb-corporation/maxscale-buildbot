@@ -18,6 +18,9 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 
 SCHEDULERS = [MANUAL_SCHEDULER]
 
+# Add schedulers for every active branch to be built every night
+# The list of branches is defined by constants.NIGHTLY_SCHEDS 
+# (see maxscale/config/constants.py)
 for branch in constants.NIGHTLY_SCHEDS:
     NIGHTLY_PROPERTIES = properties.extractDefaultValues(BUILD_ALL_PROPERTIES)
     del NIGHTLY_PROPERTIES['target']
