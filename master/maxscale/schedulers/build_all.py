@@ -16,18 +16,25 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=BUILD_ALL_PROPERTIES
 )
 
-NIGHTLY_22_SCHEDULER = schedulers.Nightly(
-    name='nightly_22',
-    branch='2.2',
-    builderNames=['build_all'],
-    hour=14, minute=6,
-    codebases={
-        'codebase1': {
-            'branch': '2.2',
-            'repository': constants.MAXSCALE_REPOSITORY
-        }
-    },
-    properties=properties.extractDefaultValues(BUILD_ALL_PROPERTIES)
-)
+SCHEDULERS = [MANUAL_SCHEDULER]
 
-SCHEDULERS = [MANUAL_SCHEDULER, NIGHTLY_22_SCHEDULER]
+for branch in constants.NIGHTLY_SCHEDS:
+    NIGHTLY_PROPERTIES = properties.extractDefaultValues(BUILD_ALL_PROPERTIES)
+    del NIGHTLY_PROPERTIES['target']
+    NIGHTLY_PROPERTIES['target'] = branch
+
+    NIGHTLY_SCHEDULER = schedulers.Nightly(
+        name=branch,
+        builderNames=['build_all'],
+        hour=4, minute=0,
+        codebases={
+            'codebase1': {
+                'branch': branch,
+                'repository': constants.MAXSCALE_REPOSITORY
+            }
+        },
+        properties=NIGHTLY_PROPERTIES
+        )
+    SCHEDULERS.append(NIGHTLY_SCHEDULER)
+    continue
+
