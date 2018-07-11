@@ -3,6 +3,7 @@ from maxscale.schedulers.build import BUILD_PROPERTIES
 from . import properties
 from . import common
 
+BUILD_ALL_PROPERTIES = [properties.buildBoxCheckboxContainer()] + BUILD_PROPERTIES[1:]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_all",
@@ -11,7 +12,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     codebases=[
         common.maxscale_codebase()
     ],
-    properties=[properties.buildBoxCheckboxContainer()] + BUILD_PROPERTIES[1:]
+    properties=BUILD_ALL_PROPERTIES
 )
 
 SCHEDULERS = [MANUAL_SCHEDULER]
