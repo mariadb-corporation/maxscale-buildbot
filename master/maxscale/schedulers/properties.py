@@ -235,7 +235,8 @@ def buildBoxCheckboxContainer():
         label="Build boxes",
         maxsize=300,
         columns=1,
-        fields=[buildBoxCheckbox(box) for box in constants.BUILD_ALL_BOXES])
+        fields=[buildBoxCheckbox(box) for box in constants.BUILD_ALL_BOXES],
+        default=dict((box, True) for box in constants.BUILD_ALL_BOXES))
 
 
 def buildBoxCheckbox(box):

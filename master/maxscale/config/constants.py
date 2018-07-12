@@ -71,3 +71,6 @@ DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y'
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
 
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
+
+# Define branches for nightly build_all builds
+NIGHTLY_SCHEDS = ['2.2', 'develop', '2.1']
