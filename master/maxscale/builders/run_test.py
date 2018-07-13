@@ -48,9 +48,10 @@ def remoteRunScriptAndLog():
         shutil.copytree("default-maxscale-branch/MaxScale/maxscale-system-test/mdbci", "maxscale-system-test")
 
     logFile = open(buildLogFile, "w")
-    process = subprocess.Popen(["maxscale-system-test/mdbci/{}".format(script_name)], stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT, universal_newlines=True)
-    for line in process.stdout:
+    process = subprocess.Popen(["maxscale-system-test/mdbci/{}".format(script_name)],
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for byteLine in process.stdout:
+        line = byteLine.decode("utf-8")
         sys.stdout.write(line)
         logFile.write(line)
     process.wait()
