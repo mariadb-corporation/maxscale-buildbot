@@ -69,29 +69,27 @@ def destroyVirtualMachine():
 
 
 def removeSnapshotLock():
-    """Remove vagrant lock if it was left by the build script"""
+    """
+    Compares $build_full_name and $HOME/mdbci/${name}_snapshot_lock content
+    and calls remove lock if they are equal
+    """
     def remoteCode():
-        if try_already_running == "yes":
-            print("Releasing lock for already running VM")
-            os.remove("{}/{}_snpashot_lock".format(MDBCI_VM_PATH, box))
-            sys.exit(0)
-
-        lockFile = "{}/vagrant_lock".format(HOME)
+        lockFile = "{}/{}_snapshot_lock".format(MDBCI_VM_PATH, name)
         if not os.path.exists(lockFile):
             print("Lock file {} does not exist, doing nothing".format(lockFile))
             sys.exit(0)
 
         buildFullName = "{}-{}".format(buildername, buildnumber)
-        lockerSource = open(lockFile).read()
-        if lockerSource.strip() != buildFullName:
-            print("Lock file was crated not by the current task, {} != {}, doing nothing".
+        lockerSource = open(lockFile).read().strip()
+        if lockerSource != buildFullName:
+            print("Lock file was created not by the current task, {} != {}, doing nothing".
                   format(buildFullName, lockerSource))
             sys.exit(0)
-
         os.remove(lockFile)
+        sys.exit(0)
 
     return support.executePythonScript(
-        "Remove leftover vagrant locks", remoteCode,
+        "Remove leftover snapshot locks", remoteCode,
         haltOnFailure=False, alwaysRun=True)
 
 
@@ -104,13 +102,17 @@ def removeLock():
             sys.exit(0)
 
         buildFullName = "{}-{}".format(buildername, buildnumber)
-        lockerSource = open(lockFile).read()
+        lockerSource = open(lockFile).read().strip()
         if lockerSource != buildFullName:
-            print("Lock file was crated not by the current task, {} != {}, doing nothing".
+            print("Lock file was created not by the current task, {} != {}, doing nothing".
                   format(buildFullName, lockerSource))
             sys.exit(0)
-
         os.remove(lockFile)
+
+        if try_already_running == "yes":
+            print("Releasing lock for already running VM")
+            os.remove("{}/{}_snapshot_lock".format(MDBCI_VM_PATH, box))
+        sys.exit(0)
 
     return support.executePythonScript(
         "Remove leftover vagrant locks", remoteCode,
