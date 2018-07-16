@@ -24,7 +24,8 @@ def createFactory():
             'box': 'ubuntu_xenial_libvirt',
             'try_already_running': 'yes',
             'target': util.Interpolate("%(prop:target)s-perf"),
-            'cmake_flags': '-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y',
+            'cmake_flags': ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y'
+                            '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'),
         }
     ))
     factory.addStep(steps.Trigger(
