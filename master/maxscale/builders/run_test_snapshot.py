@@ -48,7 +48,6 @@ def createRunTestSnapshotSteps():
         run_test.remoteParseCtestLogAndStoreIt))
     testSnapshotSteps.append(run_test.writeBuildResultsToDatabase())
     testSnapshotSteps.append(run_test.uploadTestRunsToReportPortal())
-    testSnapshotSteps.extend(common.destroyVirtualMachine())
     testSnapshotSteps.extend(common.removeSnapshotLock())
     testSnapshotSteps.extend(common.removeLock())
     testSnapshotSteps.extend(common.cleanBuildDir())
