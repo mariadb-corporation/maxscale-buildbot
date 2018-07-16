@@ -17,11 +17,7 @@ BUILD_PROPERTIES = [
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="build",
-    builderNames=["build"],
-    codebases=[
-        common.maxscale_codebase()
-    ],
-    properties=properties.extractDefaultValues(BUILD_PROPERTIES)
+    builderNames=["build"]
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
@@ -34,9 +30,4 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=BUILD_PROPERTIES
 )
 
-BUILD_ALL_TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
-   name="build_all_subtask",
-   builderNames=["build"]
-)
-
-SCHEDULERS = [TRIGGERABLE_SCHEDULER, MANUAL_SCHEDULER, BUILD_ALL_TRIGGERABLE_SCHEDULER]
+SCHEDULERS = [TRIGGERABLE_SCHEDULER, MANUAL_SCHEDULER]
