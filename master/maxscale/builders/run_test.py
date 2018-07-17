@@ -37,17 +37,21 @@ def configureCommonProperties(properties):
     }
 
 
-def remoteRunTestAndLog():
-    """Run tests and save results to the log file"""
+def remoteRunScriptAndLog():
+    """
+    Runs shell script which name is given in a property 'script_name' of a builder on a worker
+    and save results to the log file
+    """
     if not os.path.exists("maxscale-system-test/mdbci"):
         os.mkdir("default-maxscale-branch")
         subprocess.run(["git", "clone", repository, "default-maxscale-branch/MaxScale"])
         shutil.copytree("default-maxscale-branch/MaxScale/maxscale-system-test/mdbci", "maxscale-system-test")
 
     logFile = open(buildLogFile, "w")
-    process = subprocess.Popen(["maxscale-system-test/mdbci/run_test.sh"], stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT, universal_newlines=True)
-    for line in process.stdout:
+    process = subprocess.Popen(["maxscale-system-test/mdbci/{}".format(script_name)],
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for byteLine in process.stdout:
+        line = byteLine.decode("utf-8")
         sys.stdout.write(line)
         logFile.write(line)
     process.wait()
@@ -116,7 +120,7 @@ def createRunTestSteps():
     testSteps.extend(common.cloneRepository())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
     testSteps.extend(support.executePythonScript(
-        "Run MaxScale tests using MDBCI", remoteRunTestAndLog))
+        "Run MaxScale tests using MDBCI", remoteRunScriptAndLog))
     testSteps.extend(support.executePythonScript(
         "Parse ctest results log and save it to logs directory", remoteParseCtestLogAndStoreIt))
     testSteps.append(writeBuildResultsToDatabase())
@@ -140,5 +144,7 @@ BUILDERS = [
         workernames=workers.workerNames(),
         factory=createTestFactory(),
         tags=["test"],
-        env=ENVIRONMENT)
+        env=ENVIRONMENT,
+        properties={"script_name": "run_test.sh",
+                    "try_already_running": False})
 ]

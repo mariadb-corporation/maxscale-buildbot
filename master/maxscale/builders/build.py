@@ -53,7 +53,7 @@ def createBuildSteps():
         "Build MaxScale using MDBCI", remoteBuildMaxscale))
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
-    buildSteps.extend(common.removeSnapshotLock())
+    buildSteps.extend(common.removeLock())
     return buildSteps
 
 

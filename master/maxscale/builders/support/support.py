@@ -67,6 +67,7 @@ class PythonFunctionRenderer(object):
     def getRenderingFor(self, properties):
         """Construct remote Python script"""
         code = ["#!/usr/bin/env python3"]
+        code.append("# -*- coding: utf-8 -*-")
         code.extend(self.__renderModules())
         code.extend(self.__printScriptContents())
         code.extend(self.__renderProperties(properties))
