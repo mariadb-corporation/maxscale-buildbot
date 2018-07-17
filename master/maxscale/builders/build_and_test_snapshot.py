@@ -5,6 +5,18 @@ from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
 
+COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
+    "branch",
+    "repository",
+    "box",
+    "target",
+    "cmake_flags",
+    "build_experimental",
+    "product",
+    "version",
+    "ci_url",
+]
+
 
 def createFactory():
     factory = BuildFactory()
@@ -13,19 +25,11 @@ def createFactory():
         schedulerNames=['build'],
         waitForFinish=True,
         haltOnFailure=True,
-        copy_properties=[
-            "repository",
-            "branch",
-            "build_experimental",
-            "product",
-            "version",
-            "ci_url"],
+        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
         set_properties={
             'box': 'ubuntu_xenial_libvirt',
             'try_already_running': 'yes',
             'target': util.Interpolate("%(prop:target)s-perf"),
-            'cmake_flags': ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y'
-                            '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'),
         }
     ))
     factory.addStep(steps.Trigger(
@@ -33,37 +37,17 @@ def createFactory():
         schedulerNames=['build'],
         waitForFinish=True,
         haltOnFailure=True,
-        copy_properties=[
-            "repository",
-            "branch",
-            "build_experimental",
-            "product",
-            "version",
-            "target",
-            "ci_url"],
+        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
         set_properties={
-            'box': 'centos_7_libvirt',
-            'try_already_running': 'yes',
-            'cmake_flags': ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y '
-                            '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'),
+            'try_already_running': 'yes'
         }
     ))
     factory.addStep(steps.Trigger(
         name="Call the 'run_test_snapshot' scheduler. Run functional tests",
         schedulerNames=['run_test_snapshot'],
         waitForFinish=True,
-        copy_properties=[
-            "repository",
-            "branch",
-            "target",
-            "build_experimental",
-            "product",
-            "version",
-            "test_set",
-            "ci_url",
-            "backend_ssl"],
+        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES + ["test_set", "backend_ssl"],
         set_properties={
-            "box": "centos_7_libvirt",
             "test_branch": util.Property("branch")
         }
     ))
