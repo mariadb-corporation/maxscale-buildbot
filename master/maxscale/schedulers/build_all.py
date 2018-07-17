@@ -14,7 +14,13 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=BUILD_ALL_PROPERTIES
 )
 
-SCHEDULERS = [MANUAL_SCHEDULER]
+TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
+    name="build_all_triggerable",
+    builderNames=["build_all"],
+    properties=properties.extractDefaultValues([properties.buildBoxCheckboxContainer()])
+)
+
+SCHEDULERS = [MANUAL_SCHEDULER, TRIGGERABLE_SCHEDULER]
 
 # Add schedulers for every active branch to be built every night
 # The list of branches is defined by constants.NIGHTLY_SCHEDS
