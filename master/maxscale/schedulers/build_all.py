@@ -10,9 +10,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_all",
     builderNames=["build_all"],
     buttonName="Build all",
-    codebases=[
-        common.maxscale_codebase()
-    ],
+    codebases=properties.codebaseParameter(),
     properties=BUILD_ALL_PROPERTIES
 )
 
@@ -29,12 +27,7 @@ for branch in constants.NIGHTLY_SCHEDS:
         name=branch,
         builderNames=['build_all'],
         hour=4, minute=0,
-        codebases={
-            'codebase1': {
-                'branch': branch,
-                'repository': constants.MAXSCALE_REPOSITORY
-            }
-        },
+        codebases=constants.MAXSCALE_CODEBASE,
         properties=nightlyProperties
     )
     SCHEDULERS.append(nightlyScheduler)

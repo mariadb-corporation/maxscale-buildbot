@@ -1,5 +1,5 @@
 from buildbot.plugins import schedulers
-from . import common
+from maxscale.config import constants
 from . import properties
 
 BUILD_PROPERTIES = [
@@ -18,9 +18,7 @@ BUILD_PROPERTIES = [
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="build",
     builderNames=["build"],
-    codebases=[
-        common.maxscale_codebase()
-    ],
+    codebases=constants.MAXSCALE_CODEBASE,
     properties=properties.extractDefaultValues(BUILD_PROPERTIES)
 )
 
@@ -28,9 +26,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_force",
     buttonName="Force build",
     builderNames=["build"],
-    codebases=[
-        common.maxscale_codebase()
-    ],
+    codebases=properties.codebaseParameter(),
     properties=BUILD_PROPERTIES
 )
 

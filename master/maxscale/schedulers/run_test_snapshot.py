@@ -12,9 +12,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="run_test_snapshot_force",
     buttonName="Run test snapshots",
     builderNames=["run_test_snapshot"],
-    codebases=[
-        common.maxscale_codebase(),
-    ],
+    codebases=properties.codebaseParameter(),
     properties=[
         properties.build_name(),
         properties.snapshot_name(),

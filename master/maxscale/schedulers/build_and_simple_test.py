@@ -1,6 +1,6 @@
 from buildbot.plugins import util, schedulers
 from maxscale.change_source.maxscale import check_branch_fn
-from . import common
+from maxscale.config import constants
 from . import properties
 
 
@@ -9,6 +9,7 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     change_filter=util.ChangeFilter(project='maxscale', branch_fn=check_branch_fn),
     treeStableTimer=60,
     builderNames=["build_and_simple_test"],
+    codebases=constants.MAXSCALE_CODEBASE
 )
 
 
@@ -16,9 +17,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_simple_test_force",
     buttonName="Build and simple test",
     builderNames=["build_and_simple_test"],
-    codebases=[
-        common.maxscale_codebase()
-    ],
+    codebases=properties.codebaseParameter(),
     properties=[
         properties.build_target(),
         properties.build_experimental_features(),

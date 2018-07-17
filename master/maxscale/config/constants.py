@@ -74,3 +74,12 @@ CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
 # Define branches for nightly build_all builds
 NIGHTLY_SCHEDS = ['2.2', 'develop', '2.1']
+
+# Define dictionary with maxscale repositories
+MAXSCALE_CODEBASE = {
+    "Main repository": {
+        "branch": "develop",
+        "revision": "",
+        "repository": MAXSCALE_REPOSITORY
+    },
+}
