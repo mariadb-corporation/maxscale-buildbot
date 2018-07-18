@@ -5,6 +5,23 @@ from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
 
+COMMON_PROPERTIES = [
+    "name",
+    "repository",
+    "branch",
+    "target",
+    "build_experimental",
+    "box",
+    "product",
+    "version",
+    "cmake_flags"
+    "do_not_destroy_vm",
+    "test_set",
+    "ci_url",
+    "smoke",
+    "big"
+]
+
 
 def create_factory():
     factory = BuildFactory()
@@ -14,42 +31,14 @@ def create_factory():
         schedulerNames=['build'],
         waitForFinish=True,
         haltOnFailure=True,
-        copy_properties=[
-            "name",
-            "repository",
-            "branch",
-            "target",
-            "build_experimental",
-            "box",
-            "product",
-            "version",
-            "cmake_flags"
-            "do_not_destroy_vm",
-            "test_set",
-            "ci_url",
-            "smoke",
-            "big"]
+        copy_properties=COMMON_PROPERTIES
     ))
 
     factory.addStep(steps.Trigger(
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
         waitForFinish=True,
-        copy_properties=[
-            "name",
-            "repository",
-            "branch",
-            "target",
-            "build_experimental",
-            "box",
-            "product",
-            "version",
-            "cmake_flags"
-            "do_not_destroy_vm",
-            "test_set",
-            "ci_url",
-            "smoke",
-            "big"],
+        copy_properties=COMMON_PROPERTIES,
         set_properties={'test_branch': util.Property('branch')}
     ))
 
