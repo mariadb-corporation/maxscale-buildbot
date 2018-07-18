@@ -3,7 +3,7 @@ from maxscale.config import constants
 from . import properties
 
 BUILD_FOR_RELEASE_PROPERTIES = [
-    properties.database_version(),
+    properties.versionNumber(),
     properties.build_experimental_features(),
     properties.old_target(),
 ]

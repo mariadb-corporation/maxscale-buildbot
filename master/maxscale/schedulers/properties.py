@@ -262,3 +262,10 @@ def codebaseParameter():
                                             default=codebase["repository"]),
         ))
     return codebaseParameterList
+
+
+def versionNumber():
+    return util.StringParameter(
+        name="version_number",
+        label="The version number of this release in x.y.z format"
+    )

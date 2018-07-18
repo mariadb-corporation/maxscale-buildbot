@@ -10,7 +10,7 @@ COMMON_PROPERTIES = [
     'branch',
     "repository",
     "build_experimental",
-    "version",
+    "version_number",
     "old_target"
 ]
 
@@ -45,8 +45,9 @@ class BuildForReleaseTrigger(Trigger):
             propertiesToSet = {}
             propertiesToSet.update(self.set_properties)
             propertiesToSet.update(buildTarget)
-            propertiesToSet["target"] = "maxscale-{}-{}".format(self.set_properties["version"],
-                                                                buildTarget["target_name"])
+            propertiesToSet["target"] = "maxscale-{}-{}".format(
+                self.set_properties["version_number"],
+                buildTarget["target_name"])
             for schedulerName in self.schedulerNames:
                 schedulers.append({
                     "sched_name": schedulerName,
