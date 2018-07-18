@@ -7,9 +7,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test",
     label="Build and test",
     builderNames=["build_and_test"],
-    codebases=[
-        common.maxscale_codebase()
-    ],
+    codebases=properties.codebaseParameter(),
     properties=[
         properties.build_name(),
         properties.build_target(),

@@ -20,12 +20,7 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_snapshot_on_push",
     change_filter=util.ChangeFilter(project='maxscale', branch_fn=check_branch_fn),
     treeStableTimer=60,
-    codebases={
-        "codebase1": {
-            "branch": "develop",
-            "repository": constants.MAXSCALE_REPOSITORY
-        }
-    },
+    codebases=constants.MAXSCALE_CODEBASE,
     builderNames=["build_and_test_snapshot"],
     properties=properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES)
 )
@@ -34,9 +29,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test_snapshot_force",
     buttonName="Build and test snapshot",
     builderNames=["build_and_test_snapshot"],
-    codebases=[
-        common.maxscale_codebase()
-    ],
+    codebases=properties.codebaseParameter(),
     properties=BUILD_AND_TEST_SNAPSHOT_PROPERTIES
 )
 

@@ -1,4 +1,5 @@
 from buildbot.plugins import schedulers
+from maxscale.config import constants
 from . import common
 from . import properties
 
@@ -24,15 +25,14 @@ RUN_TEST_PROPERTIES = [
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="run_test",
     builderNames=["run_test"],
-    codebases=[common.maxscale_codebase()],
-    properties=properties.extractDefaultValues(RUN_TEST_PROPERTIES)
+    codebases=constants.MAXSCALE_CODEBASE,
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="run_test_force",
     buttonName="Run tests",
     builderNames=["run_test"],
-    codebases=[common.maxscale_codebase()],
+    codebases=properties.codebaseParameter(),
     properties=RUN_TEST_PROPERTIES
 )
 
