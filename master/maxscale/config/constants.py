@@ -77,7 +77,7 @@ NIGHTLY_SCHEDS = ['2.2', 'develop', '2.1']
 
 # Define dictionary with maxscale repositories
 MAXSCALE_CODEBASE = {
-    "Main repository": {
+    "": {
         "branch": "develop",
         "revision": "",
         "repository": MAXSCALE_REPOSITORY
