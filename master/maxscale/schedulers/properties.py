@@ -248,17 +248,14 @@ def buildBoxCheckbox(box):
 
 
 def codebaseParameter():
-    codebaseParameterList = []
-    for codebaseName, codebase in constants.MAXSCALE_CODEBASE.items():
-        codebaseParameterList.append(util.CodebaseParameter(
-            "",
-            label=codebaseName,
-            branch=util.StringParameter(name="branch",
-                                        default=codebase["branch"]),
-            revision=util.FixedParameter(name="revision",
-                                         default=codebase["revision"]),
-            project=util.FixedParameter(name="project", default=""),
-            repository=util.StringParameter(name="repository",
-                                            default=codebase["repository"]),
-        ))
-    return codebaseParameterList
+    return [util.CodebaseParameter(
+        "",
+        label="Main repository",
+        branch=util.StringParameter(name="branch",
+                                    default=constants.MAXSCALE_CODEBASE[""]["branch"]),
+        revision=util.FixedParameter(name="revision",
+                                     default=constants.MAXSCALE_CODEBASE[""]["revision"]),
+        project=util.FixedParameter(name="project", default=""),
+        repository=util.StringParameter(name="repository",
+                                        default=constants.MAXSCALE_CODEBASE[""]["repository"]),
+    )]
