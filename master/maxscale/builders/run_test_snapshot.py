@@ -25,8 +25,7 @@ RUN_TEST_SNAPSHOT_ENVIRONMENT = {
     "backend_ssl": util.Property('backend_ssl'),
     "logs_dir": util.Property('logs_dir'),
     "template": util.Property('template'),
-    "test_branch": util.Property('branch'),
-    "try_already_running": util.Property('try_already_running')
+    "test_branch": util.Property('branch')
 }
 
 
@@ -68,6 +67,8 @@ BUILDERS = [
         factory=createTestShapshotFactory(),
         tags=['test'],
         env=RUN_TEST_SNAPSHOT_ENVIRONMENT,
-        properties={"script_name": "run_test_snapshot.sh",
-                    "try_already_running": False})
+        properties={
+            "script_name": "run_test_snapshot.sh",
+            "try_already_running": None
+        })
 ]

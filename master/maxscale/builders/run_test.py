@@ -51,7 +51,7 @@ def remoteRunScriptAndLog():
     process = subprocess.Popen(["maxscale-system-test/mdbci/{}".format(script_name)],
                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     for byteLine in process.stdout:
-        line = byteLine.decode("utf-8")
+        line = byteLine.decode("utf-8", "replace")
         sys.stdout.write(line)
         logFile.write(line)
     process.wait()
