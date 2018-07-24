@@ -16,13 +16,17 @@ BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     properties.backend_use_ssl(),
 ]
 
+DEFAULT_PROPERTIES = \
+    properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES)
+del DEFAULT_PROPERTIES["target"]
+
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_snapshot_on_push",
     change_filter=util.ChangeFilter(project='maxscale', branch_fn=check_branch_fn),
     treeStableTimer=60,
     codebases=constants.MAXSCALE_CODEBASE,
     builderNames=["build_and_test_snapshot"],
-    properties=properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES)
+    properties=DEFAULT_PROPERTIES
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(

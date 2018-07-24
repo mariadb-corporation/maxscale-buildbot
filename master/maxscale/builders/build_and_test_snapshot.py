@@ -1,15 +1,15 @@
 import os
+import datetime
 
 from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
+from buildbot.process.results import SKIPPED
 from maxscale import workers
 
 COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "branch",
     "repository",
-    "box",
-    "target",
     "cmake_flags",
     "build_experimental",
     "product",
@@ -20,6 +20,14 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 
 def createFactory():
     factory = BuildFactory()
+    today = datetime.date.today().strftime("%b%d")
+    factory.addStep(steps.SetProperty(
+        name=util.Interpolate("Set '%(prop:branch)s-buildbot-{}' as target".format(today)),
+        property="target",
+        value=util.Interpolate("%(prop:branch)s-buildbot-{}".format(today)),
+        doStepIf=lambda step: step.build.getProperty('target') is None,
+        hideStepIf=lambda results, s: results == SKIPPED
+    ))
     factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler. Build Ubuntu",
         schedulerNames=['build'],
@@ -39,16 +47,22 @@ def createFactory():
         haltOnFailure=True,
         copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
         set_properties={
-            'try_already_running': 'yes'
+            "box": util.Property("box"),
+            'try_already_running': 'yes',
+            "target": util.Property("target")
         }
     ))
     factory.addStep(steps.Trigger(
         name="Call the 'run_test_snapshot' scheduler. Run functional tests",
         schedulerNames=['run_test_snapshot'],
         waitForFinish=True,
-        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES + ["test_set", "backend_ssl"],
+        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
         set_properties={
-            "test_branch": util.Property("branch")
+            "box": util.Property("box"),
+            "target": util.Property("target"),
+            "test_branch": util.Property("branch"),
+            "test_set": util.Property("test_set"),
+            "backend_ssl": util.Property("backend_ssl")
         }
     ))
     return factory
