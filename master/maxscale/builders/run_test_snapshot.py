@@ -6,9 +6,9 @@ from maxscale.builders import run_test
 
 
 RUN_TEST_SNAPSHOT_ENVIRONMENT = {
-    "WORKSPACE": util.Property('WORKSPACE'),
-    "JOB_NAME": util.Interpolate('%(prop:buildername)s'),
-    "BUILD_ID": util.Property('BUILD_ID'),
+    "WORKSPACE": util.Property('builddir'),
+    "JOB_NAME": util.Property("buildername"),
+    "BUILD_ID": util.Interpolate('%(prop:buildername)s-%(prop:buildnumber)s'),
     "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
     "BUILD_TIMESTAMP": util.Property('BUILD_TIMESTAMP'),
     "BUILD_LOG_PARSING_RESULT": 'Build log parsing finished with an error',
