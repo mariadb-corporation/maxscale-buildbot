@@ -18,13 +18,18 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 ]
 
 
+@util.renderer
+def formatStartTime(properties):
+    return datetime.datetime.now().strftime("%b%d-%H:%M:%S")
+
+
 def createFactory():
     factory = BuildFactory()
-    today = datetime.date.today().strftime("%b%d")
     factory.addStep(steps.SetProperty(
-        name=util.Interpolate("Set '%(prop:branch)s-buildbot-{}' as target".format(today)),
+        name=util.Interpolate("Set 'target' property"),
         property="target",
-        value=util.Interpolate("%(prop:branch)s-buildbot-{}".format(today)),
+        value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
+                               startTime=formatStartTime),
         doStepIf=lambda step: step.build.getProperty('target') is None,
         hideStepIf=lambda results, s: results == SKIPPED
     ))
