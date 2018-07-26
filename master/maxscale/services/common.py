@@ -1,4 +1,7 @@
 from buildbot.plugins import reporters, util
+from buildbot.reporters import utils
+from buildbot.reporters.message import MessageFormatter
+from twisted.internet import defer
 from maxscale.config import mailer_config
 
 
@@ -52,10 +55,10 @@ def create_mail_notifier(template, builder_names):
         mode=('failing', 'passing', 'warnings', 'cancelled'),
         extraRecipients=config['extraRecipients'],
         builders=builder_names,
-        messageFormatter=reporters.MessageFormatter(template=template, template_type='html',
-                                                    wantProperties=True, wantSteps=True,
-                                                    ctx=dict(statuses=util.Results,
-                                                             colors=RESULT_COLOR)),
+        messageFormatter=ExpandedStepsFormatter(template=template, template_type='html',
+                                                wantProperties=True, wantSteps=True,
+                                                ctx=dict(statuses=util.Results,
+                                                         colors=RESULT_COLOR)),
         sendToInterestedUsers=True,
         relayhost=config['relayhost'],
         smtpPort=config['smtpPort'],
@@ -63,3 +66,37 @@ def create_mail_notifier(template, builder_names):
         smtpUser=config['smtpUser'],
         smtpPassword=config['smtpPassword'],
     )
+
+
+class ExpandedStepsFormatter(MessageFormatter):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    @defer.inlineCallbacks
+    def buildAdditionalContext(self, master, ctx):
+        """
+        Expands steps with results of triggered builds
+        :param master: buildmaster for this build
+        :param ctx: context of mail template
+        :return:
+        """
+        ctx.update(self.ctx)
+        steps = []
+        for step in ctx['build']['steps']:
+            step['triggeredBuilds'] = []
+            for url in step['urls']:
+                buildRequestId = url['name'].split('#')[-1]
+                builds = yield master.data.get(('buildrequests', buildRequestId, 'builds'))
+                if builds:
+                    triggeredBuild = {'results': builds[0]['results']}
+                    triggeredBuildId = builds[0]['buildid']
+                    buildProperties = yield master.data.get(("builds", triggeredBuildId, 'properties'))
+                    triggeredBuild['name'] = buildProperties['virtual_builder_name'][0] or \
+                        buildProperties['buildername'][0]
+                    triggeredBuild["build_url"] = utils.getURLForBuild(master,
+                                                                       builds[0]['builderid'],
+                                                                       triggeredBuildId)
+                    step['triggeredBuilds'].append(triggeredBuild)
+            steps.append(step)
+        ctx['build']['steps'] = steps
