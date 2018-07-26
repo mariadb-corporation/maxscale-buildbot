@@ -60,6 +60,7 @@ def create_mail_notifier(template, builder_names):
                                                 ctx=dict(statuses=util.Results,
                                                          colors=RESULT_COLOR)),
         sendToInterestedUsers=True,
+        subject="[maxscale-buildbot] Buildbot %(result)s in %(title)s on %(builder)s",
         relayhost=config['relayhost'],
         smtpPort=config['smtpPort'],
         useTls=config['useTls'],
