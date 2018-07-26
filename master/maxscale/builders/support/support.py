@@ -27,6 +27,7 @@ def executeScript(name, script, args=(), haltOnFailure=True, flunkOnFailure=True
         name="Execute script: {}".format(name),
         command=[shellScriptPath, *args],
         env=env,
+        timeout=1800,
         **kwargs)
 
     kwargs["alwaysRun"] = True
