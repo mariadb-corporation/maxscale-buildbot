@@ -1,5 +1,6 @@
 from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
+from buildbot.steps.shell import ShellCommand
 from twisted.internet import defer
 from maxscale.builders.support import support
 
@@ -157,3 +158,12 @@ class SetDefaultPropertiesStep(ShellMixin, steps.BuildStep):
                     command=['echo', "Set default property: {}={}".format(property_name, value)])
                 yield self.runCommand(cmd)
         defer.returnValue(0)
+
+
+class StdoutShellCommand(ShellCommand):
+    """
+    Runs single shell command on a remote worker
+    and outputs stdout into a separate logfile
+    """
+    def commandComplete(self, cmd):
+        self.addCompleteLog('stdout', cmd.stdout)
