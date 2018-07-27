@@ -31,7 +31,16 @@ TEST_TEMPLATE = BUILD_SUMMARY_HEADER + '''\
         }}">
         Logs(ctest logs) for each test
     </a>
-
+    <h4>Test results:</h4>
+    <blockquote>
+        <pre>
+        {% if build['testResult'] %}
+            <p>{{ build['testResult'] }}</p>
+        {% else %}
+            -
+        {% endif %}
+        </pre>
+    </blockquote>
     <p><b> -- The Buildbot</b></p>
     '''
 
@@ -100,4 +109,8 @@ class ExpandedStepsFormatter(MessageFormatter):
                                                                        triggeredBuildId)
                     step['triggeredBuilds'].append(triggeredBuild)
             steps.append(step)
+
+        testResult = yield master.data.get(('builds', ctx['build']['buildid'], 'steps',
+                                            'test_result', 'logs', 'stdout', 'contents'))
+        ctx['build']['testResult'] = testResult['content']
         ctx['build']['steps'] = steps
