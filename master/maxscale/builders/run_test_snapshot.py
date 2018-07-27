@@ -4,7 +4,6 @@ from maxscale.builders.support import common, support
 from maxscale import workers
 from maxscale.builders import run_test
 
-
 RUN_TEST_SNAPSHOT_ENVIRONMENT = {
     "WORKSPACE": util.Property('builddir'),
     "JOB_NAME": util.Property("buildername"),
@@ -47,6 +46,7 @@ def createRunTestSnapshotSteps():
         run_test.remoteParseCtestLogAndStoreIt))
     testSnapshotSteps.append(run_test.writeBuildResultsToDatabase())
     testSnapshotSteps.append(run_test.uploadTestRunsToReportPortal())
+    testSnapshotSteps.append(run_test.showTestResult())
     testSnapshotSteps.extend(common.removeSnapshotLock())
     testSnapshotSteps.extend(common.removeLock())
     testSnapshotSteps.extend(common.cleanBuildDir())

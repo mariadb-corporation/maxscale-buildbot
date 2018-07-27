@@ -114,6 +114,13 @@ def uploadTestRunsToReportPortal():
                  util.Interpolate("%(prop:HOME)s/report-portal-config.yml")])
 
 
+def showTestResult():
+    return common.StdoutShellCommand(
+        name="test_result",
+        collectStdout=True,
+        command=["cat", util.Property("resultFile")])
+
+
 def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
@@ -125,6 +132,7 @@ def createRunTestSteps():
         "Parse ctest results log and save it to logs directory", remoteParseCtestLogAndStoreIt))
     testSteps.append(writeBuildResultsToDatabase())
     testSteps.append(uploadTestRunsToReportPortal())
+    testSteps.append(showTestResult())
     testSteps.extend(common.destroyVirtualMachine())
     testSteps.extend(common.removeLock())
     testSteps.extend(common.cleanBuildDir())
