@@ -43,7 +43,7 @@ def createFactory():
             'box': 'ubuntu_xenial_libvirt',
             'try_already_running': 'yes',
             'target': util.Interpolate("%(prop:target)s-perf"),
-            'virtual_builder_name': 'Build Ubuntu',
+            'virtual_builder_name': 'Build for ubuntu_xenial_libvirt',
         }
     ))
     factory.addStep(steps.Trigger(
@@ -56,7 +56,7 @@ def createFactory():
             "box": util.Property("box"),
             'try_already_running': 'yes',
             "target": util.Property("target"),
-            'virtual_builder_name': 'Build CentOS',
+            'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
         }
     ))
     factory.addStep(steps.Trigger(

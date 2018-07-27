@@ -31,7 +31,10 @@ def create_factory():
         schedulerNames=['build'],
         waitForFinish=True,
         haltOnFailure=True,
-        copy_properties=COMMON_PROPERTIES
+        copy_properties=COMMON_PROPERTIES,
+        set_properties={
+            'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
+        }
     ))
 
     factory.addStep(steps.Trigger(
@@ -39,7 +42,10 @@ def create_factory():
         schedulerNames=['run_test'],
         waitForFinish=True,
         copy_properties=COMMON_PROPERTIES,
-        set_properties={'test_branch': util.Property('branch')}
+        set_properties={
+            'test_branch': util.Property('branch'),
+            'virtual_builder_name': util.Interpolate('Run tests'),
+        }
     ))
 
     return factory
