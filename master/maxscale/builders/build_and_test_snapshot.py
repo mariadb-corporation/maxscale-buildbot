@@ -43,6 +43,7 @@ def createFactory():
             'box': 'ubuntu_xenial_libvirt',
             'try_already_running': 'yes',
             'target': util.Interpolate("%(prop:target)s-perf"),
+            'virtual_builder_name': 'Build Ubuntu',
         }
     ))
     factory.addStep(steps.Trigger(
@@ -54,7 +55,8 @@ def createFactory():
         set_properties={
             "box": util.Property("box"),
             'try_already_running': 'yes',
-            "target": util.Property("target")
+            "target": util.Property("target"),
+            'virtual_builder_name': 'Build CentOS',
         }
     ))
     factory.addStep(steps.Trigger(
@@ -67,7 +69,8 @@ def createFactory():
             "target": util.Property("target"),
             "test_branch": util.Property("branch"),
             "test_set": util.Property("test_set"),
-            "backend_ssl": util.Property("backend_ssl")
+            "backend_ssl": util.Property("backend_ssl"),
+            'virtual_builder_name': 'Run functional tests',
         }
     ))
     return factory
