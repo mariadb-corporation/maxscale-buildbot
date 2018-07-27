@@ -1,3 +1,4 @@
+from buildbot.data.resultspec import Filter
 from buildbot.plugins import reporters, util
 from buildbot.reporters import utils
 from buildbot.reporters.message import MessageFormatter
@@ -93,24 +94,43 @@ class ExpandedStepsFormatter(MessageFormatter):
         """
         ctx.update(self.ctx)
         steps = []
+        testResults = ''
         for step in ctx['build']['steps']:
             step['triggeredBuilds'] = []
             for url in step['urls']:
                 buildRequestId = url['name'].split('#')[-1]
                 builds = yield master.data.get(('buildrequests', buildRequestId, 'builds'))
                 if builds:
-                    triggeredBuild = {'results': builds[0]['results']}
-                    triggeredBuildId = builds[0]['buildid']
-                    buildProperties = yield master.data.get(("builds", triggeredBuildId, 'properties'))
-                    triggeredBuild['name'] = buildProperties['virtual_builder_name'][0] or \
+                    build = {'results': builds[0]['results']}
+                    buildId = builds[0]['buildid']
+                    buildProperties = yield master.data.get(("builds", buildId, 'properties'))
+                    build['name'] = buildProperties['virtual_builder_name'][0] or \
                         buildProperties['buildername'][0]
-                    triggeredBuild["build_url"] = utils.getURLForBuild(master,
-                                                                       builds[0]['builderid'],
-                                                                       triggeredBuildId)
-                    step['triggeredBuilds'].append(triggeredBuild)
+                    build["build_url"] = utils.getURLForBuild(master, builds[0]['builderid'],
+                                                              buildId)
+                    testResult = yield self.getTestLog(master, buildId)
+                    step['triggeredBuilds'].append(build)
+                    if testResult:
+                        testResults += testResult['content']
             steps.append(step)
 
-        testResult = yield master.data.get(('builds', ctx['build']['buildid'], 'steps',
-                                            'test_result', 'logs', 'stdout', 'contents'))
-        ctx['build']['testResult'] = testResult['content']
+        testResult = yield self.getTestLog(master, ctx['build']['buildid'])
+        if not testResults and testResult:
+            testResults = testResult['content']
+        ctx['build']['testResult'] = testResults
         ctx['build']['steps'] = steps
+
+    def getTestLog(self, master, buildId):
+        """
+        Seeks for 'test_result' step in build and returns its log
+        :param master: buildmaster for this build
+        :param buildId: id of this build
+        :return: stdout of 'test_result' step
+        """
+        def getStepLog(step):
+            if step:
+                return master.data.get(('builds', buildId, 'steps',
+                                        'test_result', 'logs', 'stdout', 'contents'))
+
+        return master.data.get(('builds', buildId, 'steps'),
+                               filters=[Filter("name", "eq", ["test_result"])]).addCallback(getStepLog)
