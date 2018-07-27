@@ -4,6 +4,7 @@ from . import run_test
 from . import run_test_snapshot
 from . import build_all
 from . import build_and_test_shapshot
+from . import build_and_test
 
 MAXSCALE_SERVICES = list(itertools.chain(
     build.SERVICES,
@@ -11,4 +12,5 @@ MAXSCALE_SERVICES = list(itertools.chain(
     run_test_snapshot.SERVICES,
     build_all.SERVICES,
     build_and_test_shapshot.SERVICES,
+    build_and_test.SERVICES,
 ))
