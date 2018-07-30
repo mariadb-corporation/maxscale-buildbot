@@ -77,7 +77,7 @@ def remoteParseCtestLogAndStoreIt():
     storeDirectory = os.path.join(HOME, "LOGS", buildId, "LOGS")
     for logDirectory in os.listdir(outputDirectory):
         targetDirectory = os.path.join(storeDirectory, logDirectory)
-        os.makedirs(targetDirectory, exist_ok=True)
+        os.makedirs(targetDirectory, mode=755, exist_ok=True)
         shutil.copy(os.path.join(outputDirectory, logDirectory, "ctest_sublog"), targetDirectory)
 
 
