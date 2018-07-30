@@ -24,14 +24,6 @@ BUILD_SUMMARY_HEADER = u'''\
 
 TEST_TEMPLATE = BUILD_SUMMARY_HEADER + '''\
 
-    <a href="{{
-            'http://max-tst-01.mariadb.com/LOGS/{}-{}/LOGS/'.format(
-                build['properties']['buildername'][0],
-                build['properties']['buildnumber'][0]
-            )
-        }}">
-        Logs(ctest logs) for each test
-    </a>
     <h4>Test results:</h4>
     <blockquote>
         <pre>
@@ -42,6 +34,16 @@ TEST_TEMPLATE = BUILD_SUMMARY_HEADER + '''\
         {% endif %}
         </pre>
     </blockquote>
+    {% if build['results'] == 0 %}
+        <a href="{{
+                'http://max-tst-01.mariadb.com/LOGS/{}-{}/LOGS/'.format(
+                    build['properties']['buildername'][0],
+                    build['properties']['buildnumber'][0]
+                )
+            }}">
+            Logs(ctest logs) for each test
+        </a>
+    {% endif %}
     <p><b> -- The Buildbot</b></p>
     '''
 
@@ -98,20 +100,13 @@ class ExpandedStepsFormatter(MessageFormatter):
         for step in ctx['build']['steps']:
             step['triggeredBuilds'] = []
             for url in step['urls']:
-                buildRequestId = url['name'].split('#')[-1]
-                builds = yield master.data.get(('buildrequests', buildRequestId, 'builds'))
-                if builds:
-                    build = {'results': builds[0]['results']}
-                    buildId = builds[0]['buildid']
-                    buildProperties = yield master.data.get(("builds", buildId, 'properties'))
-                    build['name'] = buildProperties['virtual_builder_name'][0] or \
-                        buildProperties['buildername'][0]
-                    build["build_url"] = utils.getURLForBuild(master, builds[0]['builderid'],
-                                                              buildId)
-                    testResult = yield self.getTestLog(master, buildId)
-                    step['triggeredBuilds'].append(build)
+                build = yield self.getTriggeredBuild(master, url['name'].split('#')[-1])
+                if build:
+                    testResult = yield self.getTestLog(master, build['buildId'])
                     if testResult:
+                        build['testResult'] = testResult['content']
                         testResults += testResult['content']
+                    step['triggeredBuilds'].append(build)
             steps.append(step)
 
         testResult = yield self.getTestLog(master, ctx['build']['buildid'])
@@ -119,6 +114,32 @@ class ExpandedStepsFormatter(MessageFormatter):
             testResults = testResult['content']
         ctx['build']['testResult'] = testResults
         ctx['build']['steps'] = steps
+
+    def getTriggeredBuild(self, master, buildRequestId):
+        """
+        Seeks for build by the given build request ID
+        :param master: buildmaster for the root build
+        :param buildRequestId: ID of the build request that triggered wanted build
+        :return: Deferred build object or None
+        """
+        def getBuildInfo(build):
+            if build:
+                buildId = build[0]['buildid']
+                return master.data.get(("builds", buildId, 'properties')).addCallback(
+                    lambda properties: {
+                        'buildId': buildId,
+                        'name': (properties.get('virtual_builder_name') or
+                                 properties.get('buildername'))[0],
+                        'build_url': utils.getURLForBuild(master,
+                                                          build[0]['builderid'],
+                                                          buildId),
+                        'results': build[0]['results'],
+                        'properties': properties
+                    }
+                )
+
+        return master.data.get(('buildrequests', buildRequestId,
+                                'builds')).addCallback(getBuildInfo)
 
     def getTestLog(self, master, buildId):
         """
