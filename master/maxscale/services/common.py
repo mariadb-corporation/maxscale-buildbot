@@ -1,3 +1,4 @@
+import re
 from buildbot.data.resultspec import Filter
 from buildbot.plugins import reporters, util
 from buildbot.reporters import utils
@@ -125,7 +126,10 @@ class ExpandedStepsFormatter(MessageFormatter):
         testResults = ''
         for step in ctx['build']['steps']:
             step['triggeredBuilds'] = []
-            for url in step['urls']:
+            # Here we filter only urls that match the path to build request
+            buildRequestUrls = [url for url in step['urls']
+                                if re.match(r'^https?://.*/#buildrequests/\d+$', url['url'])]
+            for url in buildRequestUrls:
                 build = yield self.getTriggeredBuild(master, url['name'].split('#')[-1])
                 if build:
                     testResult = yield self.getTestLog(master, build['buildId'])

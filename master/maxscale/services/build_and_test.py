@@ -7,9 +7,10 @@ MAIL_TEMPLATE = common.COMPLEX_STEPS_BUILD_TEMPLATE + '''\
     {% for step in build['steps'] %}
         {% for test in step['triggeredBuilds'] %}
             {% if test['testResult'] %}
-                <li><p>Result of {{ test['properties']['buildername'][0] }}</p>
+                <li>
+                <p>Result of {{ test['properties']['buildername'][0] }}</p>
                 <blockquote>
-                    <p>{{ test['testResult'] }}</p>
+                    <pre><p>{{ test['testResult'] }}</p></pre>
                 </blockquote>
                 {% if build['results'] == 0 %}
                     <a href="{{
@@ -19,7 +20,7 @@ MAIL_TEMPLATE = common.COMPLEX_STEPS_BUILD_TEMPLATE + '''\
                         )
                     }}">Logs(ctest logs) for each test</a>
                 {% endif %}
-                <li>
+                </li>
             {% endif %}
         {% endfor %}
     {% endfor %}
