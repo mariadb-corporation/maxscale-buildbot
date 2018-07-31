@@ -118,7 +118,7 @@ def showTestResult():
     return common.StdoutShellCommand(
         name="test_result",
         collectStdout=True,
-        command=["cat", util.Property("resultFile")])
+        command=["cat", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s")])
 
 
 def createRunTestSteps():
