@@ -35,12 +35,12 @@ If you have installed BuildBot into the virtual environment, then you should eit
 
 1. Clone the repository or get a repository slice.
 2. Install packages that are required to run the worker: `pip3 install -r requirements-worker.txt`.
-3. Create configuration for the worker: `buildbot-worker create-worker --umask=MASK DIRECTORY SERVER NAME PASSWORD `, where
+3. Create configuration for the worker: `buildbot-worker create-worker --umask=002 DIRECTORY SERVER NAME PASSWORD `, where
    * `DIRECTORY` - path to the worker configuration and build directory.
    * `SERVER` - URI of the server to connect to.
    * `NAME` - name of the worker as specified on the server.
    * `PASSWORD` - password for the specified name.
-   * `MASK` - umask for a worker process which determines permission of files created by the worker. The default value for workers is 077. See [Worker Options](http://docs.buildbot.net/current/manual/installation/worker.html#cmdoption-buildbot-worker-create-worker-umask)
+   * `--umask` - umask for a worker process which determines permission of files created by the worker. The default value for workers is 077. See [Worker Options](http://docs.buildbot.net/current/manual/installation/worker.html#cmdoption-buildbot-worker-create-worker-umask)
 4. Fill-in information about the administrator in `DIRECTORY/info/admin` file.
 5. Fill-in host description in `DIRECTORY/info/host` file.
 6. Start the worker daemon: `bildbot-worker start DIRECTORY`.
