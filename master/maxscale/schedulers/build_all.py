@@ -27,7 +27,10 @@ for branch in constants.NIGHTLY_SCHEDS:
         name=branch,
         builderNames=['build_all'],
         hour=4, minute=0,
-        codebases=constants.MAXSCALE_CODEBASE,
+        codebases={"": {
+            "branch": branch,
+            "repository": constants.MAXSCALE_REPOSITORY
+        }},
         properties=nightlyProperties
     )
     SCHEDULERS.append(nightlyScheduler)

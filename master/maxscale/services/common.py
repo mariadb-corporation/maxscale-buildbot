@@ -19,7 +19,7 @@ BUILD_SUMMARY_HEADER = u'''\
     <li> {{ step['name'] }}: <b style='color:{{colors[step['results']]}}'>{{ statuses[step['results']]}}</b></li>
     {% endfor %}
     </ul>
-    <br>
+    </br>
     '''
 
 
@@ -67,7 +67,7 @@ COMPLEX_STEPS_BUILD_TEMPLATE = u'''\
                     <b style='color:{{colors[triggeredBuild['results']]}}'>{{ statuses[triggeredBuild['results']]}}</b>
                 </li>
             {% endfor %}
-            <ul>
+            </ul>
         {% endif %}
     </li>
     {% endfor %}
