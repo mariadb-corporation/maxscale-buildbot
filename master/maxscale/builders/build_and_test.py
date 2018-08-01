@@ -4,6 +4,7 @@ from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
+from maxscale.builders.support import common
 
 COMMON_PROPERTIES = [
     "name",
@@ -25,7 +26,7 @@ COMMON_PROPERTIES = [
 
 def create_factory():
     factory = BuildFactory()
-
+    factory.addSteps(common.setMissingTarget())
     factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler",
         schedulerNames=['build'],

@@ -1,11 +1,10 @@
 import os
-import datetime
 
 from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
-from buildbot.process.results import SKIPPED
 from maxscale import workers
+from maxscale.builders.support import common
 
 COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "branch",
@@ -18,21 +17,9 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 ]
 
 
-@util.renderer
-def formatStartTime(properties):
-    return datetime.datetime.now().strftime("%b%d-%H:%M:%S")
-
-
 def createFactory():
     factory = BuildFactory()
-    factory.addStep(steps.SetProperty(
-        name=util.Interpolate("Set 'target' property"),
-        property="target",
-        value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
-                               startTime=formatStartTime),
-        doStepIf=lambda step: step.build.getProperty('target') is None,
-        hideStepIf=lambda results, s: results == SKIPPED
-    ))
+    factory.addSteps(common.setMissingTarget())
     factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler. Build Ubuntu",
         schedulerNames=['build'],

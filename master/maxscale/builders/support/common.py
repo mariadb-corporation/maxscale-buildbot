@@ -1,9 +1,10 @@
+import datetime
 from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
+from buildbot.process.results import SKIPPED
 from buildbot.steps.shell import ShellCommand
 from twisted.internet import defer
 from maxscale.builders.support import support
-
 
 def cloneRepository():
     """Clone MaxScale repository using default configuration options"""
@@ -168,3 +169,19 @@ class StdoutShellCommand(ShellCommand):
     """
     def commandComplete(self, cmd):
         self.addCompleteLog('stdout', cmd.stdout)
+
+
+@util.renderer
+def formatStartTime(properties):
+    return datetime.datetime.now().strftime("%b%d-%H:%M:%S")
+
+
+def setMissingTarget():
+    return [steps.SetProperty(
+        name=util.Interpolate("Set 'target' property"),
+        property="target",
+        value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
+                               startTime=formatStartTime),
+        doStepIf=lambda step: step.build.getProperty('target') is None,
+        hideStepIf=lambda results, s: results == SKIPPED
+    )]
