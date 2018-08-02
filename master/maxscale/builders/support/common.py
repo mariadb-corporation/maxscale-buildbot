@@ -5,6 +5,7 @@ from buildbot.process.results import SKIPPED
 from buildbot.steps.shell import ShellCommand
 from twisted.internet import defer
 from maxscale.builders.support import support
+from maxscale.config import workers
 
 def cloneRepository():
     """Clone MaxScale repository using default configuration options"""
@@ -184,4 +185,27 @@ def setMissingTarget():
                                startTime=formatStartTime),
         doStepIf=lambda step: step.build.getProperty('target') is None,
         hideStepIf=lambda results, s: results == SKIPPED
+    )]
+
+
+def generateRepositories():
+    return [steps.ShellCommand(
+        name="Generate product repositories",
+        command=["%(prop:HOME)s/mdbci/mdbci", "generate-product-repositories"]
+    )]
+
+
+@util.renderer
+def createRsyncQueue(properties):
+    return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d "
+                                  "vagrant@{}:~/.config/mdbci/repo.d".format(worker['host']),
+                          logfile="rsync to {}".format(worker['host']))
+            for worker in workers.WORKER_CREDENTIALS
+            if worker['name'] is not properties.getProperty("workername")]
+
+
+def syncRepod():
+    return [steps.ShellSequence(
+        name="Synchronizing ~/.config/mdbci/repo.d among workers",
+        commands=createRsyncQueue
     )]
