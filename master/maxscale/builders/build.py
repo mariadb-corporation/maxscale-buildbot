@@ -71,6 +71,9 @@ BUILDERS = [
         factory=createBuildFactory(),
         tags=["build"],
         env=ENVIRONMENT,
-        collapseRequests=False
+        collapseRequests=False,
+        defaultProperties={
+            "try_already_running": None
+        }
     )
 ]

@@ -154,6 +154,8 @@ BUILDERS = [
         factory=createTestFactory(),
         tags=["test"],
         env=ENVIRONMENT,
-        properties={"script_name": "run_test.sh",
-                    "try_already_running": False})
+        properties={"script_name": "run_test.sh"},
+        defaultProperties={
+            "try_already_running": None
+        })
 ]

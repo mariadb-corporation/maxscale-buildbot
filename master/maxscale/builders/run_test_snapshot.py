@@ -68,7 +68,10 @@ BUILDERS = [
         tags=['test'],
         env=RUN_TEST_SNAPSHOT_ENVIRONMENT,
         properties={
-            "script_name": "run_test_snapshot.sh",
+            "script_name": "run_test_snapshot.sh"
+        },
+        defaultProperties={
             "try_already_running": None
-        })
+        }
+    ),
 ]
