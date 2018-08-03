@@ -98,28 +98,31 @@ def remoteStoreCoredumps():
     shutil.copy(buildLogFile, os.path.join(HOME, "LOGS", buildId))
 
 
-def writeBuildResultsToDatabase():
+def writeBuildResultsToDatabase(**kwargs):
     """Call the script to save results to the database"""
     return steps.ShellCommand(
         name="Save test results to the database",
         command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/write_build_results.rb"),
-                 "-f", util.Property("jsonResultsFile")])
+                 "-f", util.Property("jsonResultsFile")],
+        **kwargs)
 
 
-def uploadTestRunsToReportPortal():
+def uploadTestRunsToReportPortal(**kwargs):
     """Save test results to the report portal"""
     return steps.ShellCommand(
         name="Send test results to the Report Portal",
         command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/report_portal/bin/upload_testrun.rb"),
                  util.Property("jsonResultsFile"),
-                 util.Interpolate("%(prop:HOME)s/report-portal-config.yml")])
+                 util.Interpolate("%(prop:HOME)s/report-portal-config.yml")],
+        **kwargs)
 
 
-def showTestResult():
+def showTestResult(**kwargs):
     return common.StdoutShellCommand(
         name="test_result",
         collectStdout=True,
-        command=["cat", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s")])
+        command=["cat", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s")],
+        **kwargs)
 
 
 def createRunTestSteps():
@@ -130,10 +133,11 @@ def createRunTestSteps():
     testSteps.extend(support.executePythonScript(
         "Run MaxScale tests using MDBCI", remoteRunScriptAndLog))
     testSteps.extend(support.executePythonScript(
-        "Parse ctest results log and save it to logs directory", remoteParseCtestLogAndStoreIt))
-    testSteps.append(writeBuildResultsToDatabase())
-    testSteps.append(uploadTestRunsToReportPortal())
-    testSteps.append(showTestResult())
+        "Parse ctest results log and save it to logs directory",
+        remoteParseCtestLogAndStoreIt, alwaysRun=True))
+    testSteps.append(writeBuildResultsToDatabase(alwaysRun=True))
+    testSteps.append(uploadTestRunsToReportPortal(alwaysRun=True))
+    testSteps.append(showTestResult(alwaysRun=True))
     testSteps.extend(common.destroyVirtualMachine())
     testSteps.extend(common.removeLock())
     testSteps.extend(common.cleanBuildDir())

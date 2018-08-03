@@ -43,10 +43,10 @@ def createRunTestSnapshotSteps():
         "Run MaxScale tests using MDBCI", run_test.remoteRunScriptAndLog))
     testSnapshotSteps.extend(support.executePythonScript(
         "Parse ctest results log and save it to logs directory",
-        run_test.remoteParseCtestLogAndStoreIt))
-    testSnapshotSteps.append(run_test.writeBuildResultsToDatabase())
-    testSnapshotSteps.append(run_test.uploadTestRunsToReportPortal())
-    testSnapshotSteps.append(run_test.showTestResult())
+        run_test.remoteParseCtestLogAndStoreIt, alwaysRun=True))
+    testSnapshotSteps.append(run_test.writeBuildResultsToDatabase(alwaysRun=True))
+    testSnapshotSteps.append(run_test.uploadTestRunsToReportPortal(alwaysRun=True))
+    testSnapshotSteps.append(run_test.showTestResult(alwaysRun=True))
     testSnapshotSteps.extend(common.removeSnapshotLock())
     testSnapshotSteps.extend(common.removeLock())
     testSnapshotSteps.extend(common.cleanBuildDir())
