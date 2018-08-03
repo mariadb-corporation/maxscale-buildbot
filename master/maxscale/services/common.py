@@ -75,6 +75,9 @@ COMPLEX_STEPS_BUILD_TEMPLATE = u'''\
     <br>
     '''
 
+SUBJECT_TEMPLATE = "[maxscale-buildbot] {{ buildername }}-{{ build['properties']['buildnumber'][0] }}" \
+                   "-{{ build['properties']['branch'][0] }} ended with {{ statuses[build['results']].upper() }}"
+
 RESULT_COLOR = [
     "#8d4",  # success
     "#fa3",  # warnings
@@ -96,10 +99,10 @@ def create_mail_notifier(template, builder_names):
         builders=builder_names,
         messageFormatter=ExpandedStepsFormatter(template=template, template_type='html',
                                                 wantProperties=True, wantSteps=True,
+                                                subject=SUBJECT_TEMPLATE,
                                                 ctx=dict(statuses=util.Results,
                                                          colors=RESULT_COLOR)),
         sendToInterestedUsers=True,
-        subject="[maxscale-buildbot] Buildbot %(result)s in %(title)s on %(builder)s",
         relayhost=config['relayhost'],
         smtpPort=config['smtpPort'],
         useTls=config['useTls'],
