@@ -8,6 +8,7 @@ from twisted.internet import defer
 from maxscale.builders.support import support
 from maxscale.config import workers
 
+
 def cloneRepository():
     """Clone MaxScale repository using default configuration options"""
     return [steps.Git(
@@ -192,7 +193,7 @@ def setMissingTarget():
 def generateRepositories():
     return [steps.ShellCommand(
         name="Generate product repositories",
-        command=["%(prop:HOME)s/mdbci/mdbci", "generate-product-repositories"]
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories"]
     )]
 
 

@@ -5,6 +5,7 @@ from . import build_and_test_snapshot
 from . import run_test
 from . import run_test_snapshot
 from . import build_all
+from . import generate_and_sync_repod
 
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
@@ -14,4 +15,5 @@ MAXSCALE_SCHEDULERS = list(itertools.chain(
     run_test_snapshot.SCHEDULERS,
     build_all.SCHEDULERS,
     build_and_test_snapshot.SCHEDULERS,
+    generate_and_sync_repod.SCHEDULERS,
 ))
