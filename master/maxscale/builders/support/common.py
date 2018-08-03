@@ -193,7 +193,8 @@ def setMissingTarget():
 def generateRepositories():
     return [steps.ShellCommand(
         name="Generate product repositories",
-        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories"]
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories"],
+        haltOnFailure=True
     )]
 
 
