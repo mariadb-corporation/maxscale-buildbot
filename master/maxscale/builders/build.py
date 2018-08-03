@@ -54,6 +54,7 @@ def createBuildSteps():
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
+    buildSteps.extend(common.syncRepod())
     return buildSteps
 
 
