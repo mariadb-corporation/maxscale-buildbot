@@ -225,4 +225,6 @@ class RsyncShellSequence(ShellSequence):
     def run(self):
         hosts = self.getRemoteWorkersHosts()
         self.commands = self.createRsyncSequence(hosts)
+        if not hosts:
+            self.descriptionDone = "No remote hosts found"
         return self.runShellSequence(self.commands)
