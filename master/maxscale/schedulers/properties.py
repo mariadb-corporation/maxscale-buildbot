@@ -259,3 +259,10 @@ def codebaseParameter():
         repository=util.StringParameter(name="repository",
                                         default=constants.MAXSCALE_CODEBASE[""]["repository"]),
     )]
+
+
+def versionNumber():
+    return util.StringParameter(
+        name="version_number",
+        label="The version number of this release in x.y.z format"
+    )
