@@ -189,18 +189,14 @@ def setMissingTarget():
     )]
 
 
-def assignWorker(hostMap):
+def assignWorker(builder, workerForBuilerList, buildRequest):
     """
-    Creates function that returns available worker for a builder
+    Returns available worker for a builder
     filtered by the scheduler which triggered build and by the giver task-host mapping
     See 'nextWorker' at http://docs.buildbot.net/current/manual/cfg-builders.html#builder-configuration
     """
-    def getNextWorker(builder, workerForBuilerList, buildRequest):
-        host = hostMap.get(buildRequest.properties.getProperty("scheduler"), hostMap["default"])
-        workerNames = workers.workerNames(host)
-        availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
-        for workerForBuilder in availableWorkers:
-            if workerForBuilder.isAvailable():
-                return workerForBuilder
-
-    return getNextWorker
+    workerNames = workers.workerNames(buildRequest.properties.getProperty("host", default=""))
+    availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
+    for workerForBuilder in availableWorkers:
+        if workerForBuilder.isAvailable():
+            return workerForBuilder

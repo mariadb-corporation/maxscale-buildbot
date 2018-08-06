@@ -64,18 +64,12 @@ def createBuildFactory():
     return factory
 
 
-SCHEDULER_TO_HOST_MAP = {
-    "build": "localhost",
-    "default": "127.0.0.1"
-}
-
-
 BUILDERS = [
     BuilderConfig(
         name="build",
         workernames=workers.workerNames(),
         factory=createBuildFactory(),
-        nextWorker=common.assignWorker(SCHEDULER_TO_HOST_MAP),
+        nextWorker=common.assignWorker,
         tags=["build"],
         env=ENVIRONMENT,
         collapseRequests=False,

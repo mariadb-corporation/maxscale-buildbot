@@ -2,6 +2,8 @@ from buildbot.config import BuilderConfig
 from buildbot.plugins import util
 from buildbot.steps.trigger import Trigger
 from maxscale import workers
+from maxscale.builders.support import common
+from maxscale.config import constants
 from .build import ENVIRONMENT
 
 
@@ -61,7 +63,8 @@ def createBuildFactory():
             "test_set",
             "ci_url",
             "smoke",
-            "big"],
+            "big",
+            "host"],
         set_properties={
             "virtual_builder_name": "build"
         }
@@ -73,6 +76,7 @@ BUILDERS = [
     BuilderConfig(
         name="build_all",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
         factory=createBuildFactory(),
         tags=["build"],
         env=ENVIRONMENT,

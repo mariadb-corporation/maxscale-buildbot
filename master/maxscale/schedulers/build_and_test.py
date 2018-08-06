@@ -17,6 +17,7 @@ BUILD_AND_TEST_PROPERTIES = [
     properties.smoke_tests(),
     properties.big_number_of_vms(),
     properties.backend_use_ssl(),
+    properties.host("max-tst-01.mariadb.com"),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(

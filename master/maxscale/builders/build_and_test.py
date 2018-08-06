@@ -5,6 +5,7 @@ from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
 from maxscale.builders.support import common
+from maxscale.config import constants
 
 COMMON_PROPERTIES = [
     "name",
@@ -20,7 +21,8 @@ COMMON_PROPERTIES = [
     "test_set",
     "ci_url",
     "smoke",
-    "big"
+    "big",
+    "host",
 ]
 
 
@@ -56,6 +58,7 @@ BUILDERS = [
     BuilderConfig(
         name="build_and_test",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
         factory=create_factory(),
         tags=['build', 'test'],
         env=dict(os.environ))

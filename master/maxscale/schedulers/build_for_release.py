@@ -6,6 +6,7 @@ BUILD_FOR_RELEASE_PROPERTIES = [
     properties.versionNumber(),
     properties.build_experimental_features(),
     properties.old_target(),
+    properties.host(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
