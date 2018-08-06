@@ -64,7 +64,7 @@ def createBuildFactory():
     return factory
 
 
-HOST_MAP = {
+SCHEDULER_TO_HOST_MAP = {
     "build": "localhost",
     "default": "127.0.0.1"
 }
@@ -75,7 +75,7 @@ BUILDERS = [
         name="build",
         workernames=workers.workerNames(),
         factory=createBuildFactory(),
-        nextWorker=common.assignWorker(HOST_MAP),
+        nextWorker=common.assignWorker(SCHEDULER_TO_HOST_MAP),
         tags=["build"],
         env=ENVIRONMENT,
         collapseRequests=False,

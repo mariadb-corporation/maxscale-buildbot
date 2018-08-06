@@ -193,6 +193,7 @@ def assignWorker(hostMap):
     """
     Creates function that returns available worker for a builder
     filtered by the scheduler which triggered build and by the giver task-host mapping
+    See 'nextWorker' at http://docs.buildbot.net/current/manual/cfg-builders.html#builder-configuration
     """
     def getNextWorker(builder, workerForBuilerList, buildRequest):
         host = hostMap.get(buildRequest.properties.getProperty("scheduler"), hostMap["default"])
