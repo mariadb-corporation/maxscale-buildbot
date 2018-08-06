@@ -25,6 +25,7 @@ SCHEDULERS = [MANUAL_SCHEDULER, TRIGGERABLE_SCHEDULER]
 # Add schedulers for every active branch to be built every night
 # The list of branches is defined by constants.NIGHTLY_SCHEDS
 # (see maxscale/config/constants.py)
+i = 0
 for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_ALL_PROPERTIES)
     nightlyProperties['target'] = branch
@@ -32,7 +33,7 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyScheduler = schedulers.Nightly(
         name=branch,
         builderNames=['build_all'],
-        hour=4, minute=0,
+        hour= 4 + i, minute=0,
         codebases={"": {
             "branch": branch,
             "repository": constants.MAXSCALE_REPOSITORY
@@ -40,3 +41,4 @@ for branch in constants.NIGHTLY_SCHEDS:
         properties=nightlyProperties
     )
     SCHEDULERS.append(nightlyScheduler)
+    i = i + 1
