@@ -10,14 +10,10 @@ def workerConfiguration():
     return configuration
 
 
-def workerNames():
+def workerNames(host=""):
     """Create a list of worker names that can be used in build configuration"""
     workers = []
     for credentials in WORKER_CREDENTIALS:
-        workers.append(credentials["name"])
+        if host in credentials["host"]:
+            workers.append(credentials["name"])
     return workers
-
-
-def workerNamesByHost(host):
-    """Creates a list of workers selected by a specific host"""
-    return [worker["name"] for worker in WORKER_CREDENTIALS if worker["host"] is not host]

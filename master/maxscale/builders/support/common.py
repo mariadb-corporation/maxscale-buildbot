@@ -197,7 +197,7 @@ def assignWorker(hostMap):
     """
     def getNextWorker(builder, workerForBuilerList, buildRequest):
         host = hostMap.get(buildRequest.properties.getProperty("scheduler"), hostMap["default"])
-        workerNames = workers.workerNamesByHost(host)
+        workerNames = workers.workerNames(host)
         availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
         for workerForBuilder in availableWorkers:
             if workerForBuilder.isAvailable():
