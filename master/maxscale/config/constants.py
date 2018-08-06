@@ -43,7 +43,7 @@ BUILD_ALL_BOXES = [
     "centos_6_libvirt",
     "ubuntu_trusty_libvirt",
     "ubuntu_xenial_libvirt",
-    "ubuntu_bionic_libvirt",
+    "ubuntu_bionic_aws",
     "debian_wheezy_libvirt",
     "debian_jessie_libvirt",
     "debian_stretch_libvirt",
