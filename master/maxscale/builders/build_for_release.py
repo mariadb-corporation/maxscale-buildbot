@@ -21,7 +21,7 @@ BUILD_TARGETS = [
     },
     {
         "target_name": "debug",
-        "cmake_flags": "DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DBUILD_MMMON=Y -DBUILD_CDC=Y"
+        "cmake_flags": "-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DBUILD_MMMON=Y -DBUILD_CDC=Y"
     }
 ]
 
@@ -45,6 +45,8 @@ class BuildForReleaseTrigger(Trigger):
             propertiesToSet = {}
             propertiesToSet.update(self.set_properties)
             propertiesToSet.update(buildTarget)
+            propertiesToSet["virtual_builder_name"] = \
+                "Build all for {}".format(buildTarget["target_name"])
             propertiesToSet["target"] = "maxscale-{}-{}".format(
                 self.set_properties["version_number"],
                 buildTarget["target_name"])
