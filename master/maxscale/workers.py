@@ -16,3 +16,8 @@ def workerNames():
     for credentials in WORKER_CREDENTIALS:
         workers.append(credentials["name"])
     return workers
+
+
+def workerNamesByHost(host):
+    """Creates a list of workers selected by a specific host"""
+    return [worker["name"] for worker in WORKER_CREDENTIALS if worker["host"] is not host]
