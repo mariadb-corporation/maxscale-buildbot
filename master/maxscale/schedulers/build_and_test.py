@@ -34,12 +34,13 @@ SCHEDULERS = [MANUAL_SCHEDULER]
 # (see maxscale/config/constants.py)
 for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+    nightlyProperties["name"] = "nightly_test_{}".format(branch)
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_{}_nightly".format(branch),
         builderNames=["build_and_test"],
-        hour=17, minute=20,
+        hour=23, minute=00,
         codebases={"": {
             "branch": branch,
             "repository": constants.MAXSCALE_REPOSITORY
