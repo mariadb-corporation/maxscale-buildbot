@@ -33,6 +33,16 @@ If you have installed BuildBot into the virtual environment, then you should eit
 
 ## Worker installation notes
 
+### Using the manager to install and restart nodes
+
+1. Configure the list of workers for the BuildBot master.
+2. Go to the `worker-management` directory and call the `./manage.py --help`.
+
+* If you wish to install workers on the host `first-host` then execute `./manage.py install --host first-host`.
+* If you with to restart all workers on all hosts then execute `./manage.py restart`.
+
+### Manual installation
+
 1. Clone the repository or get a repository slice.
 2. Install packages that are required to run the worker: `pip3 install -r requirements-worker.txt`.
 3. Create configuration for the worker: `buildbot-worker create-worker --umask=0o002 DIRECTORY SERVER NAME PASSWORD `, where
