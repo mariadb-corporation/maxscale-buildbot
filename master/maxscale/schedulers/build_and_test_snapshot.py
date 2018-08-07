@@ -19,7 +19,7 @@ BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 
 DEFAULT_PROPERTIES = \
     properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES)
-DEFAULT_PROPERTIES["host"] = "max-tst-02.mariadb.com"
+DEFAULT_PROPERTIES["host"] = "max-tst-02"
 del DEFAULT_PROPERTIES["target"]
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(

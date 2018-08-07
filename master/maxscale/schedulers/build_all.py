@@ -29,7 +29,7 @@ i = 0
 for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_ALL_PROPERTIES)
     nightlyProperties['target'] = branch
-    nightlyProperties['host'] = "max-tst-02.mariadb.com"
+    nightlyProperties['host'] = "max-tst-02"
 
     nightlyScheduler = schedulers.Nightly(
         name=branch,

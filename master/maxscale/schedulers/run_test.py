@@ -20,7 +20,7 @@ RUN_TEST_PROPERTIES = [
     properties.do_not_revert_virtual_machines(),
     properties.test_template(),
     properties.configuration_to_clone(),
-    properties.host("max-tst-01.mariadb.com"),
+    properties.host("max-tst-01"),
 ]
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
