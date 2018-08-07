@@ -6,6 +6,7 @@ from . import run_test
 from . import run_test_snapshot
 from . import build_all
 from . import build_for_release
+from . import destroy
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
     build.SCHEDULERS,
@@ -15,4 +16,5 @@ MAXSCALE_SCHEDULERS = list(itertools.chain(
     build_all.SCHEDULERS,
     build_for_release.SCHEDULERS,
     build_and_test_snapshot.SCHEDULERS,
+    destroy.SCHEDULERS,
 ))
