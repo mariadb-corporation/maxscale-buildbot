@@ -18,6 +18,9 @@ def parseArguments():
     parser.add_argument("--host", help="Host to manage.")
     parser.add_argument("--user", help="User to use during the SSH connection to host.", default=getpass.getuser())
     parser.add_argument("--domain", help="Default domain for hosts", default="mariadb.com")
+    parser.add_argument("--master", help="Domain name of the master to configure on workers", default="maxscale-ci")
+    parser.add_argument("--debug", help="Show debug output", dest="debug", action="store_true")
+    parser.set_defaults(debug=False)
     return parser.parse_args()
 
 
@@ -51,11 +54,16 @@ def determineHosts(arguments):
 
 
 def runCommand(sshClient, command):
+    logging.debug("Calling command '{}'".format(command))
     stdin, stdout, stderr = sshClient.exec_command(command)
     stdin.close()
     stdoutContents = stdout.readlines()
     stderrContents = stderr.readlines()
-    return ["".join(stdoutContents).strip(), "".join(stderrContents).strip()]
+    stdoutText = "".join(stdoutContents).strip()
+    stderrText = "".join(stderrContents).strip()
+    logging.debug("Stdout:\n{}".format(stdoutText))
+    logging.debug("Stderr:\n{}".format(stderrText))
+    return [stdoutText, stderrText]
 
 
 PYTHON_VENV = "~/buildbot-virtual-env"
@@ -75,26 +83,32 @@ def setupVirtualEnv(sshClient):
     runCommand(sshClient, "{}/bin/pip3 install -U -r {}/requirements.txt".format(PYTHON_VENV, PYTHON_VENV))
 
 
-def createWorkerConfig(sshClient, config):
-    print(config)
+def createWorkerConfig(sshClient, config, masterHost):
+    logging.info("Creating configuration for worker '{}'.".format(config["name"]))
+    runCommand(sshClient, "mkdir -p {}".format(WORKERS_DIR))
+    runCommand(sshClient, "{venv}/bin/buildbot-worker create-worker --umask=0o002 {dir}/{name} {server} {name} {password}".format(
+        venv=PYTHON_VENV, dir=WORKERS_DIR, server=masterHost, **config))
+    runCommand(sshClient, "echo '{host}' > {dir}/{name}/info/host".format(dir=WORKERS_DIR, **config))
 
 
-def installWorkers(hosts, username):
+def installWorkers(hosts, arguments):
     client = paramiko.SSHClient()
     client.load_system_host_keys()
     for hostIp in hosts:
         logging.info("Configuring host {}".format(hostIp))
-        client.connect(hostIp, username=username)
+        client.connect(hostIp, username=arguments.user)
         setupVirtualEnv(client)
         for worker in hosts[hostIp]:
-            createWorkerConfig(client, worker)
+            createWorkerConfig(client, worker, arguments.master)
         client.close()
-    pass
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
     arguments = parseArguments()
+    if arguments.debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
     actions = {
         'install': installWorkers
     }
@@ -103,7 +117,7 @@ def main():
         logging.error("Unknown action '{}'.".format(arguments.action))
         exit(1)
     hosts = determineHosts(arguments)
-    action(hosts, arguments.user)
+    action(hosts, arguments)
 
 
 if __name__ == "__main__":
