@@ -5,6 +5,8 @@ from buildbot.process.results import SKIPPED
 from buildbot.steps.shell import ShellCommand
 from twisted.internet import defer
 from maxscale.builders.support import support
+from maxscale import workers
+
 
 def cloneRepository():
     """Clone MaxScale repository using default configuration options"""
@@ -185,3 +187,16 @@ def setMissingTarget():
         doStepIf=lambda step: step.build.getProperty('target') is None,
         hideStepIf=lambda results, s: results == SKIPPED
     )]
+
+
+def assignWorker(builder, workerForBuilerList, buildRequest):
+    """
+    Returns available worker for a builder
+    filtered by the scheduler which triggered build and by the giver task-host mapping
+    See 'nextWorker' at http://docs.buildbot.net/current/manual/cfg-builders.html#builder-configuration
+    """
+    workerNames = workers.workerNames(buildRequest.properties.getProperty("host", default=""))
+    availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
+    for workerForBuilder in availableWorkers:
+        if workerForBuilder.isAvailable():
+            return workerForBuilder

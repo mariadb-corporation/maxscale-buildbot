@@ -266,3 +266,11 @@ def versionNumber():
         name="version_number",
         label="The version number of this release in x.y.z format"
     )
+
+
+def host(default="max-tst-03.mariadb.com"):
+    """Host of the used group of workers"""
+    return util.FixedParameter(
+        name="host",
+        default=default
+    )

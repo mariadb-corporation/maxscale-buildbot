@@ -27,7 +27,8 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
         properties.backend_use_ssl(),
         properties.test_logs_directory(),
         properties.test_template(),
-        properties.test_branch()
+        properties.test_branch(),
+        properties.host(),
     ]
 )
 

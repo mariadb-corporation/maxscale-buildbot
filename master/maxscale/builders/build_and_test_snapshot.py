@@ -14,6 +14,7 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "product",
     "version",
     "ci_url",
+    "host",
 ]
 
 

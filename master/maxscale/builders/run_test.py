@@ -155,6 +155,7 @@ BUILDERS = [
     BuilderConfig(
         name="run_test",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
         factory=createTestFactory(),
         tags=["test"],
         env=ENVIRONMENT,
