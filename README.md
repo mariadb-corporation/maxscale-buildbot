@@ -33,6 +33,16 @@ If you have installed BuildBot into the virtual environment, then you should eit
 
 ## Worker installation notes
 
+### Using the manager to install and restart nodes
+
+1. Configure the list of workers for the BuildBot master.
+2. Go to the `worker-management` directory and call the `./manage.py --help`.
+
+* If you wish to install workers on the host `first-host` then execute `./manage.py install --host first-host`.
+* If you with to restart all workers on all hosts then execute `./manage.py restart`.
+
+### Manual installation
+
 1. Clone the repository or get a repository slice.
 2. Install packages that are required to run the worker: `pip3 install -r requirements-worker.txt`.
 3. Create configuration for the worker: `buildbot-worker create-worker --umask=0o002 DIRECTORY SERVER NAME PASSWORD `, where
@@ -44,6 +54,29 @@ If you have installed BuildBot into the virtual environment, then you should eit
 4. Fill-in information about the administrator in `DIRECTORY/info/admin` file.
 5. Fill-in host description in `DIRECTORY/info/host` file.
 6. Start the worker daemon: `bildbot-worker start DIRECTORY`.
+
+# Development notes
+
+## Development environment configuration
+
+In order to efficiently work with the BuildBot codebase you should install development tools:
+
+```
+$ pip install -U -r requirements-development.txt
+```
+
+## Automated tasks
+
+The common development tasks are automated using the [Paver](https://github.com/paver/paver). There are two common tasks automated:
+
+* `paver check_code` - check Python source code with static code linters.
+* `paver check_config` - check BuildBot master configuration.
+* `paver buildbot -c start` - run start command for buildbot in the development mode. You can pass all commands to the buildbot via this command and `-c` flag.
+* `paver restart_buildbot` - restart the buildbot in the development mode and restart `worker-dev` associated with the environment. You should create the latter one by youself.
+
+## Code standard
+
+The [BuildBot](http://buildbot.net/) project is based on the [Twisted](https://twistedmatrix.com/trac/) framework and uses it's [code standard](https://twistedmatrix.com/documents/current/core/development/policy/coding-standard.html). Therefore the code of BuildBot configuration must follow this coding standard.
 
 ## Upgrading the dependencies
 
@@ -62,18 +95,3 @@ When the `requirements.txt` file has been updated, the dependencies should be in
 3. Restart the BuildBot master in order to activate installed dependecsies: `buildbot restart master`.
 
 The same should be done to the worker requirements file, `requirements-worker.txt`.
-
-# Development notes
-
-## Automated tasks
-
-The common development tasks are automated using the [Paver](https://github.com/paver/paver). There are two common tasks automated:
-
-* `paver check_code` - check Python source code with static code linters.
-* `paver check_config` - check BuildBot master configuration.
-* `paver buildbot -c start` - run start command for buildbot in the development mode. You can pass all commands to the buildbot via this command and `-c` flag.
-* `paver restart_buildbot` - restart the buildbot in the development mode and restart `worker-dev` associated with the environment. You should create the latter one by youself.
-
-## Code standard
-
-The [BuildBot](http://buildbot.net/) project is based on the [Twisted](https://twistedmatrix.com/trac/) framework and uses it's [code standard](https://twistedmatrix.com/documents/current/core/development/policy/coding-standard.html). Therefore the code of BuildBot configuration must follow this coding standard.
