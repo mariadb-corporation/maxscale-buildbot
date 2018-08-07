@@ -12,19 +12,7 @@ sys.path.append(os.path.abspath("{}/../../master/".format(__file__)))
 import maxscale.config.workers as workers
 
 
-def parseArguments():
-    parser = argparse.ArgumentParser(description="A tool to install, restart the BuildBot worker instances.")
-    parser.add_argument("action", help="Action to perform, install for example.")
-    parser.add_argument("--host", help="Host to manage.")
-    parser.add_argument("--user", help="User to use during the SSH connection to host.", default=getpass.getuser())
-    parser.add_argument("--domain", help="Default domain for hosts", default="mariadb.com")
-    parser.add_argument("--master", help="Domain name of the master to configure on workers", default="maxscale-ci.mariadb.come")
-    parser.add_argument("--debug", help="Show debug output", dest="debug", action="store_true")
-    parser.set_defaults(debug=False)
-    return parser.parse_args()
-
-
-def determineIP(host, domain):
+def determineHost(host, domain):
     possibleHosts = [
         host,
         "{}.{}".format(host, domain)
@@ -34,7 +22,7 @@ def determineIP(host, domain):
             info = socket.gethostbyname(checkHost)
         except BaseException:
             continue
-        return info
+        return checkHost
     return None
 
 
@@ -43,13 +31,13 @@ def determineHosts(arguments):
     for hostConfiguration in workers.WORKER_CREDENTIALS:
         if arguments.host is not None and hostConfiguration["host"] != arguments.host:
             continue
-        ipAddress = determineIP(hostConfiguration["host"], arguments.domain)
-        if ipAddress is None:
+        host = determineHost(hostConfiguration["host"], arguments.domain)
+        if host is None:
             continue
-        if ipAddress in hosts:
-            hosts[ipAddress].append(hostConfiguration)
+        if host in hosts:
+            hosts[host].append(hostConfiguration)
         else:
-            hosts[ipAddress] = [hostConfiguration]
+            hosts[host] = [hostConfiguration]
     return hosts
 
 
@@ -66,14 +54,21 @@ def runCommand(sshClient, command):
     return [stdoutText, stderrText]
 
 
+def isDirectoryAbsent(sshClient, directory):
+    _, stderr = runCommand(sshClient, "ls -ld {}".format(directory))
+    if stderr:
+        return True
+    else:
+        return False
+
+
 PYTHON_VENV = "~/buildbot-virtual-env"
 WORKERS_DIR = "~/buildbot-workers"
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def setupVirtualEnv(sshClient):
-    _, stderr = runCommand(sshClient, "ls -ld {}".format(PYTHON_VENV))
-    if stderr:
+    if isDirectoryAbsent(sshClient, PYTHON_VENV):
         logging.info("Creating python virtual environment in {}".format(PYTHON_VENV))
         runCommand(sshClient, "python3 -m virtualenv -p /usr/bin/python3 {}".format(PYTHON_VENV))
     logging.info("Installing latest version of requirements")
@@ -86,12 +81,14 @@ def setupVirtualEnv(sshClient):
 def createWorkerConfig(sshClient, config, masterHost):
     logging.info("Creating configuration for worker '{}'.".format(config["name"]))
     runCommand(sshClient, "mkdir -p {}".format(WORKERS_DIR))
+    runCommand(sshClient, "rm -rf {dir}/{name}".format(dir=WORKERS_DIR, **config))
     runCommand(sshClient, "{venv}/bin/buildbot-worker create-worker --umask=0o002 {dir}/{name} {server} {name} {password}".format(
         venv=PYTHON_VENV, dir=WORKERS_DIR, server=masterHost, **config))
     runCommand(sshClient, "echo '{host}' > {dir}/{name}/info/host".format(dir=WORKERS_DIR, **config))
 
 
 def installWorkers(hosts, arguments):
+    stopWorkers(hosts, arguments)
     client = paramiko.SSHClient()
     client.load_system_host_keys()
     for hostIp in hosts:
@@ -103,15 +100,49 @@ def installWorkers(hosts, arguments):
         client.close()
 
 
-def restartWorkers(hosts, arguments):
+def callBuildbotAction(action, hosts, arguments):
     client = paramiko.SSHClient()
     client.load_system_host_keys()
     for hostIp in hosts:
-        logging.info("Restarting workers on host {}".format(hostIp))
+        logging.info("Executing action '{}' workers on host '{}'".format(action, hostIp))
         client.connect(hostIp, username=arguments.user)
         for worker in hosts[hostIp]:
-            runCommand(client, "{venv}/bin/buildbot-worker restart {dir}/{name}".format(
-                venv=PYTHON_VENV, dir=WORKERS_DIR, **worker))
+            if isDirectoryAbsent(client, "{dir}/{name}".format(dir=WORKERS_DIR, **worker)):
+                logging.debug("Worker '{name}' configuration does not exist, doing nothing".format(**worker))
+                continue
+            runCommand(client, "{venv}/bin/buildbot-worker {action} {dir}/{name}".format(
+                venv=PYTHON_VENV, dir=WORKERS_DIR, action=action, **worker))
+
+def restartWorkers(hosts, arguments):
+    callBuildbotAction("restart", hosts, arguments)
+
+
+def stopWorkers(hosts, arguments):
+    callBuildbotAction("stop", hosts, arguments)
+
+
+def startWorkers(hosts, arguments):
+    callBuildbotAction("start", hosts, arguments)
+
+
+AVAILABLE_ACTIONS = {
+    "install": installWorkers,
+    "restart": restartWorkers,
+    "stop": stopWorkers,
+    "start": startWorkers
+}
+
+
+def parseArguments():
+    parser = argparse.ArgumentParser(description="A tool to install, restart the BuildBot worker instances.")
+    parser.add_argument("action", help="Action to perform, install for example.", choices=AVAILABLE_ACTIONS.keys())
+    parser.add_argument("--host", help="Host to manage.")
+    parser.add_argument("--user", help="User to use during the SSH connection to host.", default=getpass.getuser())
+    parser.add_argument("--domain", help="Default domain for hosts", default="mariadb.com")
+    parser.add_argument("--master", help="Domain name of the master to configure on workers", default="maxscale-ci.mariadb.com")
+    parser.add_argument("--debug", help="Show debug output", dest="debug", action="store_true")
+    parser.set_defaults(debug=False)
+    return parser.parse_args()
 
 
 def main():
@@ -120,11 +151,7 @@ def main():
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-    actions = {
-        "install": installWorkers,
-        "restart": restartWorkers
-    }
-    action = actions.get(arguments.action)
+    action = AVAILABLE_ACTIONS.get(arguments.action)
     if action is None:
         logging.error("Unknown action '{}'.".format(arguments.action))
         exit(1)
