@@ -18,7 +18,7 @@ def parseArguments():
     parser.add_argument("--host", help="Host to manage.")
     parser.add_argument("--user", help="User to use during the SSH connection to host.", default=getpass.getuser())
     parser.add_argument("--domain", help="Default domain for hosts", default="mariadb.com")
-    parser.add_argument("--master", help="Domain name of the master to configure on workers", default="maxscale-ci")
+    parser.add_argument("--master", help="Domain name of the master to configure on workers", default="maxscale-ci.mariadb.come")
     parser.add_argument("--debug", help="Show debug output", dest="debug", action="store_true")
     parser.set_defaults(debug=False)
     return parser.parse_args()
@@ -103,6 +103,17 @@ def installWorkers(hosts, arguments):
         client.close()
 
 
+def restartWorkers(hosts, arguments):
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    for hostIp in hosts:
+        logging.info("Restarting workers on host {}".format(hostIp))
+        client.connect(hostIp, username=arguments.user)
+        for worker in hosts[hostIp]:
+            runCommand(client, "{venv}/bin/buildbot-worker restart {dir}/{name}".format(
+                venv=PYTHON_VENV, dir=WORKERS_DIR, **worker))
+
+
 def main():
     arguments = parseArguments()
     if arguments.debug:
@@ -110,7 +121,8 @@ def main():
     else:
         logging.basicConfig(level=logging.INFO)
     actions = {
-        'install': installWorkers
+        "install": installWorkers,
+        "restart": restartWorkers
     }
     action = actions.get(arguments.action)
     if action is None:
