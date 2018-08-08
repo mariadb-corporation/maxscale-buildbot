@@ -121,7 +121,7 @@ def showTestResult(**kwargs):
     return common.StdoutShellCommand(
         name="test_result",
         collectStdout=True,
-        command=["cat", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s")],
+        command=util.Interpolate(r"cat %(prop:builddir)s/results_%(prop:buildnumber)s | sed -E 's/\\n\\//g'"),
         **kwargs)
 
 
