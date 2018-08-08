@@ -27,6 +27,7 @@ BUILDERS = [
     BuilderConfig(
         name="destroy",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
         factory=createFactory(),
         tags=["destroy"],
     )
