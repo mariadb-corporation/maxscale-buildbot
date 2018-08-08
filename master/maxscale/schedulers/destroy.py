@@ -1,14 +1,14 @@
-from buildbot.plugins import schedulers
+from buildbot.plugins import schedulers, util
 from . import properties
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="destroy_force",
+    buttonName="Destroy",
     builderNames=["destroy"],
-    codebases=properties.codebaseParameter(),
+    codebases=[util.CodebaseParameter(codebase='', hide=True)],
     properties=[
         properties.build_name(),
-        properties.keep_virtual_machines(),
-        properties.try_already_running(),
+        properties.host(),
     ]
 )
 
