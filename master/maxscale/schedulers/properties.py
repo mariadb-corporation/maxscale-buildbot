@@ -1,6 +1,7 @@
 import os
 from buildbot.plugins import util
 from maxscale.config import constants
+from maxscale.config import workers
 
 
 def build_box():
@@ -268,9 +269,11 @@ def versionNumber():
     )
 
 
-def host(default="max-tst-03.mariadb.com"):
+def host(default="max-tst-03"):
     """Host of the used group of workers"""
-    return util.FixedParameter(
+    return util.ChoiceStringParameter(
         name="host",
+        label="Host",
+        choices=list(set(map(lambda worker: worker["host"], workers.WORKER_CREDENTIALS))),
         default=default
     )
