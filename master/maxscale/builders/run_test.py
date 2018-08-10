@@ -5,8 +5,11 @@ from maxscale import workers
 
 
 ENVIRONMENT = {
+    "WORKSPACE": util.Interpolate('%(prop:builddir)s/build'),
     "JOB_NAME": util.Property("buildername"),
     "BUILD_NUMBER": util.Interpolate("%(prop:buildnumber)s"),
+    "BUILD_TIMESTAMP": util.Interpolate('%(kw:datetime)s',
+                                        datetime=common.getFormattedDateTime("%Y-%m-%d %H-%M-%S")),
     "name": util.Property("name"),
     "target": util.Property("target"),
     "box": util.Property("box"),
@@ -19,7 +22,7 @@ ENVIRONMENT = {
     "big": util.Property("big"),
     "backend_ssl": util.Property("backend_ssl"),
     "use_snapshots": util.Property("use_snapshots"),
-    "logs_dir": util.Interpolate("%(prop:HOME)s/logs_dir"),
+    "logs_dir": util.Property('logs_dir'),
     "no_vm_revert": util.Property("no_vm_revert"),
     "template": util.Property("template"),
     "config_to_clone": util.Property("config_to_clone"),

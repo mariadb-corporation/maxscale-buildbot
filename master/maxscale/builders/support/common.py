@@ -173,9 +173,12 @@ class StdoutShellCommand(ShellCommand):
         self.addCompleteLog('stdout', cmd.stdout)
 
 
-@util.renderer
-def formatStartTime(properties):
-    return datetime.datetime.now().strftime("%b%d-%H:%M:%S")
+def getFormattedDateTime(format):
+    @util.renderer
+    def formatDateTime(properties):
+        return datetime.datetime.now().strftime(format)
+
+    return formatDateTime
 
 
 def setMissingTarget():
@@ -183,7 +186,7 @@ def setMissingTarget():
         name=util.Interpolate("Set 'target' property"),
         property="target",
         value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
-                               startTime=formatStartTime),
+                               startTime=getFormattedDateTime("%b%d-%H:%M:%S")),
         doStepIf=lambda step: step.build.getProperty('target') is None,
         hideStepIf=lambda results, s: results == SKIPPED
     )]
