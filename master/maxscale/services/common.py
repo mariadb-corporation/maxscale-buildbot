@@ -165,7 +165,7 @@ class ExpandedStepsFormatter(MessageFormatter):
                                  properties.get('buildername'))[0],
                         'build_url': utils.getURLForBuild(master,
                                                           build[0]['builderid'],
-                                                          buildId),
+                                                          build[0]['number']),
                         'results': build[0]['results'],
                         'properties': properties
                     }
