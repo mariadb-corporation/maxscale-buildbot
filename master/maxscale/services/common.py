@@ -113,9 +113,6 @@ def create_mail_notifier(template, builder_names):
 
 class ExpandedStepsFormatter(MessageFormatter):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     @defer.inlineCallbacks
     def buildAdditionalContext(self, master, ctx):
         """
