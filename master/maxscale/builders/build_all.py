@@ -11,9 +11,6 @@ class BuildAllTrigger(Trigger):
     """
     Implements custom trigger step which triggers 'build' task on a virtual builder for every marked checkbox
     """
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def getSchedulersAndProperties(self):
         """
         Overrides method getSchedulersAndProperties of Trigger class
