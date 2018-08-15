@@ -5,7 +5,7 @@ MAXSCALE_BRANCHES_LIST = [
     },
     {
         "branch": "MXS-.*",
-        "test_set": "-L LIGHT""
+        "test_set": "-L LIGHT"
     },
     {
         "branch": r"^2\.2$",
