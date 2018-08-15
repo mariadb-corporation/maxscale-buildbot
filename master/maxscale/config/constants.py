@@ -27,6 +27,7 @@ BOXES = [
     'debian_stretch_libvirt',
     'debian_stretch_aws',
     'suse_13_libvirt',
+    'suse_15_libvirt',
     'sles_11_aws',
     'sles_12_aws',
     'sles_12_libvirt',
@@ -50,6 +51,7 @@ BUILD_ALL_BOXES = [
     "debian_jessie_libvirt",
     "debian_stretch_libvirt",
     "sles_12_aws",
+    "suse_15_libvirt",
     "rhel_6_aws",
     "rhel_7_aws"
 ]
