@@ -11,7 +11,8 @@ COMMON_PROPERTIES = [
     "repository",
     "build_experimental",
     "version_number",
-    "old_target"
+    "old_target",
+    "host",
 ]
 
 BUILD_TARGETS = [

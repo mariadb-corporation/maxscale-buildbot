@@ -12,7 +12,8 @@ BUILD_PROPERTIES = [
     properties.try_already_running(),
     properties.run_upgrade_test(),
     properties.old_target(),
-    properties.ci_url()
+    properties.ci_url(),
+    properties.host(),
 ]
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(

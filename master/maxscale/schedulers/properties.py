@@ -1,6 +1,7 @@
 import os
 from buildbot.plugins import util
 from maxscale.config import constants
+from maxscale.config import workers
 
 
 def build_box():
@@ -265,4 +266,14 @@ def versionNumber():
     return util.StringParameter(
         name="version_number",
         label="The version number of this release in x.y.z format"
+    )
+
+
+def host(default="max-tst-03"):
+    """Host of the used group of workers"""
+    return util.ChoiceStringParameter(
+        name="host",
+        label="Host",
+        choices=list(set(map(lambda worker: worker["host"], workers.WORKER_CREDENTIALS))),
+        default=default
     )

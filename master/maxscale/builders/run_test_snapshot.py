@@ -5,11 +5,12 @@ from maxscale import workers
 from maxscale.builders import run_test
 
 RUN_TEST_SNAPSHOT_ENVIRONMENT = {
-    "WORKSPACE": util.Property('builddir'),
+    "WORKSPACE": util.Interpolate('%(prop:builddir)s/build'),
     "JOB_NAME": util.Property("buildername"),
     "BUILD_ID": util.Interpolate('%(prop:buildername)s-%(prop:buildnumber)s'),
     "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
-    "BUILD_TIMESTAMP": util.Property('BUILD_TIMESTAMP'),
+    "BUILD_TIMESTAMP": util.Interpolate('%(kw:datetime)s',
+                                        datetime=common.getFormattedDateTime("%Y-%m-%d %H-%M-%S")),
     "BUILD_LOG_PARSING_RESULT": 'Build log parsing finished with an error',
     "name": util.Property('name'),
     "snapshot_name": util.Property('snapshot_name'),
@@ -64,6 +65,7 @@ BUILDERS = [
     BuilderConfig(
         name="run_test_snapshot",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
         factory=createTestShapshotFactory(),
         tags=['test'],
         env=RUN_TEST_SNAPSHOT_ENVIRONMENT,

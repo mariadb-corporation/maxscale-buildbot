@@ -14,6 +14,7 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "product",
     "version",
     "ci_url",
+    "host",
 ]
 
 
@@ -67,6 +68,7 @@ BUILDERS = [
     BuilderConfig(
         name="build_and_test_snapshot",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
         factory=createFactory(),
         tags=['build', 'test'],
         env=dict(os.environ))

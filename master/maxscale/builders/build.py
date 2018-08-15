@@ -69,6 +69,7 @@ BUILDERS = [
         name="build",
         workernames=workers.workerNames(),
         factory=createBuildFactory(),
+        nextWorker=common.assignWorker,
         tags=["build"],
         env=ENVIRONMENT,
         collapseRequests=False,
