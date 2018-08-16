@@ -45,6 +45,8 @@ def createRunTestSnapshotSteps():
     testSnapshotSteps.extend(support.executePythonScript(
         "Parse ctest results log and save it to logs directory",
         run_test.remoteParseCtestLogAndStoreIt, alwaysRun=True))
+    testSnapshotSteps.extend(support.executePythonScript(
+        "Find and store coredumps", run_test.remoteStoreCoredumps, alwaysRun=True))
     testSnapshotSteps.append(run_test.writeBuildResultsToDatabase(alwaysRun=True))
     testSnapshotSteps.append(run_test.uploadTestRunsToReportPortal(alwaysRun=True))
     testSnapshotSteps.append(run_test.showTestResult(alwaysRun=True))

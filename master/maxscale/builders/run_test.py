@@ -95,7 +95,7 @@ def remoteStoreCoredumps():
     if result == "":
         coredumpLogFile.write("Coredumps were not found for build {}".format(buildnumber))
     else:
-        for dump in result.split("\n"):
+        for dump in result.decode("utf_8").split("\n"):
             coredumpLogFile.write("{} \\\n".format(dump))
     buildId = "{}-{}".format(buildername, buildnumber)
     shutil.copy(buildLogFile, os.path.join(HOME, "LOGS", buildId))
@@ -138,6 +138,8 @@ def createRunTestSteps():
     testSteps.extend(support.executePythonScript(
         "Parse ctest results log and save it to logs directory",
         remoteParseCtestLogAndStoreIt, alwaysRun=True))
+    testSteps.extend(support.executePythonScript(
+        "Find and store coredumps", remoteStoreCoredumps, alwaysRun=True))
     testSteps.append(writeBuildResultsToDatabase(alwaysRun=True))
     testSteps.append(uploadTestRunsToReportPortal(alwaysRun=True))
     testSteps.append(showTestResult(alwaysRun=True))
