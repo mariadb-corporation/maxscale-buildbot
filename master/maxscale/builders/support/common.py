@@ -3,9 +3,11 @@ from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
 from buildbot.process.results import SKIPPED
 from buildbot.steps.shell import ShellCommand
+from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
 from maxscale import workers
+from maxscale.config import workers
 
 
 def cloneRepository():
@@ -203,3 +205,43 @@ def assignWorker(builder, workerForBuilerList, buildRequest):
     for workerForBuilder in availableWorkers:
         if workerForBuilder.isAvailable():
             return workerForBuilder
+
+
+def generateRepositories():
+    return [steps.ShellCommand(
+        name="Generate product repositories",
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories"],
+        haltOnFailure=True
+    )]
+
+
+def syncRepod():
+    return [RsyncShellSequence(name="Synchronizing ~/.config/mdbci/repo.d among workers")]
+
+
+class RsyncShellSequence(ShellSequence):
+    """
+    rsync ~/.config/mdbci/repo.d directory from current worker
+    to every other unique worker's host
+    """
+    def createRsyncSequence(self, hosts):
+        return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d "
+                                      "vagrant@{}:~/.config/mdbci/repo.d".format(host),
+                              logfile="rsync to {}".format(host)) for host in hosts]
+
+    def getRemoteWorkersHosts(self):
+        hosts = set()
+        for worker in self.master.workers.workers:
+            if worker is not self.getProperty("workername"):
+                connection = self.master.workers.connections.get(worker)
+                if connection:
+                    hosts.add(connection.mind.broker.transport.getPeer().host)
+        hosts.discard('127.0.0.1')
+        return hosts
+
+    def run(self):
+        hosts = self.getRemoteWorkersHosts()
+        self.commands = self.createRsyncSequence(hosts)
+        if not hosts:
+            self.descriptionDone = "No remote hosts found"
+        return self.runShellSequence(self.commands)
