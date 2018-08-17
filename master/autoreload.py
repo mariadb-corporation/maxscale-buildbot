@@ -8,7 +8,8 @@ from importlib.util import spec_from_file_location
 class ReMetaPathFinder(MetaPathFinder):
 
     def find_spec(self, fullname, path, target=None):
-        if not fullname.startswith("maxscale"):
+        print(fullname)
+        if not (fullname.startswith("maxscale") or fullname is __name__):
             return None
         if not path:
             path = [os.getcwd()]
@@ -35,6 +36,8 @@ class ReLoader(Loader):
     def exec_module(self, module):
         with open(module.__file__, "r") as file:
             code = file.read()
+            if module.__name__ == __name__:
+                module.__dict__.update({"maxscale_modules": maxscale_modules})
             exec(code, module.__dict__)
         maxscale_modules.append(module.__name__)
         return module
@@ -55,7 +58,7 @@ def install():
     sys.meta_path.insert(0, ReMetaPathFinder())
 
 
-maxscale_modules = []
+maxscale_modules = globals().get("maxscale_modules") or [__name__]
 
 
 """
