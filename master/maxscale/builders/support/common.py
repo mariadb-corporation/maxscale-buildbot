@@ -7,7 +7,6 @@ from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
 from maxscale import workers
-from maxscale.config import workers
 
 
 def cloneRepository():
