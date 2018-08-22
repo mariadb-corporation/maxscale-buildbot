@@ -215,7 +215,8 @@ def generateRepositories():
 
 
 def syncRepod():
-    return [RsyncShellSequence(name="Synchronizing ~/.config/mdbci/repo.d among workers")]
+    return [RsyncShellSequence(name="Synchronizing ~/.config/mdbci/repo.d among workers",
+                               haltOnFailure=False)]
 
 
 class RsyncShellSequence(ShellSequence):
@@ -225,17 +226,18 @@ class RsyncShellSequence(ShellSequence):
     """
     def createRsyncSequence(self, hosts):
         return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d "
-                                      "vagrant@{}:~/.config/mdbci/repo.d".format(host),
-                              logfile="rsync to {}".format(host)) for host in hosts]
+                                      "vagrant@{}.mariadb.com:~/.config/mdbci/repo.d".format(host),
+                              logfile="rsync to {}.mariadb.com".format(host)) for host in hosts]
 
     def getRemoteWorkersHosts(self):
         hosts = set()
-        for worker in self.master.workers.workers:
-            if worker is not self.getProperty("workername"):
-                connection = self.master.workers.connections.get(worker)
-                if connection:
-                    hosts.add(connection.mind.broker.transport.getPeer().host)
-        hosts.discard('127.0.0.1')
+        currentHost = None
+        for worker in workers.WORKER_CREDENTIALS:
+            if worker["name"] is not self.getProperty("workername"):
+                hosts.add(worker["host"])
+            else:
+                currentHost = worker["host"]
+        hosts.discard(currentHost)
         return hosts
 
     def run(self):
