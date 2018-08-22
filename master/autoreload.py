@@ -37,9 +37,9 @@ class ReLoader(Loader):
         with open(module.__file__, "r") as file:
             code = file.read()
             if module.__name__ == __name__:
-                module.__dict__.update({"maxscale_modules": maxscale_modules})
+                module.__dict__.update({"maxscale_modules": _maxscaleModules})
             exec(code, module.__dict__)
-        maxscale_modules.append(module.__name__)
+        _maxscaleModules.append(module.__name__)
         return module
 
 
@@ -48,8 +48,8 @@ def install():
         if isinstance(cls, ReMetaPathFinder):
             del cls
 
-    while maxscale_modules:
-        mod = maxscale_modules.pop()
+    while _maxscaleModules:
+        mod = _maxscaleModules.pop()
         if mod in sys.modules:
             del sys.modules[mod]
         else:
@@ -58,20 +58,5 @@ def install():
     sys.meta_path.insert(0, ReMetaPathFinder())
 
 
-maxscale_modules = globals().get("maxscale_modules") or [__name__]
+_maxscaleModules = globals().get("maxscale_modules") or [__name__]
 
-
-"""
-import builtins
-
-
-real_import = builtins.__import__
-
-
-def _import(name, globals=None, locals=None, fromlist=(), level=0):
-    print(name)
-    return real_import(name, globals, locals, fromlist, level)
-
-
-builtins.__import__ = _import
-"""
