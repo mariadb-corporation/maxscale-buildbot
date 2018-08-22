@@ -8,6 +8,14 @@ from importlib.util import spec_from_file_location
 class ReMetaPathFinder(MetaPathFinder):
 
     def find_spec(self, fullname, path, target=None):
+        """
+        Seeks for module's files and passes spec to ReLoader
+        if found files are submodules of maxscale module
+        :param fullname: Name of the module
+        :param path: Path to the module's files
+        :param target:
+        :return:
+        """
         print(fullname)
         if not (fullname.startswith("maxscale") or fullname is __name__):
             return None
@@ -34,6 +42,11 @@ class ReMetaPathFinder(MetaPathFinder):
 class ReLoader(Loader):
 
     def exec_module(self, module):
+        """
+        Executes module's source code and tracks executed module
+        :param module: Module to execute
+        :return: Module
+        """
         with open(module.__file__, "r") as file:
             code = file.read()
             if module.__name__ == __name__:
@@ -44,6 +57,10 @@ class ReLoader(Loader):
 
 
 def install():
+    """
+    Installs new ReMetaPathFinder to sys.meta_path
+    :return:
+    """
     for cls in sys.meta_path:
         if isinstance(cls, ReMetaPathFinder):
             del cls
@@ -58,5 +75,6 @@ def install():
     sys.meta_path.insert(0, ReMetaPathFinder())
 
 
+# Stores loaded maxscale modules
 _maxscaleModules = globals().get("maxscale_modules") or [__name__]
 
