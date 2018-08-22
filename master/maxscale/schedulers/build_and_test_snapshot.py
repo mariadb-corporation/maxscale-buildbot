@@ -4,23 +4,26 @@ from . import common
 from . import properties
 from maxscale.config import constants
 
-BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
+COMMON_PROPERTIES = [
     properties.build_box(),
-    properties.build_target(),
     properties.cmake_flags(),
     properties.build_experimental_features(),
     properties.backend_database(),
     properties.database_version(),
-    properties.test_set(),
     properties.ci_url(),
     properties.backend_use_ssl(),
-    properties.host(),
 ]
 
-DEFAULT_PROPERTIES = \
-    properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES)
-DEFAULT_PROPERTIES["host"] = "max-tst-02"
-del DEFAULT_PROPERTIES["target"]
+BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
+    properties.build_target(),
+    properties.test_set(),
+    properties.host(),
+] + COMMON_PROPERTIES
+
+DEFAULT_PROPERTIES = dict(
+    properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES),
+    host="max-tst-02"
+)
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_snapshot_on_push",
