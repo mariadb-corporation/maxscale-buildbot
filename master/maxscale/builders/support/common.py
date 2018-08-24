@@ -233,7 +233,7 @@ class RsyncShellSequence(ShellSequence):
         hosts = set()
         currentHost = None
         for worker in workers.WORKER_CREDENTIALS:
-            if worker["name"] is not self.getProperty("workername"):
+            if worker["name"] != self.getProperty("workername"):
                 hosts.add(worker["host"])
             else:
                 currentHost = worker["host"]
