@@ -22,7 +22,6 @@ ENVIRONMENT = {
     "big": util.Property("big"),
     "backend_ssl": util.Property("backend_ssl"),
     "use_snapshots": util.Property("use_snapshots"),
-    "logs_dir": util.Property('logs_dir'),
     "no_vm_revert": util.Property("no_vm_revert"),
     "template": util.Property("template"),
     "config_to_clone": util.Property("config_to_clone"),

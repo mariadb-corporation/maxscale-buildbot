@@ -16,7 +16,6 @@ RUN_TEST_PROPERTIES = [
     properties.big_number_of_vms(),
     properties.backend_use_ssl(),
     properties.use_snapshots(),
-    properties.test_logs_directory(),
     properties.do_not_revert_virtual_machines(),
     properties.test_template(),
     properties.configuration_to_clone(),

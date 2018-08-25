@@ -23,7 +23,6 @@ RUN_TEST_SNAPSHOT_ENVIRONMENT = {
     "smoke": util.Property('smoke'),
     "big": util.Property('big'),
     "backend_ssl": util.Property('backend_ssl'),
-    "logs_dir": util.Property('logs_dir'),
     "template": util.Property('template'),
     "test_branch": util.Property('branch')
 }
