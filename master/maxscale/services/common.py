@@ -89,7 +89,7 @@ RESULT_COLOR = [
 ]
 
 
-def create_mail_notifier(template, builder_names):
+def create_mail_notifier(template, builder_names, **kwargs):
     config = mailer_config.MAILER_CONFIG
 
     return reporters.MailNotifier(
@@ -108,6 +108,7 @@ def create_mail_notifier(template, builder_names):
         useTls=config['useTls'],
         smtpUser=config['smtpUser'],
         smtpPassword=config['smtpPassword'],
+        **kwargs,
     )
 
 
