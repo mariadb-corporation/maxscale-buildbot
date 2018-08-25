@@ -47,7 +47,6 @@ def create_factory():
         copy_properties=COMMON_PROPERTIES,
         set_properties={
             'test_branch': util.Property('branch'),
-            'virtual_builder_name': util.Interpolate('Run tests'),
         }
     ))
 
