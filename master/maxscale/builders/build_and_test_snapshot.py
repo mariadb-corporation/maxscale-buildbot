@@ -70,7 +70,6 @@ def createFactory():
             "test_branch": util.Property("branch"),
             "test_set": renderTestSet,
             "backend_ssl": util.Property("backend_ssl"),
-            'virtual_builder_name': 'Run functional tests',
         }
     ))
     return factory
