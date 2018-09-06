@@ -6,7 +6,9 @@ from buildbot.steps.shell import ShellCommand
 from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
+from maxscale import builders
 from maxscale import workers
+from maxscale.config.workers import WORKER_CREDENTIALS
 
 
 def cloneRepository():
@@ -204,6 +206,41 @@ def assignWorker(builder, workerForBuilerList, buildRequest):
     for workerForBuilder in availableWorkers:
         if workerForBuilder.isAvailable():
             return workerForBuilder
+
+
+def assignBestHost(builder, workersForBuilders, buildRequest):
+    """
+    Returns availble workersForBuilders on a host with the least tasks running
+    :param builder: Builder for this task
+    :param workersForBuilders: List of workerForBuilders
+    :param buildRequest: build request
+    :return: List of workersForBuilders for a specific host
+    """
+    # Go directly to worker assignment if host in specified
+    if buildRequest.properties.getProperty("host"):
+        assignWorker(buildRequest, workersForBuilders, buildRequest)
+
+    workerToHostMap = dict(map(lambda worker: (worker["name"], worker["host"]), WORKER_CREDENTIALS))
+    occupiedWorkers = {}
+    hostToWorkersMap = {}
+    availableWFB = []
+
+    for worker in WORKER_CREDENTIALS:
+        host = worker["host"]
+        hostToWorkersMap[host] = hostToWorkersMap.get(host, []) + [worker["name"]]
+        occupiedWorkers[host] = len(hostToWorkersMap[host])
+
+    for wfb in workersForBuilders:
+        if wfb.isAvailable() and builder.name == wfb.builder_name:
+            occupiedWorkers[workerToHostMap[wfb.worker.workername]] -= 1
+
+    bestHost = sorted(occupiedWorkers.items(), key=lambda item: item[1])[0]
+    for wfb in workersForBuilders:
+        if wfb.worker.workername in hostToWorkersMap[bestHost[0]]:
+            availableWFB.append(wfb)
+
+    buildRequest.properties.setProperty("host", bestHost[0], "Automatically assigned")
+    return assignWorker(builder, availableWFB, buildRequest)
 
 
 def generateRepositories():
