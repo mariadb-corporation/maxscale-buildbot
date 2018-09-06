@@ -204,6 +204,8 @@ def assignWorker(builder, workerForBuilerList, buildRequest):
     availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
     for workerForBuilder in availableWorkers:
         if workerForBuilder.isAvailable():
+            buildRequest.properties.setProperty("host", workers.workerToHostMap()[workerForBuilder.worker.workername],
+                                                "Assign worker")
             return workerForBuilder
 
 
@@ -237,7 +239,6 @@ def assignBestHost(builder, workersForBuilders, buildRequest):
         if wfb.worker.workername in hostToWorkersMap[bestHost[0]]:
             availableWFB.append(wfb)
 
-    buildRequest.properties.setProperty("host", bestHost[0], "Automatically assigned")
     return assignWorker(builder, availableWFB, buildRequest)
 
 
