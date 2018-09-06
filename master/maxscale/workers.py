@@ -17,3 +17,11 @@ def workerNames(host=""):
         if host in credentials["host"]:
             workers.append(credentials["name"])
     return workers
+
+
+def workerToHostMap():
+    """Creates dictionary with worker name mapped to host"""
+    workerToHost = {}
+    for credentials in WORKER_CREDENTIALS:
+        workerToHost[credentials["name"]] = credentials["host"]
+    return workerToHost

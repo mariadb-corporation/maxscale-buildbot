@@ -8,7 +8,6 @@ from twisted.internet import defer
 from maxscale.builders.support import support
 from maxscale import builders
 from maxscale import workers
-from maxscale.config.workers import WORKER_CREDENTIALS
 
 
 def cloneRepository():
@@ -220,14 +219,13 @@ def assignBestHost(builder, workersForBuilders, buildRequest):
     if buildRequest.properties.getProperty("host"):
         assignWorker(buildRequest, workersForBuilders, buildRequest)
 
-    workerToHostMap = dict(map(lambda worker: (worker["name"], worker["host"]), WORKER_CREDENTIALS))
+    workerToHostMap = workers.workerToHostMap()
     occupiedWorkers = {}
     hostToWorkersMap = {}
     availableWFB = []
 
-    for worker in WORKER_CREDENTIALS:
-        host = worker["host"]
-        hostToWorkersMap[host] = hostToWorkersMap.get(host, []) + [worker["name"]]
+    for name, host in workerToHostMap.items():
+        hostToWorkersMap[host] = hostToWorkersMap.get(host, []) + [name]
         occupiedWorkers[host] = len(hostToWorkersMap[host])
 
     for wfb in workersForBuilders:
