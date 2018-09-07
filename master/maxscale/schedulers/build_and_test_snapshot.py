@@ -21,7 +21,7 @@ BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 ] + COMMON_PROPERTIES
 
 DEFAULT_PROPERTIES = dict(
-    properties.extractDefaultValues(BUILD_AND_TEST_SNAPSHOT_PROPERTIES),
+    properties.extractDefaultValues(COMMON_PROPERTIES),
     host="max-tst-02"
 )
 
