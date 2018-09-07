@@ -6,6 +6,7 @@ from buildbot.steps.shell import ShellCommand
 from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
+from maxscale import builders
 from maxscale import workers
 
 
@@ -203,7 +204,42 @@ def assignWorker(builder, workerForBuilerList, buildRequest):
     availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
     for workerForBuilder in availableWorkers:
         if workerForBuilder.isAvailable():
+            buildRequest.properties.setProperty("host", workers.workerToHostMap()[workerForBuilder.worker.workername],
+                                                "Assign worker")
             return workerForBuilder
+
+
+def assignBestHost(builder, workersForBuilders, buildRequest):
+    """
+    Returns availble workersForBuilders on a host with the least tasks running
+    :param builder: Builder for this task
+    :param workersForBuilders: List of workerForBuilders
+    :param buildRequest: build request
+    :return: List of workersForBuilders for a specific host
+    """
+    # Go directly to worker assignment if host in specified
+    if buildRequest.properties.getProperty("host"):
+        assignWorker(buildRequest, workersForBuilders, buildRequest)
+
+    workerToHostMap = workers.workerToHostMap()
+    occupiedWorkers = {}
+    hostToWorkersMap = {}
+    availableWFB = []
+
+    for name, host in workerToHostMap.items():
+        hostToWorkersMap[host] = hostToWorkersMap.get(host, []) + [name]
+        occupiedWorkers[host] = len(hostToWorkersMap[host])
+
+    for wfb in workersForBuilders:
+        if wfb.isAvailable() and builder.name == wfb.builder_name:
+            occupiedWorkers[workerToHostMap[wfb.worker.workername]] -= 1
+
+    bestHost = sorted(occupiedWorkers.items(), key=lambda item: item[1])[0]
+    for wfb in workersForBuilders:
+        if wfb.worker.workername in hostToWorkersMap[bestHost[0]]:
+            availableWFB.append(wfb)
+
+    return assignWorker(builder, availableWFB, buildRequest)
 
 
 def generateRepositories():
