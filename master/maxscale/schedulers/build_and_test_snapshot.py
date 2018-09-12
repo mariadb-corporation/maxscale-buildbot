@@ -20,10 +20,7 @@ BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     properties.host(),
 ] + COMMON_PROPERTIES
 
-DEFAULT_PROPERTIES = dict(
-    properties.extractDefaultValues(COMMON_PROPERTIES),
-    host="max-tst-02"
-)
+DEFAULT_PROPERTIES = properties.extractDefaultValues(COMMON_PROPERTIES)
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_snapshot_on_push",
