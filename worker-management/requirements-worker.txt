@@ -1,1 +1,1 @@
-buildbot-worker==1.2.0
+buildbot-worker==1.4.0
