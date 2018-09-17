@@ -3,6 +3,7 @@ from buildbot.data.resultspec import Filter
 from buildbot.plugins import reporters, util
 from buildbot.reporters import utils
 from buildbot.reporters.message import MessageFormatter
+from buildbot.reporters.mail import MailNotifier
 from twisted.internet import defer
 from maxscale.config import mailer_config
 
@@ -92,7 +93,7 @@ RESULT_COLOR = [
 def create_mail_notifier(template, builder_names, **kwargs):
     config = mailer_config.MAILER_CONFIG
 
-    return reporters.MailNotifier(
+    return CustomMailNotifier(
         fromaddr=config['fromaddr'],
         mode=('failing', 'passing', 'warnings', 'cancelled'),
         extraRecipients=config['extraRecipients'],
@@ -186,3 +187,21 @@ class ExpandedStepsFormatter(MessageFormatter):
 
         return master.data.get(('builds', buildId, 'steps'),
                                filters=[Filter("name", "eq", ["test_result"])]).addCallback(getStepLog)
+
+
+class CustomMailNotifier(MailNotifier):
+    """
+    Mail notifier which filters email notification based on the way the build started
+    """
+
+    def isMessageNeeded(self, build):
+        """
+        Disables mail notification if build was triggered from parent build
+        applies standard rules otherwise
+        :param build:
+        :return:
+        """
+        if build["buildset"].get("parent_buildid") and build["buildset"].get("reason") != "rebuild":
+            return False
+        else:
+            return super().isMessageNeeded(build)
