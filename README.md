@@ -85,7 +85,7 @@ The list of Python packages that are required to install the BuildBot master is 
 In orded to migrate to the newer versions you should either specify them directly in the file or use the [pur](https://pypi.org/project/pur/) utility. The latter one upgrades all dependencise to the latest version available. Be adviced, that it might not be the right approach. In order to use `pur`, launch it the following way:
 
 ```bash
-$ pyr -r requirements.txt
+$ pur -r requirements.txt
 ```
 
 When the `requirements.txt` file has been updated, the dependencies should be installed in the Python virtual environment.
