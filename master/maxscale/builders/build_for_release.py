@@ -13,6 +13,8 @@ COMMON_PROPERTIES = [
     "version_number",
     "old_target",
     "host",
+    "owner",
+    "owners",
 ]
 
 BUILD_TARGETS = [

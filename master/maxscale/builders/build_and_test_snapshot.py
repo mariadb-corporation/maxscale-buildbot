@@ -16,6 +16,8 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "version",
     "ci_url",
     "host",
+    "owner",
+    "owners",
 ]
 
 

@@ -61,7 +61,10 @@ def createBuildFactory():
             "ci_url",
             "smoke",
             "big",
-            "host"],
+            "host",
+            "owner",
+            "owners",
+        ],
         set_properties={
             "virtual_builder_name": "build"
         }

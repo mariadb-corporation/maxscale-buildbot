@@ -23,6 +23,8 @@ COMMON_PROPERTIES = [
     "smoke",
     "big",
     "host",
+    "owner",
+    "owners",
 ]
 
 
