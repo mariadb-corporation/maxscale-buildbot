@@ -102,11 +102,19 @@ def remoteStoreCoredumps():
 
 def writeBuildResultsToDatabase(**kwargs):
     """Call the script to save results to the database"""
-    return steps.ShellCommand(
+    return steps.SetPropertyFromCommand(
         name="Save test results to the database",
         command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/write_build_results.rb"),
                  "-f", util.Property("jsonResultsFile")],
+        extract_fn=extractDatabaseBuildid,
         **kwargs)
+
+
+def extractDatabaseBuildid(rc, stdout, stderr):
+    keyPhrase = "LAST_WRITE_BUILD_RESULTS_ID"
+    for line in stdout.split("\n"):
+        if line.startswith(keyPhrase):
+            return {keyPhrase: line[len(keyPhrase) + 2:]}
 
 
 def uploadTestRunsToReportPortal(**kwargs):
@@ -116,6 +124,7 @@ def uploadTestRunsToReportPortal(**kwargs):
         command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/report_portal/bin/upload_testrun.rb"),
                  util.Property("jsonResultsFile"),
                  util.Interpolate("%(prop:HOME)s/report-portal-config.yml")],
+        env={"LAST_WRITE_BUILD_RESULTS_ID": util.Property("LAST_WRITE_BUILD_RESULTS_ID")},
         **kwargs)
 
 
