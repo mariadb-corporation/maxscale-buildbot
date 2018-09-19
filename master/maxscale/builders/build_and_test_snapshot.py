@@ -79,7 +79,7 @@ BUILDERS = [
     BuilderConfig(
         name="build_and_test_snapshot",
         workernames=workers.workerNames(),
-        nextWorker=common.assignWorker,
+        nextWorker=common.assignBestHost,
         factory=createFactory(),
         tags=['build', 'test'],
         env=dict(os.environ))
