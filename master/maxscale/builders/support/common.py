@@ -219,7 +219,7 @@ def assignBestHost(builder, workersForBuilders, buildRequest):
     """
     # Go directly to worker assignment if host in specified
     if buildRequest.properties.getProperty("host"):
-        assignWorker(buildRequest, workersForBuilders, buildRequest)
+        return assignWorker(buildRequest, workersForBuilders, buildRequest)
 
     workerToHostMap = workers.workerToHostMap()
     occupiedWorkers = {}
