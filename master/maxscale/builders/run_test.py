@@ -115,6 +115,7 @@ def extractDatabaseBuildid(rc, stdout, stderr):
     for line in stdout.split("\n"):
         if line.startswith(keyPhrase):
             return {keyPhrase: line[len(keyPhrase) + 2:]}
+    return {}
 
 
 def uploadTestRunsToReportPortal(**kwargs):
