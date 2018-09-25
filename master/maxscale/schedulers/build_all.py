@@ -30,6 +30,7 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_ALL_PROPERTIES)
     nightlyProperties['target'] = branch
     nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
 
     nightlyScheduler = schedulers.Nightly(
         name=branch,

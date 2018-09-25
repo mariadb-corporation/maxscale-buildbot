@@ -36,6 +36,7 @@ SCHEDULERS = [MANUAL_SCHEDULER]
 for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "nightly_test_{}".format(branch)
+    nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
