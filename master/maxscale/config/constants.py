@@ -74,6 +74,7 @@ DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y '
                        '-DWITH_ASAN=Y')
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
+MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
 
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
@@ -88,5 +89,13 @@ MAXSCALE_CODEBASE = {
         "branch": "develop",
         "revision": "",
         "repository": MAXSCALE_REPOSITORY
+    },
+}
+
+MDBCI_CODEBASE = {
+    "": {
+        "branch": "integration",
+        "revision": "",
+        "repository": MDBCI_REPOSITORY
     },
 }
