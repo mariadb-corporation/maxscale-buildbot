@@ -22,7 +22,7 @@ def configureBuildProperties(properties):
 def remoteBuildMdbci():
     """This script will be run on the worker"""
     os.chdir("package")
-    results = subprocess.run(["build.sh"])
+    results = subprocess.run(["build.sh 1"])
     sys.exit(results.returncode)
 
 
