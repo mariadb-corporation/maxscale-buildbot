@@ -152,7 +152,6 @@ def createRunTestSteps():
     testSteps.extend(support.executePythonScript(
         "Find and store coredumps", remoteStoreCoredumps, alwaysRun=True))
     testSteps.append(writeBuildResultsToDatabase(alwaysRun=True))
-    testSteps.append(uploadTestRunsToReportPortal(alwaysRun=True))
     testSteps.append(showTestResult(alwaysRun=True))
     testSteps.extend(common.destroyVirtualMachine())
     testSteps.extend(common.removeLock())

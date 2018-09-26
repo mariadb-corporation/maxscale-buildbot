@@ -47,7 +47,6 @@ def createRunTestSnapshotSteps():
     testSnapshotSteps.extend(support.executePythonScript(
         "Find and store coredumps", run_test.remoteStoreCoredumps, alwaysRun=True))
     testSnapshotSteps.append(run_test.writeBuildResultsToDatabase(alwaysRun=True))
-    testSnapshotSteps.append(run_test.uploadTestRunsToReportPortal(alwaysRun=True))
     testSnapshotSteps.append(run_test.showTestResult(alwaysRun=True))
     testSnapshotSteps.extend(common.removeSnapshotLock())
     testSnapshotSteps.extend(common.removeLock())
