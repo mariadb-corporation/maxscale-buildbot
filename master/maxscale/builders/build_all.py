@@ -62,7 +62,6 @@ def createBuildFactory():
             "smoke",
             "big",
             "host",
-            "owner",
             "owners",
         ],
         set_properties={

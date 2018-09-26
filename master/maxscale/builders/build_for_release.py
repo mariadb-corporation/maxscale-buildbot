@@ -13,7 +13,6 @@ COMMON_PROPERTIES = [
     "version_number",
     "old_target",
     "host",
-    "owner",
     "owners",
 ]
 
