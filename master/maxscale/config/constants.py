@@ -68,9 +68,9 @@ DB_VERSIONS = [
     '10.3.7'
 ]
 
-DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y'
-                       '-DBUILD_SYSTEM_TESTS=Y'
-                       '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y'
+DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DFAKE_CODE=Y '
+                       '-DBUILD_SYSTEM_TESTS=Y '
+                       '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
                        '-DWITH_ASAN=Y')
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
