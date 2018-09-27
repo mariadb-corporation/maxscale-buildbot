@@ -30,7 +30,13 @@ def remoteBuildMdbci():
 def publishMdbci():
     return [steps.ShellCommand(
         name="Copy MDBCI AppImage to CI repository",
-        command=util.Interpolate("cp %(prop:builddir)s/build/package/build/out/* $HOME/%(prop:repo_path)s"),
+        command=util.Interpolate(
+            "cp %(prop:builddir)s/build/package/build/out/* \
+             $HOME/%(prop:repo_path)s; \
+             mdbci_file=`ls %(prop:builddir)s/build/package/build/out/* \
+             | xargs -n1 basename`; unlink $HOME/%(prop:repo_path)s/mdbci; \
+             ln -s $HOME/%(prop:repo_path)s/${mdbci_file} \
+             $HOME/%(prop:repo_path)s/mdbci"),
         alwaysRun=False)]
 
 
