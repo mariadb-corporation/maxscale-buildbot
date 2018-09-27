@@ -64,7 +64,7 @@ BUILDERS = [
         workernames=workers.workerNames(),
         factory=createBuildFactory(),
         nextWorker=common.assignWorker,
-        tags=["build"],
+        tags=["build_mdbci"],
         env=ENVIRONMENT,
         collapseRequests=False,
     )
