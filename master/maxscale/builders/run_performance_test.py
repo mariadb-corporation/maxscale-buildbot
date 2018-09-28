@@ -1,3 +1,4 @@
+import os
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
 from maxscale.builders.support import common, support
@@ -33,9 +34,11 @@ def showTestResult(**kwargs):
         **kwargs)
 
 
-def RunPerformanceTest():
-    return os.system(
-        util.Interpolate(
+def RunPerformanceTest(**kwargs):
+    return common.StdoutShellCommand(
+        name="test_result",
+        collectStdout=True,
+        command=util.Interpolate(
             "cd ~/maxscale-performance-test/; \
              unset COMP_WORDBREAKS; \
              ./bin/performance_test -v \
@@ -49,16 +52,15 @@ def RunPerformanceTest():
              --maxscale-version %(prop:target)s \
              --keep-servers true \
              > %(prop:builddir)s/results_%(prop:buildnumber)s \
-             "
-          )
-     )
+             "),
+        **kwargs)
 
 
 def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    testSteps.append(RunPerformanceTest())
+    testSteps.append(RunPerformanceTest(alwaysRun=True))
     testSteps.append(showTestResult(alwaysRun=True))
     testSteps.extend(common.cleanBuildDir())
     return testSteps
