@@ -262,6 +262,20 @@ def codebaseParameter():
     )]
 
 
+def codebaseMdbciParameter():
+    return [util.CodebaseParameter(
+        "",
+        label="Main repository",
+        branch=util.StringParameter(name="branch",
+                                    default=constants.MDBCI_CODEBASE[""]["branch"]),
+        revision=util.FixedParameter(name="revision",
+                                     default=constants.MDBCI_CODEBASE[""]["revision"]),
+        project=util.FixedParameter(name="project", default=""),
+        repository=util.StringParameter(name="repository",
+                                        default=constants.MDBCI_CODEBASE[""]["repository"]),
+    )]
+
+
 def versionNumber():
     return util.StringParameter(
         name="version_number",
