@@ -19,11 +19,11 @@ COMMON_PROPERTIES = [
 BUILD_TARGETS = [
     {
         "target_name": "release",
-        "cmake_flags": "-DBUILD_TESTS=N -DBUILD_MMMON=Y -DBUILD_CDC=Y -DWITH_ASAN=Y"
+        "cmake_flags": "-DBUILD_TESTS=N -DBUILD_MMMON=Y -DBUILD_CDC=Y"
     },
     {
         "target_name": "debug",
-        "cmake_flags": "-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DBUILD_MMMON=Y -DBUILD_CDC=Y -DWITH_ASAN=Y"
+        "cmake_flags": "-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug -DBUILD_MMMON=Y -DBUILD_CDC=Y"
     }
 ]
 
