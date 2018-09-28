@@ -59,7 +59,6 @@ def runPerformanceTest(**kwargs):
 
 
 def parsePerformanceTestResults(**kwargs):
--e $WORKSPACE/env_results_$BUILD_ID -o $WORKSPACE/json_$BUILD_ID
     return common.StdoutShellCommand(
         name="Parsing performance tests results",
         collectStdout=True,
