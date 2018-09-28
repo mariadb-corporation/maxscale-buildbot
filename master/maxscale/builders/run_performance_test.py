@@ -36,9 +36,9 @@ def showTestResult(**kwargs):
         **kwargs)
 
 
-def RunPerformanceTest(**kwargs):
+def runPerformanceTest(**kwargs):
     return common.StdoutShellCommand(
-        name="test_result",
+        name="Run performance tests",
         collectStdout=True,
         command=util.Interpolate(
             "cd ~/maxscale-performance-test/; \
@@ -58,12 +58,40 @@ def RunPerformanceTest(**kwargs):
         **kwargs)
 
 
+def parsePerformanceTestResults(**kwargs):
+-e $WORKSPACE/env_results_$BUILD_ID -o $WORKSPACE/json_$BUILD_ID
+    return common.StdoutShellCommand(
+        name="Parsing performance tests results",
+        collectStdout=True,
+        command=util.Interpolate(
+            "~/mdbci/scripts/benchmark_parser/parse_log.rb \
+            -i %(prop:builddir)s/results_%(prop:buildnumber)s \
+            -e %(prop:builddir)s/env_%(prop:buildnumber)s \
+            -o %(prop:builddir)s/json_%(prop:buildnumber)s \
+             "),
+        **kwargs)
+
+
+def writePerformanceTestResults(**kwargs):
+    return common.StdoutShellCommand(
+        name="Writing performance tests results to DB",
+        collectStdout=True,
+        command=util.Interpolate(
+            "~/mdbci/scripts/benchmark_parser/write_benchmark_results.rb \
+            -i %(prop:builddir)s/json_%(prop:buildnumber)s \
+            -e %(prop:builddir)s/env_%(prop:buildnumber)s \
+             "),
+        **kwargs)
+
+
 def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    testSteps.append(RunPerformanceTest(alwaysRun=True))
+    testSteps.append(runPerformanceTest(alwaysRun=True))
     testSteps.append(showTestResult(alwaysRun=True))
+    testSteps.append(parsePerformanceTestResults(alwaysRun=True))
+    testSteps.append(writePerformanceTestResults(alwaysRun=True))
     testSteps.extend(common.cleanBuildDir())
     return testSteps
 
