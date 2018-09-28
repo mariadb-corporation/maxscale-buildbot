@@ -26,6 +26,7 @@ def configureCommonProperties(properties):
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
     }
 
+
 def showTestResult(**kwargs):
     return common.StdoutShellCommand(
         name="test_result",
@@ -37,9 +38,8 @@ def showTestResult(**kwargs):
 
 
 def runPerformanceTest(**kwargs):
-    return common.StdoutShellCommand(
+    return steps.ShellCommand(
         name="Run performance tests",
-        collectStdout=True,
         command=util.Interpolate(
             "cd ~/maxscale-performance-test/; \
              unset COMP_WORDBREAKS; \
@@ -59,9 +59,8 @@ def runPerformanceTest(**kwargs):
 
 
 def parsePerformanceTestResults(**kwargs):
-    return common.StdoutShellCommand(
+    return steps.ShellCommand(
         name="Parsing performance tests results",
-        collectStdout=True,
         command=util.Interpolate(
             "~/mdbci/scripts/benchmark_parser/parse_log.rb \
             -i %(prop:builddir)s/results_%(prop:buildnumber)s \
@@ -72,9 +71,8 @@ def parsePerformanceTestResults(**kwargs):
 
 
 def writePerformanceTestResults(**kwargs):
-    return common.StdoutShellCommand(
+    return steps.ShellCommand(
         name="Writing performance tests results to DB",
-        collectStdout=True,
         command=util.Interpolate(
             "~/mdbci/scripts/benchmark_parser/write_benchmark_results.rb \
             -i %(prop:builddir)s/json_%(prop:buildnumber)s \
@@ -88,9 +86,9 @@ def createRunTestSteps():
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
     testSteps.append(runPerformanceTest(alwaysRun=True))
-    testSteps.append(showTestResult(alwaysRun=True))
     testSteps.append(parsePerformanceTestResults(alwaysRun=True))
     testSteps.append(writePerformanceTestResults(alwaysRun=True))
+    testSteps.append(showTestResult(alwaysRun=True))
     testSteps.extend(common.cleanBuildDir())
     return testSteps
 
@@ -108,7 +106,7 @@ BUILDERS = [
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
         factory=createTestFactory(),
-        tags=["perfirmance_test"],
+        tags=["performance_test"],
         env=ENVIRONMENT,
     )
 ]
