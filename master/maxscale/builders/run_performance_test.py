@@ -33,7 +33,7 @@ def showTestResult(**kwargs):
         **kwargs)
 
 
-def RunPerformanceTest()
+def RunPerformanceTest():
     return os.system(
         util.Interpolate(
             "cd ~/maxscale-performance-test/; \
