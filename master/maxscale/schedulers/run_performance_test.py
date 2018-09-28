@@ -6,6 +6,8 @@ PERFORMACE_TEST_PROPERTIES = [
     properties.build_target(),
     properties.database_version(),
     properties.host(),
+    properties.maxscale_threads(),
+    properties.sysbench_threads(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
