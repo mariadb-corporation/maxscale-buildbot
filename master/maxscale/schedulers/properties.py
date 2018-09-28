@@ -293,6 +293,17 @@ def host(default="max-tst-03"):
     )
 
 
+def host1(default="max-tst-01"):
+    """Host of the used group of workers"""
+    return util.ChoiceStringParameter(
+        name="host",
+        label="Host",
+        choices=list(set(map(lambda worker: worker["host"], workers.WORKER_CREDENTIALS))),
+        default=default
+    )
+
+
+
 def maxscale_threads():
     return util.StringParameter(
         name="maxscale_threads",
