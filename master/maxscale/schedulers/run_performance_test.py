@@ -18,11 +18,11 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 )
 
 
-MANUAL_SCHEDULER = schedulers.Periodic(
+PERIODIC_SCHEDULER = schedulers.Periodic(
     name="run_performance_test_half_hour",
     builderNames=["run_performance_test"],
     periodicBuildTimer=30*60,
     properties=PERFORMACE_TEST_PROPERTIES
 )
 
-SCHEDULERS = [MANUAL_SCHEDULER]
+SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER]
