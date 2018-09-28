@@ -13,6 +13,8 @@ ENVIRONMENT = {
                                         datetime=common.getFormattedDateTime("%Y-%m-%d %H-%M-%S")),
     "target": util.Property("target"),
     "version": util.Property("version"),
+    "maxscale_threads": util.Property("maxscale_threads"),
+    "sysbench_threads": util.Property("sysbench_threads"),
 }
 
 
