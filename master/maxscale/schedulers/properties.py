@@ -291,3 +291,19 @@ def host(default="max-tst-03"):
         choices=list(set(map(lambda worker: worker["host"], workers.WORKER_CREDENTIALS))),
         default=default
     )
+
+
+def maxscale_threads():
+    return util.StringParameter(
+        name="maxscale_threads",
+        label="The value of 'threads' parameter in the maxscale.cnf",
+        default="8"
+    )
+
+
+def sysbench_threads():
+    return util.StringParameter(
+        name="sysbench_threads",
+        label="Number of sysbench threads",
+        default="16"
+    )

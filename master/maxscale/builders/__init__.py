@@ -8,6 +8,7 @@ from . import build_all
 from . import build_for_release
 from . import destroy
 from . import generate_and_sync_repod
+from . import run_performance_test
 from . import build_mdbci
 
 MAXSCALE_BUILDERS = list(itertools.chain(
@@ -20,5 +21,6 @@ MAXSCALE_BUILDERS = list(itertools.chain(
     build_and_test_snapshot.BUILDERS,
     destroy.BUILDERS,
     generate_and_sync_repod.BUILDERS,
+    run_performance_test.BUILDERS,
     build_mdbci.BUILDERS,
 ))
