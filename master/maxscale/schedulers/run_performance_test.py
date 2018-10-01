@@ -27,4 +27,9 @@ PERIODIC_SCHEDULER = schedulers.Periodic(
     properties=prop
 )
 
-SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER]
+REPOSITORY_SCHEDULER = schedulers.Triggerable(
+    name="run_performance_test",
+    builderNames=["run_performance_test"],
+)
+
+SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER, REPOSITORY_SCHEDULER]

@@ -41,10 +41,10 @@ def createFactory():
         haltOnFailure=True,
         copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
         set_properties={
-            'box': 'ubuntu_xenial_libvirt',
+            'box': 'ubuntu_bionic_libvirt',
             'try_already_running': 'yes',
             'target': util.Interpolate("%(prop:target)s-perf"),
-            'virtual_builder_name': 'Build for ubuntu_xenial_libvirt',
+            'virtual_builder_name': 'Build for ubuntu_bionic_libvirt',
         }
     ))
     factory.addStep(steps.Trigger(
@@ -71,6 +71,15 @@ def createFactory():
             "test_branch": util.Property("branch"),
             "test_set": renderTestSet,
             "backend_ssl": util.Property("backend_ssl"),
+        }
+    ))
+    factory.addStep(steps.Trigger(
+        name="Call the 'run_performance_test' scheduler. Run performance tests",
+        schedulerNames=['run_performance_test'],
+        waitForFinish=True,
+        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
+        set_properties={
+            "target": util.Property("target"),
         }
     ))
     return factory
