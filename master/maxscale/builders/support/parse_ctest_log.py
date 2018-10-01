@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import subprocess
 import argparse
 
 LOG_FILE_OPTION = 'log-file'
@@ -223,6 +224,100 @@ class CTestParser:
                 ctestArguments.append(testIndex)
         return ",".join(ctestArguments)
 
+    def getTestCodeCommit(self):
+        if not os.environ.get([WORKSPACE]):
+            return NOT_FOUND
+        currentDirectory = os.getcwd()
+        os.chdir(os.environ.get([WORKSPACE]))
+        gitLog = subprocess.Popen("git log -1", stdout=subprocess.PIPE).stdout
+        os.chdir(currentDirectory)
+        if not gitLog:
+            return NOT_FOUND
+        commitRegex = re.compile(r"commit\s+(.+)")
+        if commitRegex.match(gitLog.readlines()):
+            return commitRegex.match(gitLog.readlines()[0])[0]
+        return NOT_FOUND
+
+    def generateRunTestBuildParametersHr(self):
+        buildParams = []
+        for (key, value) in RUN_TEST_BUILD_ENV_VARS_TO_HR.items():
+            envValue = os.environ.get(key) or NOT_FOUND
+            buildParams.append("{}: {}".format(value, envValue))
+        return buildParams
+
+    def generateRunTestBuildParametersMr(self):
+        buildParams = {}
+        for (key, value) in RUN_TEST_BUILD_ENV_VARS_TO_MR.items():
+            envValue = os.environ.get(key) or NOT_FOUND
+            buildParams[value] = envValue
+        return buildParams
+
+    def generateHrResult(self, parsedCtestData):
+        hrTests = []
+        hrTests.append(self.ctestSummary)
+        for test in parsedCtestData[TESTS]:
+            hrTests.append("{} - {} ({})".format(test[TEST_NUMBER], test[TEST_NAME], test[TEST_SUCCESS]))
+        hrTests.extend(["", "{}: {}".format(CTEST_ARGUMENTS_HR, self.generateCtestArguments()), ""])
+        maxscaleCommit = self.maxscaleCommit or NOT_FOUND
+        maxscaleSource = self.maxscaleSource or NOT_FOUND
+        cmakeFlags = self.cmakeFlags or NOT_FOUND
+        logsDir = self.logsDir or NOT_FOUND
+        hrTests.append("{}: {}".format(MAXSCALE_COMMIT_HR, maxscaleCommit))
+        hrTests.append("{}: {}".format(MAXSCALE_SOURCE_MR, maxscaleSource))
+        hrTests.append("{}: {}".format(LOGS_DIR_HR, logsDir))
+        hrTests.append("{}: {}".format(CMAKE_FLAGS_HR, cmakeFlags))
+        hrTests.append("{}: {}".format(MAXSCALE_SYSTEM_TEST_COMMIT_HR, self.getTestCodeCommit()))
+        hrTests.extend(self.generateRunTestBuildParametersHr())
+        if not self.ctestExecuted:
+            hrTests.append("{}: {}".format(ERROR, CTEST_NOT_EXECUTED_ERROR))
+        for me in self.maxscaleEntity:
+            hrTests.append("{}: {}".format(MAXSCALE_FULL, me))
+        return hrTests
+
+    def generateMrResults(self, parsedCtestData):
+        res = parsedCtestData
+        res.update(self.generateRunTestBuildParametersMr())
+        res.update({
+            MAXSCALE_SYSTEM_TEST_COMMIT_MR: self.getTestCodeCommit(),
+            MAXSCALE_COMMIT_MR: self.maxscaleCommit or NOT_FOUND,
+            MAXSCALE_SOURCE_MR: self.maxscaleSource or NOT_FOUND,
+            CMAKE_FLAGS_MR: self.maxscaleSource or NOT_FOUND,
+            LOGS_DIR_MR: self.logsDir or NOT_FOUND,
+            CTEST_ARGUMENTS_MR: self.generateCtestArguments(),
+        })
+        if not self.ctestExecuted:
+            res.update({ERROR: CTEST_NOT_EXECUTED_ERROR})
+        return res
+
+    def showHrResults(self, parsedCtestData):
+        print(self.generateHrResult(parsedCtestData))
+
+    def showMrResults(self, parsedCtestData):
+        print(self.generateMrResults(parsedCtestData))
+
+    def saveResultsToFile(self):
+        with open(self.args.output_log_file, "w") as file:
+            ctestInfo = self.failedCtestInfo if self.args.only_failed else self.allCtestInfo
+            file.writelines(NEW_LINE_JENKINS_FORMAT.join([BUILD_LOG_PARSING_RESULT]
+                                                         + self.generateHrResult(ctestInfo)))
+
+    def saveAllResultsToJsonFile(self):
+        with open(self.args.output_log_json_file, "w") as file:
+            file.writelines(self.generateMrResults(self.allCtestInfo))
+
+    def showCtestParsedInfo(self):
+        if not self.args.human_readable:
+            self.showMrResults(self.failedCtestInfo if self.args.only_failed else self.allCtestInfo)
+        else:
+            self.showHrResults(self.failedCtestInfo if self.args.only_failed else self.allCtestInfo)
+
+    def parse(self):
+        self.parseCtestLog()
+        self.showCtestParsedInfo()
+        if self.args.output_log_file:
+            self.saveResultsToFile()
+        if self.args.output_log_json_file:
+            self.saveAllResultsToJsonFile()
 
 
 def main():
