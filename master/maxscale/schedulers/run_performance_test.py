@@ -28,7 +28,7 @@ PERIODIC_SCHEDULER = schedulers.Periodic(
 )
 
 REPOSITORY_SCHEDULER = schedulers.Triggerable(
-    name="run_performance_test",
+    name="run_performance_test_trigger",
     builderNames=["run_performance_test"],
 )
 
