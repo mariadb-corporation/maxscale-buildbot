@@ -111,8 +111,8 @@ class CTestParser:
         self.failedCtestIndexes = []
         self.allCtestArguments = None
         self.failedCtestArguments = None
-        self.allCtestInfo = {}
-        self.failedCtestInfo = {}
+        self.allCtestInfo = []
+        self.failedCtestInfo = []
         self.failCtestCounter = 0
         self.maxscaleEntity = []
 
@@ -167,6 +167,61 @@ class CTestParser:
             self.failedCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
 
     def findTestsInfo(self, ctestLog):
+        if self.args.ctest_sublogs_path:
+            os.mkdir(self.args.ctest_sublogs_path)
+        ctestSublog = []
+        for line in ctestLog:
+            testEndRegex = re.compile(r"(\d+)\/(\d+)\s+Test\s+#(\d+):[\s]+([^\s]+)\s+[\.\*]+([^\d]+)([\d\.]+)")
+            if line not in FIRST_LINES_CTEST_TO_SKIP:
+                ctestSublog.append(line)
+            if testEndRegex.match(line):
+                testIndexNumber = testEndRegex.match(line)[0]
+                testSuccess = testEndRegex.match(line)[4].strip()
+                testName = testEndRegex.match(line)[3]
+                if self.args.ctest_sublogs_path:
+                    os.mkdir("{}/{}".format(self.args.ctest_sublogs_path, testName))
+                    with open("{}/{}/ctest_sublog".format(self.args.ctest_sublogs_path, testName), "w") as file:
+                        file.writelines(ctestSublog)
+                ctestSublog = []
+                testNumber = testEndRegex.match(line)[2]
+                testTime = testEndRegex.match(line)[5]
+                self.allCtestIndexes.append(testNumber)
+                self.allCtestInfo.append({
+                    TEST_INDEX_NUMBER: testIndexNumber,
+                    TEST_NUMBER: testNumber,
+                    TEST_NAME: testName,
+                    TEST_SUCCESS: testSuccess,
+                    TEST_TIME: testTime
+                })
+                if testSuccess != PASSED:
+                    self.failCtestCounter += 1
+                    self.failedCtestIndexes.append(testNumber)
+                    self.failedCtestInfo.append({
+                        TEST_INDEX_NUMBER: testIndexNumber,
+                        TEST_NUMBER: testNumber,
+                        TEST_NAME: testName,
+                        TEST_SUCCESS: testSuccess,
+                        TEST_TIME: testTime
+                    })
+        self.allCtestInfo = {FAILED_TESTS_COUNT: self.failCtestCounter, TESTS: self.allCtestInfo}
+        self.failedCtestInfo = {FAILED_TESTS_COUNT: self.failCtestCounter, TESTS: self.failedCtestInfo}
+
+    def generateCtestArguments(self):
+        if not self.ctestExecuted:
+            return NOT_FOUND
+        ctestArguments = []
+        testIndexesArray = self.failedCtestIndexes if self.args.only_failed else self.allCtestIndexes
+        sortedTestIndexesArray = sorted(testIndexesArray, key=lambda item: item)
+        if not sortedTestIndexesArray:
+            return NOT_FOUND
+        for testIndex in sortedTestIndexesArray:
+            if testIndex == sortedTestIndexesArray[0]:
+                ctestArguments.extend([testIndex, testIndex])
+                if len(sortedTestIndexesArray) > 1:
+                    ctestArguments.append("1")
+            else:
+                ctestArguments.append(testIndex)
+        return ",".join(ctestArguments)
 
 
 
