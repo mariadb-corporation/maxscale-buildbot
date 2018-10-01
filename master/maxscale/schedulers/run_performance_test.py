@@ -17,12 +17,14 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=PERFORMACE_TEST_PROPERTIES
 )
 
+prop = properties.extractDefaultValues(PERFORMACE_TEST_PROPERTIES)
+prop['target'] = "maxscale-2.2.15-release"
 
 PERIODIC_SCHEDULER = schedulers.Periodic(
     name="run_performance_test_half_hour",
     builderNames=["run_performance_test"],
-    periodicBuildTimer=15*60,
-    properties=properties.extractDefaultValues(PERFORMACE_TEST_PROPERTIES)
+    periodicBuildTimer=10*60,
+    properties=prop
 )
 
 SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER]
