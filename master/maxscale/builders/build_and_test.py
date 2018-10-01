@@ -16,7 +16,7 @@ COMMON_PROPERTIES = [
     "box",
     "product",
     "version",
-    "cmake_flags"
+    "cmake_flags",
     "do_not_destroy_vm",
     "test_set",
     "ci_url",
