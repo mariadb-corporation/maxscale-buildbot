@@ -95,6 +95,43 @@ class BuildResultsWriter:
         cursor.close()
         print("Performed insert (results): {}".format(query % values))
 
+    def findCoreDumpPath(self, runTestDir, testName):
+        coreDumpPathRegex = re.compile(r".*\/run_test[^\/.+]+(\/.+)")
+        dir = "/home/vagrant/LOGS/{}/LOGS/{}".format(runTestDir, testName)
+        if not os.path.isdir(dir):
+            return ""
+        result = subprocess.run(["find {} | grep core | sed -e 's|/[^/]*$|/*|g".format(dir)],
+                                stdout=subprocess.PIPE).stdout
+        if not result or not coreDumpPathRegex.match(result):
+            return ""
+        return coreDumpPathRegex.match(result)[0]
+
+    def writeBuildResultsToDb(self, results):
+        tests = []
+        if results.get("tests"):
+            for test in results["tests"]:
+                tests.append({
+                    TEST_NAME: test[TEST_NAME],
+                    TEST_SUCCESS: test[TEST_SUCCESS],
+                    TEST_TIME: test[TEST_TIME]
+                })
+
+        id = self.writeTestRunTable(*(results[key] for key in (
+            "job_build_number", "timestamp", "target", "box",
+            "product", "version", "maxscale_system_test_commit",
+            "maxscale_commit", "job_name", "cmake_flags", "maxscale_source",
+            "logs_dir"
+        )))
+
+        if not results.get(ERROR):
+            for test in tests:
+                print("Preparing to write test={} into results")
+                name = test[TEST_NAME]
+                result = int(test[TEST_SUCCESS] == FAILED)
+                testTime = test[TEST_TIME]
+                coreDumpPath = self.findCoreDumpPath(results["logs_dir"], name)
+                self.writeResultsTable(id, name, result, testTime, coreDumpPath)
+
 
 def main():
     args = options.parse_args()
