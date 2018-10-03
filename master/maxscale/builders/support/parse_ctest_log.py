@@ -137,8 +137,8 @@ class CTestParser:
             for line in file:
                 if maxscaleVersionEndRegex.search(line):
                     maxscaleVersionEndFound = True
-                if maxscaleVersionStartFound and not maxscaleVersionEndFound and line.replace("\n", ""):
-                    self.maxscaleEntity.append(line.replace("\n", ""))
+                if maxscaleVersionStartFound and not maxscaleVersionEndFound and line.strip():
+                    self.maxscaleEntity.append(line.strip())
                 if maxscaleVersionStartRegex.search(line):
                     maxscaleVersionStartFound = True
                 if maxscaleCommitRegex.search(line) and not self.maxscaleCommit:
@@ -158,7 +158,7 @@ class CTestParser:
                 testQuantity = 0
                 for line in file:
                     if ctestLastLineRegex.search(line):
-                        self.ctestSummary = line
+                        self.ctestSummary = line.strip()
                         testQuantity = ctestLastLineRegex.search(line).group(0)
                         break
                     ctestLog.append(line)
@@ -173,7 +173,7 @@ class CTestParser:
 
     def findTestsInfo(self, ctestLog):
         if self.args.ctest_sublogs_path:
-            os.mkdir(self.args.ctest_sublogs_path)
+            os.makedirs(self.args.ctest_sublogs_path, exist_ok=True)
         ctestSublog = []
         for line in ctestLog:
             testEndRegex = re.compile(r"(\d+)\/(\d+)\s+Test\s+#(\d+):[\s]+([^\s]+)\s+[\.\*]+([^\d]+)([\d\.]+)")
@@ -184,7 +184,7 @@ class CTestParser:
                 testSuccess = testEndRegex.search(line).group(4).strip()
                 testName = testEndRegex.search(line).group(3)
                 if self.args.ctest_sublogs_path:
-                    os.mkdir("{}/{}".format(self.args.ctest_sublogs_path, testName))
+                    os.makedirs("{}/{}".format(self.args.ctest_sublogs_path, testName), exist_ok=True)
                     with open("{}/{}/ctest_sublog".format(self.args.ctest_sublogs_path, testName), "w") as file:
                         file.writelines(ctestSublog)
                 ctestSublog = []
@@ -229,10 +229,10 @@ class CTestParser:
         return ",".join(ctestArguments)
 
     def getTestCodeCommit(self):
-        if not os.environ.get([WORKSPACE]):
+        if not os.environ.get(WORKSPACE):
             return NOT_FOUND
         currentDirectory = os.getcwd()
-        os.chdir(os.environ.get([WORKSPACE]))
+        os.chdir(os.environ.get(WORKSPACE))
         gitLog = subprocess.Popen("git log -1", stdout=subprocess.PIPE).stdout
         os.chdir(currentDirectory)
         if not gitLog:
