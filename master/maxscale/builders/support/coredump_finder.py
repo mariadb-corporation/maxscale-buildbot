@@ -7,7 +7,7 @@ import subprocess
 
 options = argparse.ArgumentParser(description="Core dump finder")
 options.add_argument("build_id", help="Id of the build (<build_name>_<build_number>)")
-options.add_argument("output_format", help="(url|files)", choices=["url", "files"])
+options.add_argument("output_format", help="Output format (url|files)", choices=["url", "files"])
 
 args = options.parse_args()
 HOME = os.environ["HOME"]

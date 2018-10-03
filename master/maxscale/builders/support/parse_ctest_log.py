@@ -7,7 +7,7 @@ import sys
 import subprocess
 import argparse
 
-LOG_FILE_OPTION = 'log-file'
+LOG_FILE_OPTION = 'log_file'
 OUTPUT_LOG_FILE_OPTION = '--output-log-file'
 OUTPUT_LOG_JSON_FILE_OPTION = '--output-log-json-file'
 ONLY_FAILED_OPTION = '--only-failed'
