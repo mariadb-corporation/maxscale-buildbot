@@ -11,7 +11,7 @@ from configparser import ConfigParser
 
 
 # Command line options
-INPUT_FILE_OPTION = '--file'
+INPUT_FILE_OPTION = 'file'
 ENV_FILE_OPTION = '--env-file'
 HELP_OPTION = '--help'
 
@@ -46,10 +46,11 @@ class BuildResultsWriter:
         self.parseInputFile(inputFilePath)
         self.connectMdb(DEFAULT_FILE, DB_NAME)
         self.writeBuildResultsToDb(self.parsedContent)
+        self.client.close()
 
     def parseInputFile(self, inputFilePath):
         with open(inputFilePath, "r") as file:
-            self.parsedContent = json.load(" ".join(file.readline()))
+            self.parsedContent = json.load(file)
 
     def connectMdb(self, defaultFile, dbName):
         self.client = mysql.connector.connect(database=dbName, **self.readDatabaseConfiguration(defaultFile))
@@ -64,7 +65,8 @@ class BuildResultsWriter:
             for item in config.items(section):
                 db[item[0]] = item[1]
         else:
-            raise Exception('{0} not found in the {1} file'.format(section, filename))
+            raise Exception("{} not found in the {} file".format(section, filename))
+        return db
 
     def writeTestRunTable(self, jenkinsId, startTime, targat, box, product, mariadbVersion,
                           testCodeCommitId, maxscaleCommitId, jobName,
@@ -80,7 +82,7 @@ class BuildResultsWriter:
                   cmakeFlags, maxscaleSource, logsDir)
         cursor.execute(query, values)
         id = cursor.lastrowid
-        cursor.commit()
+        self.client.commit()
         cursor.close()
         print("Performed insert (test_run, id = {}: {}".format(id, query % values))
         return id
@@ -91,7 +93,7 @@ class BuildResultsWriter:
                  "VALUES (%s, %s, %s, %s, %s)")
         values = (id, test, result, testTime, coreDumpPath)
         cursor.execute(query, values)
-        cursor.commit()
+        self.client.commit()
         cursor.close()
         print("Performed insert (results): {}".format(query % values))
 
@@ -139,8 +141,7 @@ def main():
         writer = BuildResultsWriter()
         writer.writeResultsFromInputFile(args.file)
     except Exception as e:
-        print(e.__cause__)
-        print(e.__traceback__)
+        print(e)
         if args.env_file:
             with open(args.env_file, "w") as file:
                 file.write("{} {}".format(DB_WRITE_ERROR, e.__cause__))
