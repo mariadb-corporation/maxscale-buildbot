@@ -154,15 +154,15 @@ class CTestParser:
                     break
 
             if self.ctestExecuted:
-                ctestLog = file.readlines()
-                ctestEndLine = 0
-                for line in ctestLog:
+                ctestLog = []
+                testQuantity = 0
+                for line in file:
                     if ctestLastLineRegex.search(line):
                         self.ctestSummary = line
+                        testQuantity = ctestLastLineRegex.search(line).group(0)
                         break
-                    ctestEndLine += 1
-                ctestLog = ctestLog[:ctestEndLine]
-                testQuantity = ctestLastLineRegex.search(ctestLog[-1]).group(0)
+                    ctestLog.append(line)
+
                 self.findTestsInfo(ctestLog)
                 self.allCtestInfo.update({TESTS_COUNT: testQuantity})
                 self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
