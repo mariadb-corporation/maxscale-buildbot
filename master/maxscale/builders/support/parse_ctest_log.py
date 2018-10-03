@@ -142,13 +142,13 @@ class CTestParser:
                 if maxscaleVersionStartRegex.search(line):
                     maxscaleVersionStartFound = True
                 if maxscaleCommitRegex.search(line) and not self.maxscaleCommit:
-                    self.maxscaleCommit = maxscaleCommitRegex.search(line).group(0)
+                    self.maxscaleCommit = maxscaleCommitRegex.search(line).group(1)
                 if cmakeFlagsRegex.search(line) and not self.cmakeFlags:
-                    self.cmakeFlags = cmakeFlagsRegex.search(line).group(0).strip()
+                    self.cmakeFlags = cmakeFlagsRegex.search(line).group(1).strip()
                 if maxscaleSourceRegex.search(line) and not self.maxscaleSource:
-                    self.maxscaleSource = maxscaleSourceRegex.search(line).group(0).strip()
+                    self.maxscaleSource = maxscaleSourceRegex.search(line).group(1).strip()
                 if logsFirRegex.search(line) and not self.logsDir:
-                    self.logsDir = logsFirRegex.search(line).group(0).strip()
+                    self.logsDir = logsFirRegex.search(line).group(1).strip()
                 if ctestFirstLineRegex.search(line):
                     self.ctestExecuted = True
                     break
@@ -159,7 +159,7 @@ class CTestParser:
                 for line in file:
                     if ctestLastLineRegex.search(line):
                         self.ctestSummary = line.strip()
-                        testQuantity = ctestLastLineRegex.search(line).group(0)
+                        testQuantity = ctestLastLineRegex.search(line).group(1)
                         break
                     ctestLog.append(line)
 
@@ -180,16 +180,16 @@ class CTestParser:
             if line not in FIRST_LINES_CTEST_TO_SKIP:
                 ctestSublog.append(line)
             if testEndRegex.search(line):
-                testIndexNumber = testEndRegex.search(line).group(0)
-                testSuccess = testEndRegex.search(line).group(4).strip()
-                testName = testEndRegex.search(line).group(3)
+                testIndexNumber = testEndRegex.search(line).group(1)
+                testSuccess = testEndRegex.search(line).group(5).strip()
+                testName = testEndRegex.search(line).group(4)
                 if self.args.ctest_sublogs_path:
                     os.makedirs("{}/{}".format(self.args.ctest_sublogs_path, testName), exist_ok=True)
                     with open("{}/{}/ctest_sublog".format(self.args.ctest_sublogs_path, testName), "w") as file:
                         file.writelines(ctestSublog)
                 ctestSublog = []
-                testNumber = testEndRegex.search(line).group(2)
-                testTime = testEndRegex.search(line).group(5)
+                testNumber = testEndRegex.search(line).group(3)
+                testTime = testEndRegex.search(line).group(6)
                 self.allCtestIndexes.append(testNumber)
                 self.allCtestInfo.append({
                     TEST_INDEX_NUMBER: testIndexNumber,
@@ -239,7 +239,7 @@ class CTestParser:
             return NOT_FOUND
         commitRegex = re.compile(r"commit\s+(.+)")
         if commitRegex.search(gitLog.readlines()):
-            return commitRegex.search(gitLog.readlines()[0]).group(0)
+            return commitRegex.search(gitLog.readlines()[0]).group(1)
         return NOT_FOUND
 
     def generateRunTestBuildParametersHr(self):
@@ -267,7 +267,7 @@ class CTestParser:
         cmakeFlags = self.cmakeFlags or NOT_FOUND
         logsDir = self.logsDir or NOT_FOUND
         hrTests.append("{}: {}".format(MAXSCALE_COMMIT_HR, maxscaleCommit))
-        hrTests.append("{}: {}".format(MAXSCALE_SOURCE_MR, maxscaleSource))
+        hrTests.append("{}: {}".format(MAXSCALE_SOURCE_HR, maxscaleSource))
         hrTests.append("{}: {}".format(LOGS_DIR_HR, logsDir))
         hrTests.append("{}: {}".format(CMAKE_FLAGS_HR, cmakeFlags))
         hrTests.append("{}: {}".format(MAXSCALE_SYSTEM_TEST_COMMIT_HR, self.getTestCodeCommit()))
@@ -285,13 +285,13 @@ class CTestParser:
             MAXSCALE_SYSTEM_TEST_COMMIT_MR: self.getTestCodeCommit(),
             MAXSCALE_COMMIT_MR: self.maxscaleCommit or NOT_FOUND,
             MAXSCALE_SOURCE_MR: self.maxscaleSource or NOT_FOUND,
-            CMAKE_FLAGS_MR: self.maxscaleSource or NOT_FOUND,
+            CMAKE_FLAGS_MR: self.cmakeFlags or NOT_FOUND,
             LOGS_DIR_MR: self.logsDir or NOT_FOUND,
             CTEST_ARGUMENTS_MR: self.generateCtestArguments(),
         })
         if not self.ctestExecuted:
             res.update({ERROR: CTEST_NOT_EXECUTED_ERROR})
-        return json.dumps(res, sort_keys=True, indent=4)
+        return json.dumps(res, sort_keys=True, indent=2)
 
     def showHrResults(self, parsedCtestData):
         print(self.generateHrResult(parsedCtestData))
