@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import json
 import os
 import re
 import sys
@@ -287,7 +290,7 @@ class CTestParser:
         })
         if not self.ctestExecuted:
             res.update({ERROR: CTEST_NOT_EXECUTED_ERROR})
-        return res
+        return json.dumps(res, sort_keys=True, indent=4)
 
     def showHrResults(self, parsedCtestData):
         print(self.generateHrResult(parsedCtestData))
