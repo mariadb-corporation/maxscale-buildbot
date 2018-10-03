@@ -75,7 +75,7 @@ def createFactory():
     ))
     factory.addStep(steps.Trigger(
         name="Call the 'run_performance_test' scheduler. Run performance tests",
-        schedulerNames=['run_performance_test'],
+        schedulerNames=['run_performance_test_trigger'],
         waitForFinish=True,
         copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
         set_properties={
