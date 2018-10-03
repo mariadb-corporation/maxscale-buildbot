@@ -99,6 +99,7 @@ options.add_argument("-o", OUTPUT_LOG_FILE_OPTION, metavar="file_path",
 options.add_argument("-j", OUTPUT_LOG_JSON_FILE_OPTION, metavar="json_file_path",
                      help="CTEST PARSER OUTPUT LOG JSON FILE (there will be "
                           "saved all test results - passed and failed)")
+options.add_argument("-s", CTEST_SUBLOGS_PATH, help="Path to ctest sublogs")
 
 
 class CTestParser:
@@ -143,11 +144,13 @@ class CTestParser:
                 maxscaleVersionStartFound = True
             if maxscaleCommitRegex.match(line) and not self.maxscaleCommit:
                 self.maxscaleCommit = maxscaleCommitRegex.match(line)[0]
+            if cmakeFlagsRegex.match(line) and not self.cmakeFlags:
+                self.cmakeFlags = cmakeFlagsRegex.match(line)[0].strip()
             if maxscaleSourceRegex.match(line) and not self.maxscaleSource:
                 self.maxscaleSource = maxscaleSourceRegex.match(line)[0].strip()
             if logsFirRegex.match(line) and not self.logsDir:
                 self.logsDir = logsFirRegex.match(line)[0].strip()
-            if ctestFirstLineRegex:
+            if ctestFirstLineRegex.match(line):
                 self.ctestExecuted = True
                 break
             ctestStartLine += 1
@@ -325,7 +328,8 @@ class CTestParser:
 
 def main():
     args = options.parse_args()
-    CTestParser(args)
+    parser = CTestParser(args)
+    parser.parse()
 
 
 if os.path.samefile(__file__, sys.argv[0]):
