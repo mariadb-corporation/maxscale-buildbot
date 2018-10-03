@@ -135,21 +135,21 @@ class CTestParser:
 
         with open(self.args.log_file, encoding="UTF-8") as file:
             for line in file:
-                if maxscaleVersionEndRegex.match(line):
+                if maxscaleVersionEndRegex.search(line):
                     maxscaleVersionEndFound = True
                 if maxscaleVersionStartFound and not maxscaleVersionEndFound and line.replace("\n", ""):
                     self.maxscaleEntity.append(line.replace("\n", ""))
-                if maxscaleVersionStartRegex.match(line):
+                if maxscaleVersionStartRegex.search(line):
                     maxscaleVersionStartFound = True
-                if maxscaleCommitRegex.match(line) and not self.maxscaleCommit:
-                    self.maxscaleCommit = maxscaleCommitRegex.match(line).group(0)
-                if cmakeFlagsRegex.match(line) and not self.cmakeFlags:
-                    self.cmakeFlags = cmakeFlagsRegex.match(line).group(0).strip()
-                if maxscaleSourceRegex.match(line) and not self.maxscaleSource:
-                    self.maxscaleSource = maxscaleSourceRegex.match(line).group(0).strip()
-                if logsFirRegex.match(line) and not self.logsDir:
-                    self.logsDir = logsFirRegex.match(line).group(0).strip()
-                if ctestFirstLineRegex.match(line):
+                if maxscaleCommitRegex.search(line) and not self.maxscaleCommit:
+                    self.maxscaleCommit = maxscaleCommitRegex.search(line).group(0)
+                if cmakeFlagsRegex.search(line) and not self.cmakeFlags:
+                    self.cmakeFlags = cmakeFlagsRegex.search(line).group(0).strip()
+                if maxscaleSourceRegex.search(line) and not self.maxscaleSource:
+                    self.maxscaleSource = maxscaleSourceRegex.search(line).group(0).strip()
+                if logsFirRegex.search(line) and not self.logsDir:
+                    self.logsDir = logsFirRegex.search(line).group(0).strip()
+                if ctestFirstLineRegex.search(line):
                     self.ctestExecuted = True
                     break
 
@@ -157,12 +157,12 @@ class CTestParser:
                 ctestLog = file.readlines()
                 ctestEndLine = 0
                 for line in ctestLog:
-                    if ctestLastLineRegex.match(line):
+                    if ctestLastLineRegex.search(line):
                         self.ctestSummary = line
                         break
                     ctestEndLine += 1
                 ctestLog = ctestLog[:ctestEndLine]
-                testQuantity = ctestLastLineRegex.match(ctestLog[-1]).group(0)
+                testQuantity = ctestLastLineRegex.search(ctestLog[-1]).group(0)
                 self.findTestsInfo(ctestLog)
                 self.allCtestInfo.update({TESTS_COUNT: testQuantity})
                 self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
@@ -179,17 +179,17 @@ class CTestParser:
             testEndRegex = re.compile(r"(\d+)\/(\d+)\s+Test\s+#(\d+):[\s]+([^\s]+)\s+[\.\*]+([^\d]+)([\d\.]+)")
             if line not in FIRST_LINES_CTEST_TO_SKIP:
                 ctestSublog.append(line)
-            if testEndRegex.match(line):
-                testIndexNumber = testEndRegex.match(line).group(0)
-                testSuccess = testEndRegex.match(line).group(4).strip()
-                testName = testEndRegex.match(line).group(3)
+            if testEndRegex.search(line):
+                testIndexNumber = testEndRegex.search(line).group(0)
+                testSuccess = testEndRegex.search(line).group(4).strip()
+                testName = testEndRegex.search(line).group(3)
                 if self.args.ctest_sublogs_path:
                     os.mkdir("{}/{}".format(self.args.ctest_sublogs_path, testName))
                     with open("{}/{}/ctest_sublog".format(self.args.ctest_sublogs_path, testName), "w") as file:
                         file.writelines(ctestSublog)
                 ctestSublog = []
-                testNumber = testEndRegex.match(line).group(2)
-                testTime = testEndRegex.match(line).group(5)
+                testNumber = testEndRegex.search(line).group(2)
+                testTime = testEndRegex.search(line).group(5)
                 self.allCtestIndexes.append(testNumber)
                 self.allCtestInfo.append({
                     TEST_INDEX_NUMBER: testIndexNumber,
@@ -238,8 +238,8 @@ class CTestParser:
         if not gitLog:
             return NOT_FOUND
         commitRegex = re.compile(r"commit\s+(.+)")
-        if commitRegex.match(gitLog.readlines()):
-            return commitRegex.match(gitLog.readlines()[0]).group(0)
+        if commitRegex.search(gitLog.readlines()):
+            return commitRegex.search(gitLog.readlines()[0]).group(0)
         return NOT_FOUND
 
     def generateRunTestBuildParametersHr(self):
