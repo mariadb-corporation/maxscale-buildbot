@@ -130,48 +130,46 @@ class CTestParser:
         logsFirRegex = re.compile(r"^Logs go to \/home\/vagrant\/LOGS\/(.+)$")
         maxscaleVersionStartRegex = re.compile(".*Maxscale_full_version_start:.*")
         maxscaleVersionEndRegex = re.compile(".*Maxscale_full_version_end.*")
-        ctestStartLine = 0
         maxscaleVersionStartFound = False
         maxscaleVersionEndFound = False
 
-        file = open(self.args.log_file, encoding="UTF-8")
-        for line in file:
-            if maxscaleVersionEndRegex.match(line):
-                maxscaleVersionEndFound = True
-            if maxscaleVersionStartFound and not maxscaleVersionEndFound and line.replace("\n", ""):
-                self.maxscaleEntity.append(line.replace("\n", ""))
-            if maxscaleVersionStartRegex.match(line):
-                maxscaleVersionStartFound = True
-            if maxscaleCommitRegex.match(line) and not self.maxscaleCommit:
-                self.maxscaleCommit = maxscaleCommitRegex.match(line).group(0)
-            if cmakeFlagsRegex.match(line) and not self.cmakeFlags:
-                self.cmakeFlags = cmakeFlagsRegex.match(line).group(0).strip()
-            if maxscaleSourceRegex.match(line) and not self.maxscaleSource:
-                self.maxscaleSource = maxscaleSourceRegex.match(line).group(0).strip()
-            if logsFirRegex.match(line) and not self.logsDir:
-                self.logsDir = logsFirRegex.match(line).group(0).strip()
-            if ctestFirstLineRegex.match(line):
-                self.ctestExecuted = True
-                break
-            ctestStartLine += 1
-
-        if self.ctestExecuted:
-            ctestLog = file.readlines()[ctestStartLine:-1]
-            ctestEndLine = 0
-            for line in ctestLog:
-                if ctestLastLineRegex.match(line):
-                    self.ctestSummary = line
+        with open(self.args.log_file, encoding="UTF-8") as file:
+            for line in file:
+                if maxscaleVersionEndRegex.match(line):
+                    maxscaleVersionEndFound = True
+                if maxscaleVersionStartFound and not maxscaleVersionEndFound and line.replace("\n", ""):
+                    self.maxscaleEntity.append(line.replace("\n", ""))
+                if maxscaleVersionStartRegex.match(line):
+                    maxscaleVersionStartFound = True
+                if maxscaleCommitRegex.match(line) and not self.maxscaleCommit:
+                    self.maxscaleCommit = maxscaleCommitRegex.match(line).group(0)
+                if cmakeFlagsRegex.match(line) and not self.cmakeFlags:
+                    self.cmakeFlags = cmakeFlagsRegex.match(line).group(0).strip()
+                if maxscaleSourceRegex.match(line) and not self.maxscaleSource:
+                    self.maxscaleSource = maxscaleSourceRegex.match(line).group(0).strip()
+                if logsFirRegex.match(line) and not self.logsDir:
+                    self.logsDir = logsFirRegex.match(line).group(0).strip()
+                if ctestFirstLineRegex.match(line):
+                    self.ctestExecuted = True
                     break
-                ctestEndLine += 1
-            ctestLog = ctestLog[:ctestEndLine]
-            testQuantity = ctestLastLineRegex.match(ctestLog[-1]).group(0)
-            self.findTestsInfo(ctestLog)
-            self.allCtestInfo.update({TESTS_COUNT: testQuantity})
-            self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
-        else:
-            self.ctestSummary = CTEST_SUMMARY_NOTE_FOUND
-            self.allCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
-            self.failedCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
+
+            if self.ctestExecuted:
+                ctestLog = file.readlines()
+                ctestEndLine = 0
+                for line in ctestLog:
+                    if ctestLastLineRegex.match(line):
+                        self.ctestSummary = line
+                        break
+                    ctestEndLine += 1
+                ctestLog = ctestLog[:ctestEndLine]
+                testQuantity = ctestLastLineRegex.match(ctestLog[-1]).group(0)
+                self.findTestsInfo(ctestLog)
+                self.allCtestInfo.update({TESTS_COUNT: testQuantity})
+                self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
+            else:
+                self.ctestSummary = CTEST_SUMMARY_NOTE_FOUND
+                self.allCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
+                self.failedCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
 
     def findTestsInfo(self, ctestLog):
         if self.args.ctest_sublogs_path:
