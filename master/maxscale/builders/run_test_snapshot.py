@@ -39,15 +39,11 @@ def createRunTestSnapshotSteps():
     testSnapshotSteps.extend(common.configureMdbciVmPathProperty())
     testSnapshotSteps.extend(common.cloneRepository())
     testSnapshotSteps.append(steps.SetProperties(properties=run_test.configureCommonProperties))
-    testSnapshotSteps.extend(support.executePythonScript(
-        "Run MaxScale tests using MDBCI", run_test.remoteRunScriptAndLog))
-    testSnapshotSteps.extend(support.executePythonScript(
-        "Parse ctest results log and save it to logs directory",
-        run_test.remoteParseCtestLogAndStoreIt, alwaysRun=True))
-    testSnapshotSteps.extend(support.executePythonScript(
-        "Find and store coredumps", run_test.remoteStoreCoredumps, alwaysRun=True))
-    testSnapshotSteps.append(run_test.writeBuildResultsToDatabase(alwaysRun=True))
-    testSnapshotSteps.append(run_test.showTestResult(alwaysRun=True))
+    testSnapshotSteps.extend(common.remoteRunScriptAndLog())
+    testSnapshotSteps.extend(common.remoteParseCtestLogAndStoreIt())
+    testSnapshotSteps.extend(common.remoteStoreCoredumps())
+    testSnapshotSteps.extend(common.writeBuildResultsToDatabase(alwaysRun=True))
+    testSnapshotSteps.extend(common.showTestResult(alwaysRun=True))
     testSnapshotSteps.extend(common.removeSnapshotLock())
     testSnapshotSteps.extend(common.removeLock())
     testSnapshotSteps.extend(common.cleanBuildDir())
