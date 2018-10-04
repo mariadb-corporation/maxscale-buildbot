@@ -6,7 +6,6 @@ from buildbot.steps.shell import ShellCommand
 from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
-from maxscale import builders
 from maxscale import workers
 
 
@@ -282,3 +281,11 @@ class RsyncShellSequence(ShellSequence):
         if not hosts:
             self.descriptionDone = "No remote hosts found"
         return self.runShellSequence(self.commands)
+
+
+def downloadScript(scriptName):
+    return [steps.FileDownload(
+        name="Transferring {} to worker".format(scriptName),
+        mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
+        workerdest="scripts/{}".format(scriptName)
+    )]
