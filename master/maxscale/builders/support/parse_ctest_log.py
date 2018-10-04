@@ -324,8 +324,8 @@ class CTestParser:
             self.saveAllResultsToJsonFile()
 
 
-def main():
-    args = options.parse_args()
+def main(args=None):
+    args = options.parse_args(args=args)
     parser = CTestParser(args)
     parser.parse()
 

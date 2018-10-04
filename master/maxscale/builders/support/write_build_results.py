@@ -135,8 +135,8 @@ class BuildResultsWriter:
                 self.writeResultsTable(id, name, result, testTime, coreDumpPath)
 
 
-def main():
-    args = options.parse_args()
+def main(args=None):
+    args = options.parse_args(args=args)
     try:
         writer = BuildResultsWriter()
         writer.writeResultsFromInputFile(args.file)
