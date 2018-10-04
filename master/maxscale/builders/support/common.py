@@ -284,6 +284,7 @@ class RsyncShellSequence(ShellSequence):
 
 
 def downloadScript(scriptName):
+    """Downloads script with the given name from scripts directory to the current worker"""
     return [steps.FileDownload(
         name="Transferring {} to worker".format(scriptName),
         mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
@@ -354,6 +355,12 @@ def extractDatabaseBuildid(rc, stdout, stderr):
 
 
 def showTestResult(**kwargs):
+    """
+    Stores results of a test run into the buildbot's database
+    for retrieving later during email composition
+    :param kwargs:
+    :return:
+    """
     return [StdoutShellCommand(
         name="test_result",
         collectStdout=True,
@@ -391,3 +398,18 @@ def remoteRunScriptAndLog():
 
     return support.executePythonScript(
         "Run MaxScale tests using MDBCI", remoteRunScriptAndLog)
+
+
+def parseCtestLog():
+    """Downloads and runs ctect log parser"""
+    return downloadScript("parse_ctest_log.py") + remoteParseCtestLogAndStoreIt()
+
+
+def writeBuildsResults():
+    """Downloads and runs script for saving build results to database"""
+    return downloadScript("write_build_results.py") + writeBuildResultsToDatabase(alwaysRun=True)
+
+
+def findCoredump():
+    """Downloads and runs coredump finder"""
+    return downloadScript("coredump_finder.py") + remoteStoreCoredumps()
