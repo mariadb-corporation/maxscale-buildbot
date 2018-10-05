@@ -283,12 +283,14 @@ class RsyncShellSequence(ShellSequence):
         return self.runShellSequence(self.commands)
 
 
-def downloadScript(scriptName):
+def downloadScript(scriptName, **kwargs):
     """Downloads script with the given name from scripts directory to the current worker"""
     return [steps.FileDownload(
         name="Transferring {} to worker".format(scriptName),
         mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
-        workerdest="scripts/{}".format(scriptName)
+        workerdest=util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName)),
+        mode=0o755,
+        **kwargs
     )]
 
 
@@ -297,7 +299,7 @@ def remoteParseCtestLogAndStoreIt():
     def remote():
         buildId = "{}-{}".format(buildername, buildnumber)
         outputDirectory = os.path.join(builddir, buildId, "ctest_sublogs")
-        subprocess.run([os.path.join(HOME, "mdbci/scripts/build_parser/parse_ctest_log.rb"),
+        subprocess.run(["{}/scripts/parse_ctest_log.py".format(builddir),
                         "-l", buildLogFile,
                         "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
                         "-r", "-f",
@@ -320,7 +322,7 @@ def remoteStoreCoredumps():
     """Find the coredumps and store them in the LOGS directory"""
     def remote():
         result = subprocess.check_output(
-            [os.path.join(HOME, "mdbci/scripts/build_parser/coredump_finder.sh"),
+            ["{}/scripts/coredump_finder.py".format(builddir),
              "{}-{}".format(buildername, buildnumber), "url"])
         coredumpLogFile = open(os.path.join(builddir, "coredumps_{}".format(buildnumber)), "w")
         coredumpLogFile.write("COREDUMPS \\\n")
@@ -340,8 +342,8 @@ def writeBuildResultsToDatabase(**kwargs):
     """Call the script to save results to the database"""
     return [steps.SetPropertyFromCommand(
         name="Save test results to the database",
-        command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/write_build_results.rb"),
-                 "-f", util.Property("jsonResultsFile")],
+        command=[util.Interpolate("%(prop:builddir)s/scripts/write_build_results.py"),
+                 util.Property("jsonResultsFile")],
         extract_fn=extractDatabaseBuildid,
         **kwargs)]
 
@@ -397,19 +399,19 @@ def remoteRunScriptAndLog():
         sys.exit(process.returncode)
 
     return support.executePythonScript(
-        "Run MaxScale tests using MDBCI", remoteRunScriptAndLog)
+        "Run MaxScale tests using MDBCI", remote)
 
 
 def parseCtestLog():
     """Downloads and runs ctect log parser"""
-    return downloadScript("parse_ctest_log.py") + remoteParseCtestLogAndStoreIt()
+    return downloadScript("parse_ctest_log.py", alwaysRun=True) + remoteParseCtestLogAndStoreIt()
 
 
 def writeBuildsResults():
     """Downloads and runs script for saving build results to database"""
-    return downloadScript("write_build_results.py") + writeBuildResultsToDatabase(alwaysRun=True)
+    return downloadScript("write_build_results.py", alwaysRun=True) + writeBuildResultsToDatabase(alwaysRun=True)
 
 
 def findCoredump():
     """Downloads and runs coredump finder"""
-    return downloadScript("coredump_finder.py") + remoteStoreCoredumps()
+    return downloadScript("coredump_finder.py", alwaysRun=True) + remoteStoreCoredumps()
