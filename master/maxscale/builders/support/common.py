@@ -251,7 +251,7 @@ def generateRepositories():
 
 def syncRepod():
     return [RsyncShellSequence(name="Synchronizing ~/.config/mdbci/repo.d among workers",
-                               haltOnFailure=False)]
+                               haltOnFailure=False, flunkOnFailure=False, flunkOnWarnings=False)]
 
 
 class RsyncShellSequence(ShellSequence):
@@ -269,7 +269,8 @@ class RsyncShellSequence(ShellSequence):
         currentHost = None
         for worker in workers.WORKER_CREDENTIALS:
             if worker["name"] != self.getProperty("workername"):
-                hosts.add(worker["host"])
+                if self.master.workers.connections.get(worker["name"]):
+                    hosts.add(worker["host"])
             else:
                 currentHost = worker["host"]
         hosts.discard(currentHost)
