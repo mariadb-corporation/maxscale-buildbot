@@ -18,15 +18,15 @@ List of components:
 The builders are in the [master/maxscale/builders](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders). Builders describe the steps of the task.
 
 ### Default properties
-In some builders, dicts `DEFAULT_PROPERTIES` with the default values are declared for the builder properties (for example, [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py)). `DEFAULT_PROPERTIES` is used if any property of the builder at launch is not specified. For specify default properties, builder use [master/maxscale/builders/common.SetDefaultPropertiesStep](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py), which sets the missing properties to the default value.
+In some builders, dicts `DEFAULT_PROPERTIES` with the default values are declared for the builder properties (for example, [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py)). `DEFAULT_PROPERTIES` is used if any property of the builder at launch is not specified. To specify default properties, builder uses [master/maxscale/builders/common.SetDefaultPropertiesStep](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py), which sets the missing properties to the default value.
 
 ### Environmental variables on the remote worker
 Each worker has its separate environment. To create environmental variable on worker a dictionary with variable's name and value must be created and passed to `env` property of the builder's configuration.
-[Dictionary with environmental variables](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py#L8) can use render build's properties as variable's value to pass properties to worker's environment.
-Alternatively master's environment can be copied to worker by assigning `dict(os.environ))` to the `env` argument of builder's configureation.
+[Dictionary with environmental variables](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py#L8) can render build's properties as variable's value to pass properties to worker's environment.
+Alternatively master's environment can be copied to worker by assigning `dict(os.environ))` to the `env` argument of builder's configuration.
 
 ### Custom Build Step
-In some builders, to specify a group of properties in one step, you can use your own class, inherited from `steps.BuildStep` ([Custom Buildsteps docs](http://docs.buildbot.net/current/manual/customization.html#writing-new-buildsteps)). For example,  [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py) use own BuildSetPropertiesStep class for it.
+In some builders, to specify a group of properties in one step, you can use your own class, inherited from `steps.BuildStep` ([Custom Buildsteps docs](http://docs.buildbot.net/current/manual/customization.html#writing-new-buildsteps)). For example, [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py) uses own BuildSetPropertiesStep class for it.
 
 ### Remote Python scripts
 Python functions can be executed on a worker using [maxscale.builders.support.support.executePythonScript(name, function, modules=(), **kwargs)](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/support.py#L50) function. This functions will transform Python function into a string and transfer it to `<builddir>/build/script` directory on the remote worker.
@@ -34,15 +34,15 @@ All build's properties are imported to the script as a local variables. Followin
 
 ### Worker and host assignment
 Worker assignment function can be changed by passing [`common.assignWorker`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L197) to `nextWorker` argument of builder configurations.
-By default worker will be chosen from the list of workernames for this build. List of available workers can be narrowed down to workers from a specific host be setting a desired host's address as a `host` property of build.
+By default worker will be chosen from the list of workernames for this build. List of available workers can be narrowed down to workers from a specific host by setting a desired host's address as a `host` property of build.
 That way only workers from specified host will be eligible for that build.
 
 [`common.assignBestHost`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L212) can be used to assign optimal host for a build. It returns host with the least instances of this build running.
 
 ## Schedulers
-The schedulers are in the [master/maxscale/schedulers](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers). Schedulers describe the launch methods of builders.
+The schedulers located in the [master/maxscale/schedulers](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers) directory. Schedulers acts as a build launchers.
 
-* For the **manual launch** of builder use the `schedulers.ForceScheduler`. In parameters you can specify properties and repository information in `codebases` (for example, [build scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build.py)).
+* For the **manual launch** of builder use the `schedulers.ForceScheduler`. You can specify builds's properties in `properties` argument and repository information in `codebases` (for example, [build scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build.py)).
 
 * To **launch a builder from another builder**, you must create a `schedulers.Triggerable` (for example, [build scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build.py)).
 
@@ -54,14 +54,13 @@ See [Schedulers configuration official docs](http://docs.buildbot.net/current/ma
 
 ## Change Source
 
-The Change Source component is responsible for configuring the tracking of changes in the repository. To monitor changes in the Maxscale repository, the GitPoller component is configured with a given function that restricts the list of branches that are followed by shadowing (see [master/maxscale/change_source/maxscale.py](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/change_source/maxscale.py)).
+The Change Source component is responsible for configuration of a repository tracker. To monitor changes in the Maxscale repository, the GitPoller component is configured with a given function that restricts the list of branches that are followed by shadowing (see [master/maxscale/change_source/maxscale.py](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/change_source/maxscale.py)).
 
 See [Change Source configuration official docs](http://docs.buildbot.net/current/manual/cfg-changesources.html).
 
 ## Auth
 
-The project implements authorization of users via the account on the Github. The authorization configuration is described in the [master/maxscale/auth/github_auth.py
-](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/auth/github_auth.py) component. 
+The project implements authorization of users via the account on the Github. The authorization configuration is described in the [master/maxscale/auth/github_auth.py](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/auth/github_auth.py) component. 
 
 Register the Github OAuth application on the https://github.com/settings/developers
 
