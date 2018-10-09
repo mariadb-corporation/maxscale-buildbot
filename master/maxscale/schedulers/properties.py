@@ -262,6 +262,20 @@ def codebaseParameter():
     )]
 
 
+def codebaseMdbciParameter():
+    return [util.CodebaseParameter(
+        "",
+        label="Main repository",
+        branch=util.StringParameter(name="branch",
+                                    default=constants.MDBCI_CODEBASE[""]["branch"]),
+        revision=util.FixedParameter(name="revision",
+                                     default=constants.MDBCI_CODEBASE[""]["revision"]),
+        project=util.FixedParameter(name="project", default=""),
+        repository=util.StringParameter(name="repository",
+                                        default=constants.MDBCI_CODEBASE[""]["repository"]),
+    )]
+
+
 def versionNumber():
     return util.StringParameter(
         name="version_number",
@@ -276,4 +290,20 @@ def host(default="max-tst-03"):
         label="Host",
         choices=list(set(map(lambda worker: worker["host"], workers.WORKER_CREDENTIALS))),
         default=default
+    )
+
+
+def maxscale_threads():
+    return util.StringParameter(
+        name="maxscale_threads",
+        label="The value of 'threads' parameter in the maxscale.cnf",
+        default="8"
+    )
+
+
+def sysbench_threads():
+    return util.StringParameter(
+        name="sysbench_threads",
+        label="Number of sysbench threads",
+        default="16"
     )
