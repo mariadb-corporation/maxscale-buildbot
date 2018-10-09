@@ -44,9 +44,11 @@ The schedulers are in the [master/maxscale/schedulers](https://github.com/mariad
 
 * For the **manual launch** of builder use the `schedulers.ForceScheduler`. In parameters you can specify properties and repository information in `codebases` (for example, [build scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build.py)).
 
-* For **launch a builder from another builder**, you must create a `schedulers.Triggerable` (for example, [build scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build.py)).
+* To **launch a builder from another builder**, you must create a `schedulers.Triggerable` (for example, [build scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build.py)).
 
-* For launch the builder by the event of **detecting changes in the repository**, you must create a `schedulers.SingleBranchScheduler` with the specified `change_filter` (for example, [build_and_simple_test scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build_and_simple_test.py)).
+* `schedulers.SingleBranchScheduler` is used to start a build which **follows a commit to a remote repository**. `change_filter` can be specified to filter incoming changes (for example, [build_and_test_snapshot scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build_and_test_snapshot.py)).
+
+* **Nightly build** can be started at a specific time of a day through `scheduler.Nightly` scheduler (see [nightly build_all scheduler](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/build_all.py)).
 
 See [Schedulers configuration official docs](http://docs.buildbot.net/current/manual/cfg-schedulers.html).
 
