@@ -32,6 +32,13 @@ In some builders, to specify a group of properties in one step, you can use your
 Python functions can be executed on a worker using [maxscale.builders.support.support.executePythonScript(name, function, modules=(), **kwargs)](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/support.py#L50) function. This functions will transform Python function into a string and transfer it to `<builddir>/build/script` directory on the remote worker.
 All build's properties are imported to the script as a local variables. Following modules are imported by default: sys, os, os.path, shutil, subprocess and additional modules can be imported by passing their names to the `modules` argument.
 
+### Worker and host assignment
+Worker assignment function can be changed by passing [`common.assignWorker`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L197) to `nextWorker` argument of builder configurations.
+By default worker will be chosen from the list of workernames for this build. List of available workers can be narrowed down to workers from a specific host be setting a desired host's address as a `host` property of build.
+That way only workers from specified host will be eligible for that build.
+
+[`common.assignBestHost`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L212) can be used to assign optimal host for a build. It returns host with the least instances of this build running.
+
 ## Schedulers
 The schedulers are in the [master/maxscale/schedulers](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers). Schedulers describe the launch methods of builders.
 
