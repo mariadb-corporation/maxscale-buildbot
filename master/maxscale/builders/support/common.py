@@ -176,6 +176,11 @@ class StdoutShellCommand(ShellCommand):
 
 
 def getFormattedDateTime(format):
+    """
+    Creates renderer which return formatted datetime
+    :param format: format of datetime string
+    :return: rendered for datetime
+    """
     @util.renderer
     def formatDateTime(properties):
         return datetime.datetime.now().strftime(format)
@@ -184,6 +189,10 @@ def getFormattedDateTime(format):
 
 
 def setMissingTarget():
+    """
+    Sets 'target' property of the build to <branch>-buildbot-<starttime> if it isn't set yet
+    :return: list of steps
+    """
     return [steps.SetProperty(
         name=util.Interpolate("Set 'target' property"),
         property="target",
@@ -243,6 +252,10 @@ def assignBestHost(builder, workersForBuilders, buildRequest):
 
 
 def generateRepositories():
+    """
+    Runs 'mdbcu generate-product-repositories' command on a worker
+    :return: list of steps
+    """
     return [steps.ShellCommand(
         name="Generate product repositories",
         command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories"],
@@ -251,6 +264,10 @@ def generateRepositories():
 
 
 def syncRepod():
+    """
+    Creates steps for running rsync to remote workers
+    :return: list of steps
+    """
     return [RsyncShellSequence(name="Synchronizing ~/.config/mdbci/repo.d among workers",
                                haltOnFailure=False, flunkOnFailure=False, flunkOnWarnings=False)]
 
