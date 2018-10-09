@@ -70,6 +70,10 @@ See [Authentication plugins official docs](http://docs.buildbot.net/current/manu
 ## Services
 
 Directory: [master/maxscale/services](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/services/build.py)
-The service components describe the rules for sending email-notifications to each builder.
+The service components describe the rules for sending email-notifications to each builder. Each must subscribe to a builder and provide a valid form for composing email.
+
+### ExpandedStepsFormatter
+By default Buildbot provides build context only for steps of the main build without providing data on triggered builds.
+ExpandedStepsFormatter looks directly through database for additional data on triggered build's steps using Buildbot's [DATA API](http://docs.buildbot.net/current/developer/data.html)
 
 See [Reporters configuration official docs](http://docs.buildbot.net/current/manual/cfg-reporters.html).
