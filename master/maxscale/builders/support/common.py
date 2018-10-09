@@ -300,7 +300,7 @@ def remoteParseCtestLogAndStoreIt():
         buildId = "{}-{}".format(buildername, buildnumber)
         outputDirectory = os.path.join(builddir, buildId, "ctest_sublogs")
         subprocess.run(["{}/scripts/parse_ctest_log.py".format(builddir),
-                        "-l", buildLogFile,
+                        buildLogFile,
                         "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
                         "-r", "-f",
                         "-j", jsonResultsFile,
