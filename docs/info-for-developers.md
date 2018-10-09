@@ -18,26 +18,19 @@ List of components:
 The builders are in the [master/maxscale/builders](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders). Builders describe the steps of the task.
 
 ### Default properties
-In some builders, dicts `DEFAULT_PROPERTIES` with the default values are declared for the builder properties (for example, [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py)). `DEFAULT_PROPERTIES` is used if any property of the builder at launch is not specified. For specify default properties, builder use [master/maxscale/builders/common.SetDefaultPropertiesStep](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/common.py), which sets the missing properties to the default value.
+In some builders, dicts `DEFAULT_PROPERTIES` with the default values are declared for the builder properties (for example, [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py)). `DEFAULT_PROPERTIES` is used if any property of the builder at launch is not specified. For specify default properties, builder use [master/maxscale/builders/common.SetDefaultPropertiesStep](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py), which sets the missing properties to the default value.
+
+### Environmental variables on the remote worker
+Each worker has its separate environment. To create environmental variable on worker a dictionary with variable's name and value must be created and passed to `env` property of the builder's configuration.
+[Dictionary with environmental variables](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py#L8) can use render build's properties as variable's value to pass properties to worker's environment.
+Alternatively master's environment can be copied to worker by assigning `dict(os.environ))` to the `env` argument of builder's configureation.
 
 ### Custom Build Step
 In some builders, to specify a group of properties in one step, you can use your own class, inherited from `steps.BuildStep` ([Custom Buildsteps docs](http://docs.buildbot.net/current/manual/customization.html#writing-new-buildsteps)). For example,  [Build builder](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build.py) use own BuildSetPropertiesStep class for it.
 
-### Shell-scripts
-To use the shell script in the build, you need to place it in the directory [master/shell_scripts](https://github.com/mariadb-corporation/maxscale-buildbot/tree/master/master/shell_scripts). Next, in the builder, you need to add a trigger step to call the `download_shell_scripts` builder.
-
-Example:
-```python
-factory.addStep(steps.Trigger(
-    name="Call the 'download_shell_scripts' scheduler",
-    schedulerNames=['download_shell_scripts'],
-    copy_properties=['SHELL_SCRIPTS_PATH']
-))
-```
-
-`SHELL_SCRIPTS_PATH` - destination path on the worker.
-
-See [Builder configuration official docs](http://docs.buildbot.net/current/manual/cfg-builders.html) and [Build Steps official docs](http://docs.buildbot.net/current/manual/cfg-buildsteps.html).
+### Remote Python scripts
+Python functions can be executed on a worker using [maxscale.builders.support.support.executePythonScript(name, function, modules=(), **kwargs)](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/support.py#L50) function. This functions will transform Python function into a string and transfer it to `<builddir>/build/script` directory on the remote worker.
+All build's properties are imported to the script as a local variables. Following modules are imported by default: sys, os, os.path, shutil, subprocess and additional modules can be imported by passing their names to the `modules` argument.
 
 ## Schedulers
 The schedulers are in the [master/maxscale/schedulers](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers). Schedulers describe the launch methods of builders.
