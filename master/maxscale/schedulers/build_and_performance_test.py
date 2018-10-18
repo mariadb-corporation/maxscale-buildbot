@@ -26,7 +26,7 @@ SCHEDULERS = [MANUAL_SCHEDULER]
 # Add schedulers for every active branch to be built every night
 # The list of branches is defined by constants.NIGHTLY_SCHEDS
 # (see maxscale/config/constants.py)
-BUILD_INTERVAL = 3
+BUILD_INTERVAL = 1
 launchTime = 18
 for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
