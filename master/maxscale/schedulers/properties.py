@@ -131,22 +131,6 @@ def backend_use_ssl():
         default="no")
 
 
-def maxscale_threads():
-    return util.StringParameter(
-        name="maxscale_threads",
-        label="Maxscale threads",
-        size=4,
-        default="8")
-
-
-def sysbench_threads():
-    return util.StringParameter(
-        name="sysbench_threads",
-        label="Sysbench threads",
-        size=4,
-        default="128")
-
-
 def smoke_tests():
     return util.ChoiceStringParameter(
         name="smoke",

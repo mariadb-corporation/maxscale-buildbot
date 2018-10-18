@@ -65,7 +65,10 @@ DB_VERSIONS = [
     '5.6',
     '5.7',
     '10.3.6',
-    '10.3.7'
+    '10.3.7',
+    '10.3.8',
+    '10.3.9',
+    '10.3.10'
 ]
 
 DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug '
