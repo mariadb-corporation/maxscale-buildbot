@@ -8,7 +8,6 @@ from maxscale.builders.support import common
 from maxscale.config import constants
 
 COMMON_PROPERTIES = [
-    "name",
     "repository",
     "branch",
     "target",
@@ -18,12 +17,10 @@ COMMON_PROPERTIES = [
     "version",
     "cmake_flags",
     "do_not_destroy_vm",
-    "test_set",
-    "ci_url",
-    "smoke",
-    "big",
     "host",
     "owners",
+    "maxscale_threads",
+    "sysbench_threads",
 ]
 
 
@@ -39,12 +36,13 @@ def create_factory():
         set_properties={
             'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
             'box': 'ubuntu_bionic_libvirt',
+            'try_already_running': 'yes',
         }
     ))
 
     factory.addStep(steps.Trigger(
         name="Call the 'run_performance_test' scheduler",
-        schedulerNames=['run_performace_test'],
+        schedulerNames=['run_performance_test_trigger'],
         waitForFinish=True,
         copy_properties=COMMON_PROPERTIES,
         set_properties={

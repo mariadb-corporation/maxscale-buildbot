@@ -4,11 +4,13 @@ from maxscale.config import constants
 
 
 BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
-    properties.build_name(),
+    properties.backend_database(),
     properties.database_version(),
+    properties.cmake_flags(),
     properties.host1(),
     properties.maxscale_threads(),
     properties.sysbench_threads(),
+    properties.build_box('ubuntu_bionic_libvirt'),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
