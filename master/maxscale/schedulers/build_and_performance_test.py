@@ -4,6 +4,7 @@ from maxscale.config import constants
 
 
 BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
+    properties.build_target(),
     properties.backend_database(),
     properties.database_version(),
     properties.cmake_flags(),
