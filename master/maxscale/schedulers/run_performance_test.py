@@ -5,7 +5,7 @@ from . import properties
 PERFORMACE_TEST_PROPERTIES = [
     properties.build_target(),
     properties.database_version(),
-    properties.host1(),
+    properties.host("max-tst-01"),
     properties.maxscale_threads(),
     properties.sysbench_threads(),
 ]

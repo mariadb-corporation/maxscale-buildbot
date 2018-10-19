@@ -8,7 +8,7 @@ BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
     properties.backend_database(),
     properties.database_version(),
     properties.cmake_flags(),
-    properties.host1(),
+    properties.host("max-tst-01"),
     properties.maxscale_threads(),
     properties.sysbench_threads(),
     properties.build_box('ubuntu_bionic_libvirt'),
