@@ -177,7 +177,7 @@ class CTestParser:
         ctestSublog = []
         for line in ctestLog:
             testEndRegex = re.compile(r"(\d+)\/(\d+)\s+Test\s+#(\d+):[\s]+([^\s]+)\s+[\.\*]+([^\d]+)([\d\.]+)")
-            if line not in FIRST_LINES_CTEST_TO_SKIP:
+            if line.strip() not in FIRST_LINES_CTEST_TO_SKIP:
                 ctestSublog.append(line)
             if testEndRegex.search(line):
                 testIndexNumber = testEndRegex.search(line).group(1)
