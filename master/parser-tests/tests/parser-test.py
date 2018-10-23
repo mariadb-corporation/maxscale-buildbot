@@ -67,24 +67,26 @@ def readLogsDir(source):
 resultsDir = "{}/results".format(os.path.dirname(os.path.abspath(__file__)))
 
 
+def setup_module(module):
+    if os.path.exists(resultsDir):
+        shutil.rmtree(resultsDir)
+
+
 @pytest.fixture(scope="session")
 def buildId(request, source):
     yield readLogsDir(source)
 
 
-@pytest.fixture(scope="module")
-def setupResultsDirectory(request, sources):
-    if os.path.exists(resultsDir):
-        shutil.rmtree(resultsDir)
-    for source in sources:
-        logsDir = readLogsDir(source)
-        command = ["{}/../parser/parser.py".format(os.path.dirname(os.path.abspath(__file__))),
-                   source, '-f', '-r', '-c', 'url', '-o', "{}/{}".format(resultsDir, logsDir)]
-        subprocess.run(command)
-        subprocess.run(command + ["-u"])
+@pytest.fixture(scope="session")
+def parseSource(request, source):
+    logsDir = readLogsDir(source)
+    command = ["{}/../parser/parser.py".format(os.path.dirname(os.path.abspath(__file__))),
+               source, '-f', '-r', '-c', 'url', '-o', "{}/{}".format(resultsDir, logsDir)]
+    subprocess.run(command)
+    subprocess.run(command + ["-u"])
 
 
-def test_compareHrResults(buildId, setupResultsDirectory):
+def test_compareHrResults(buildId, parseSource):
     if not os.path.exists("{}/{}/".format(resultsDir, buildId)):
         pytest.skip("Test run failed and didn't produces any results")
     result, message = compareFiles("{}/{}/ruby/results".format(resultsDir, buildId),
@@ -92,7 +94,7 @@ def test_compareHrResults(buildId, setupResultsDirectory):
     assert result, message
 
 
-def test_compareMrResults(buildId, setupResultsDirectory):
+def test_compareMrResults(buildId, parseSource):
     if not os.path.exists("{}/{}/".format(resultsDir, buildId)):
         pytest.skip("Test run failed and didn't produces any results")
     result, message = compareJsonFiles("{}/{}/ruby/json".format(resultsDir, buildId),
@@ -100,7 +102,7 @@ def test_compareMrResults(buildId, setupResultsDirectory):
     assert result, message
 
 
-def test_compareCoredumps(buildId, setupResultsDirectory):
+def test_compareCoredumps(buildId, parseSource):
     if not os.path.exists("{}/{}/".format(resultsDir, buildId)):
         pytest.skip("Test run failed and didn't produces any results")
     result, message = compareFiles("{}/{}/ruby/coredump".format(resultsDir, buildId),
@@ -108,7 +110,7 @@ def test_compareCoredumps(buildId, setupResultsDirectory):
     assert result, message
 
 
-def test_compareCtestSublogs(buildId, setupResultsDirectory):
+def test_compareCtestSublogs(buildId, parseSource):
     if not os.path.exists("{}/{}/".format(resultsDir, buildId)):
         pytest.skip("Test run failed and didn't produces any results")
     result, message = compareDirectories("{}/{}/ruby/ctest_sublogs".format(resultsDir, buildId),
