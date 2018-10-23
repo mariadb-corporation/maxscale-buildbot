@@ -28,13 +28,13 @@ options.add_argument("-w", WRITE_RESULTS_TO_DATABASE_OPTION, action="store_true"
 parserRoot = os.path.dirname(os.path.abspath(__file__))
 
 
-def parseCtestRuby(opts, path, outputDir):
+def parseCtestRuby(opts, path):
     command = [
         "{}/ruby-scripts/parse_ctest_log.rb".format(parserRoot),
         "-l", opts.log_file,
-        "-o", "{}/{}/ruby/results".format(path, outputDir),
-        "-j", "{}/{}/ruby/json".format(path, outputDir),
-        "-s", "{}/{}/ruby/ctest_sublogs".format(path, outputDir)
+        "-o", "{}/ruby/results".format(path),
+        "-j", "{}/ruby/json".format(path),
+        "-s", "{}/ruby/ctest_sublogs".format(path)
     ]
     if opts.human_readable:
         command.append("-r")
@@ -43,13 +43,13 @@ def parseCtestRuby(opts, path, outputDir):
     return subprocess.check_output(command)
 
 
-def parseCtestPython(opts, path, outputDir):
+def parseCtestPython(opts, path):
     command = [
         "{}/python-scripts/parse_ctest_log.py".format(parserRoot),
         opts.log_file,
-        "-o", "{}/{}/python/results".format(path, outputDir),
-        "-j", "{}/{}/python/json".format(path, outputDir),
-        "-s", "{}/{}/python/ctest_sublogs".format(path, outputDir)
+        "-o", "{}/python/results".format(path),
+        "-j", "{}/python/json".format(path),
+        "-s", "{}/python/ctest_sublogs".format(path)
     ]
     if opts.human_readable:
         command.append("-r")
@@ -58,24 +58,24 @@ def parseCtestPython(opts, path, outputDir):
     return subprocess.check_output(command)
 
 
-def storeCoredumpsRuby(opts, buildId, path, outputDir):
+def storeCoredumpsRuby(opts, buildId, path):
     command = [
         "{}/ruby-scripts/coredump_finder.sh".format(parserRoot),
         buildId,
         opts.find_coredumps
     ]
     coredumps = subprocess.check_output(command)
-    writeCoredumpsToFile("{}/{}/ruby/coredump".format(path, outputDir), coredumps)
+    writeCoredumpsToFile("{}/ruby/coredump".format(path), coredumps)
 
 
-def storeCoredumpsPython(opts, buildId, path, outputDir):
+def storeCoredumpsPython(opts, buildId, path):
     command = [
         "{}/python-scripts/coredump_finder.py".format(parserRoot),
         buildId,
         opts.find_coredumps
     ]
     coredumps = subprocess.check_output(command)
-    writeCoredumpsToFile("{}/{}/python/coredump".format(path, outputDir), coredumps)
+    writeCoredumpsToFile("{}/python/coredump".format(path), coredumps)
 
 
 def getLogsDir(output):
@@ -107,20 +107,20 @@ def writeToDatabasePython(opts, path):
 
 def main(args=None):
     opts = options.parse_args(args=args)
-    (path, file) = os.path.split(os.path.abspath(opts.log_file))
+    path = os.path.dirname(os.path.abspath(opts.log_file))
     if opts.output_path:
         path = opts.output_path
 
     if opts.use_ruby:
-        result = parseCtestRuby(opts, path, file)
+        result = parseCtestRuby(opts, path)
         if opts.find_coredumps:
-            storeCoredumpsRuby(opts, getLogsDir(result), path, file)
+            storeCoredumpsRuby(opts, getLogsDir(result), path)
         if opts.write_to_database:
             writeToDatabaseRuby(opts, path)
     else:
-        result = parseCtestPython(opts, path, file)
+        result = parseCtestPython(opts, path)
         if opts.find_coredumps:
-            storeCoredumpsPython(opts, getLogsDir(result), path, file)
+            storeCoredumpsPython(opts, getLogsDir(result), path)
         if opts.write_to_database:
             writeToDatabasePython(opts, path)
 
