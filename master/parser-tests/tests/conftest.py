@@ -7,7 +7,8 @@ def pytest_addoption(parser):
 
 def pytest_generate_tests(metafunc):
     if 'source' in metafunc.fixturenames:
-        metafunc.parametrize("source", metafunc.config.getoption('source'))
+        metafunc.parametrize("source", metafunc.config.getoption('source'),
+                             scope="session")
 
 
 @pytest.fixture(scope="session")
