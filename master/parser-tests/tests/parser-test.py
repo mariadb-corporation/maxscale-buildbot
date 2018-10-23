@@ -4,6 +4,7 @@ import collections
 import json
 import os
 import pytest
+import re
 import shutil
 import subprocess
 from itertools import zip_longest
@@ -55,6 +56,14 @@ def compareDirectories(first, second):
     return True, ''
 
 
+def readLogsDir(source):
+    logsDirRegex = re.compile(r"^Logs go to \/home\/vagrant\/LOGS\/(.+)$")
+    with open(source) as file:
+        for line in file:
+            if logsDirRegex.search(line):
+                return logsDirRegex.search(line).group(1).strip()
+
+
 resultsDir = "{}/results".format(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -63,35 +72,36 @@ def setupResultsDirectory(request, sources):
     if os.path.exists(resultsDir):
         shutil.rmtree(resultsDir)
     for source in sources:
+        logsDir = readLogsDir(source)
         command = ["{}/../parser/parser.py".format(os.path.dirname(os.path.abspath(__file__))),
-                   source, '-f', '-r', '-c', 'url', '-o', resultsDir]
+                   source, '-f', '-r', '-c', 'url', '-o', "{}/{}".format(resultsDir, logsDir)]
         subprocess.run(command)
         subprocess.run(command + ["-u"])
 
 
 def test_compareHrResults(source, setupResultsDirectory):
-    buildId = os.path.basename(source)
+    buildId = readLogsDir(source)
     result, message = compareFiles("{}/{}/ruby/results".format(resultsDir, buildId),
                                    "{}/{}/python/results".format(resultsDir, buildId))
     assert result, message
 
 
 def test_compareMrResults(source, setupResultsDirectory):
-    buildId = os.path.basename(source)
+    buildId = readLogsDir(source)
     result, message = compareJsonFiles("{}/{}/ruby/json".format(resultsDir, buildId),
                                        "{}/{}/python/json".format(resultsDir, buildId))
     assert result, message
 
 
 def test_compareCoredumps(source, setupResultsDirectory):
-    buildId = os.path.basename(source)
+    buildId = readLogsDir(source)
     result, message = compareFiles("{}/{}/ruby/coredump".format(resultsDir, buildId),
                                    "{}/{}/python/coredump".format(resultsDir, buildId))
     assert result, message
 
 
 def test_compareCtestSublogs(source, setupResultsDirectory):
-    buildId = os.path.basename(source)
+    buildId = readLogsDir(source)
     result, message = compareDirectories("{}/{}/ruby/ctest_sublogs".format(resultsDir, buildId),
                                          "{}/{}/python/ctest_sublogs".format(resultsDir, buildId))
     assert result, message
