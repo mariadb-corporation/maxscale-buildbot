@@ -92,7 +92,7 @@ def writeCoredumpsToFile(path, coredumps):
 def writeToDatabaseRuby(opts, path):
     command = [
         "{}/ruby-scripts/write_build_results.rb".format(parserRoot),
-        "{}/ruby/json".format(path)
+        "-f", "{}/ruby/json".format(path)
     ]
     return subprocess.check_output(command)
 
