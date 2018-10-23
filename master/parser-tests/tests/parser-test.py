@@ -63,7 +63,8 @@ def setupResultsDirectory(request, sources):
     if os.path.exists(resultsDir):
         shutil.rmtree(resultsDir)
     for source in sources:
-        command = ["../parser/parser.py", source, '-f', '-r', '-c', 'url', '-o', resultsDir]
+        command = ["{}/../parser/parser.py".format(os.path.dirname(os.path.abspath(__file__))),
+                   source, '-f', '-r', '-c', 'url', '-o', resultsDir]
         subprocess.run(command)
         subprocess.run(command + ["-u"])
 
