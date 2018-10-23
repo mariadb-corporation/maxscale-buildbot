@@ -127,7 +127,7 @@ class CTestParser:
         maxscaleCommitRegex = re.compile(r"MaxScale\s+.*\d+\.*\d*\.*\d*\s+-\s+(.+)")
         cmakeFlagsRegex = re.compile(r"CMake flags:\s+(.+)")
         maxscaleSourceRegex = re.compile(r"Source:\s+(.+)")
-        logsFirRegex = re.compile(r"^Logs go to \/home\/vagrant\/LOGS\/(.+)$")
+        logsDirRegex = re.compile(r"^Logs go to \/home\/vagrant\/LOGS\/(.+)$")
         maxscaleVersionStartRegex = re.compile(".*Maxscale_full_version_start:.*")
         maxscaleVersionEndRegex = re.compile(".*Maxscale_full_version_end.*")
         maxscaleVersionStartFound = False
@@ -147,8 +147,8 @@ class CTestParser:
                     self.cmakeFlags = cmakeFlagsRegex.search(line).group(1).strip()
                 if maxscaleSourceRegex.search(line) and not self.maxscaleSource:
                     self.maxscaleSource = maxscaleSourceRegex.search(line).group(1).strip()
-                if logsFirRegex.search(line) and not self.logsDir:
-                    self.logsDir = logsFirRegex.search(line).group(1).strip()
+                if logsDirRegex.search(line) and not self.logsDir:
+                    self.logsDir = logsDirRegex.search(line).group(1).strip()
                 if ctestFirstLineRegex.search(line):
                     self.ctestExecuted = True
                     break
