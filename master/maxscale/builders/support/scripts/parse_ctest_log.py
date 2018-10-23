@@ -216,7 +216,7 @@ class CTestParser:
             return NOT_FOUND
         ctestArguments = []
         testIndexesArray = self.failedCtestIndexes if self.args.only_failed else self.allCtestIndexes
-        sortedTestIndexesArray = sorted(testIndexesArray, key=lambda item: item)
+        sortedTestIndexesArray = sorted(testIndexesArray, key=lambda item: int(item))
         if not sortedTestIndexesArray:
             return NOT_FOUND
         for testIndex in sortedTestIndexesArray:
