@@ -164,6 +164,11 @@ class CTestParser:
                     ctestLog.append(line)
 
                 self.findTestsInfo(ctestLog)
+                if not self.ctestSummary:
+                    self.ctestSummary = "timed out, {} tests failed out of {} executed"\
+                        .format(len(self.failedCtestInfo[TESTS]), len(self.allCtestInfo[TESTS]))
+                    testQuantity = len(self.allCtestInfo[TESTS])
+
                 self.allCtestInfo.update({TESTS_COUNT: testQuantity})
                 self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
             else:
