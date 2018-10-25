@@ -16,8 +16,8 @@ ENV_FILE_OPTION = '--env-file'
 HELP_OPTION = '--help'
 
 # Db parameters
-DEFAULT_FILE = '/home/vagrant/build_parser_db_password'
-DB_NAME = 'test_results_db'
+DEFAULT_FILE = '{}/build_parser_db_password'.format(os.getenv("HOME"))
+DB_NAME = 'parser_test_results_db'
 
 # parse_ctest_log.rb keys definition
 TEST_NAME = 'test_name'
