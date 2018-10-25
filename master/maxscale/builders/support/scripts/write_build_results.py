@@ -127,7 +127,7 @@ class BuildResultsWriter:
 
         if not results.get(ERROR):
             for test in tests:
-                print("Preparing to write test={} into results")
+                print("Preparing to write test={} into results".format(test))
                 name = test[TEST_NAME]
                 result = int(test[TEST_SUCCESS] == FAILED)
                 testTime = test[TEST_TIME]
