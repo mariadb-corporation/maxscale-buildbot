@@ -87,6 +87,7 @@ def database():
     config = readDatabaseConfiguration()
     testdb = mysql.connector.connect(**config)
     cursor = testdb.cursor()
+    cursor.execute("CREATE DATABASE IF NOT EXISTS {}".format(dbName))
     cursor.execute("use {}".format(dbName))
     cursor.execute('CREATE TABLE IF NOT EXISTS test_run (id int(11) PRIMARY KEY, jenkins_id int(11), '
                    'start_time datetime, target varchar(256), box varchar(256), product varchar(256), '
@@ -96,9 +97,12 @@ def database():
     cursor.execute('CREATE TABLE IF NOT EXISTS results(id int(11), FOREIGN KEY (id) REFERENCES test_run(id) '
                    'ON DELETE CASCADE, test varchar(256), result int(11), '
                    'test_time float, core_dump_path varchar(500))')
-
     cursor.close()
     yield testdb
+
+    cursor = testdb.cursor()
+    cursor.execute("DROP DATABASE {}".format(dbName))
+    cursor.close()
     testdb.close()
 
 
@@ -172,39 +176,40 @@ def test_compareCtestSublogs(buildId, parseSource):
                                          "{}/{}/python/ctest_sublogs".format(resultsDir, buildId))
     assert result, message
 
-#
-# def test_compareDatabaseResults(buildId, parseSource, database, resultsTableColumns, testRunTableColumns):
-#     if not os.path.exists("{}/{}/".format(resultsDir, buildId)):
-#         pytest.skip("Test run failed and didn't produces any results")
-#
-#     cursor = database.cursor()
-#     scriptsPath = "{}/../parser/".format(os.path.dirname(os.path.abspath(__file__)))
-#
-#     subprocess.check_output(["{}/ruby-scripts/write_build_results.rb".format(scriptsPath),
-#                              "-f", "{}/{}/ruby/json".format(resultsDir, buildId)])
-#     cursor.execute("SELECT {} FROM results".format(", ".join(resultsTableColumns)))
-#     rubyResults = cursor.fetchall()
-#     cursor.execute("SELECT {} FROM test_run".format(", ".join(testRunTableColumns)))
-#     rubyTestRun = cursor.fetchall()
-#     cursor.execute('DELETE FROM test_run')
-#     database.commit()
-#
-#     subprocess.check_output(["{}/python-scripts/write_build_results.py".format(scriptsPath),
-#                              "{}/{}/ruby/json".format(resultsDir, buildId)])
-#     cursor.execute("SELECT {} FROM results".format(", ".join(resultsTableColumns)))
-#     pythonResults = cursor.fetchall()
-#     cursor.execute("SELECT {} FROM test_run".format(", ".join(testRunTableColumns)))
-#     pythonTestRun = cursor.fetchall()
-#     cursor.execute('DELETE FROM test_run')
-#     database.commit()
-#     assert rubyTestRun == pythonTestRun, \
-#         "test_run rows created by Ruby parser:\n{}\n" \
-#         "does not match rows created by Python parser:\n{}"\
-#         .format(rubyTestRun, pythonTestRun)
-#
-#     assert rubyResults == pythonResults, \
-#         "results rows created by Ruby parser:\n{}\n" \
-#         "does not match rows created by Python parser:\n{}"\
-#         .format(rubyResults, pythonResults)
-#
-#     cursor.close()
+
+def test_compareDatabaseResults(buildId, parseSource, database, resultsTableColumns, testRunTableColumns):
+    if not os.path.exists("{}/{}/".format(resultsDir, buildId)):
+        pytest.skip("Test run failed and didn't produces any results")
+
+    cursor = database.cursor()
+    scriptsPath = "{}/../parser/".format(os.path.dirname(os.path.abspath(__file__)))
+
+    subprocess.run(["{}/ruby-scripts/write_build_results.rb".format(scriptsPath),
+                    "-f", "{}/{}/ruby/json".format(resultsDir, buildId)], stdout=subprocess.DEVNULL)
+    cursor.execute("SELECT {} FROM results".format(", ".join(resultsTableColumns)))
+    rubyResults = cursor.fetchall()
+    cursor.execute("SELECT {} FROM test_run".format(", ".join(testRunTableColumns)))
+    rubyTestRun = cursor.fetchall()
+    cursor.execute('DELETE FROM test_run')
+    database.commit()
+
+    subprocess.run(["{}/python-scripts/write_build_results.py".format(scriptsPath),
+                    "{}/{}/ruby/json".format(resultsDir, buildId)], stdout=subprocess.DEVNULL)
+    cursor.execute("SELECT {} FROM results".format(", ".join(resultsTableColumns)))
+    pythonResults = cursor.fetchall()
+    cursor.execute("SELECT {} FROM test_run".format(", ".join(testRunTableColumns)))
+    pythonTestRun = cursor.fetchall()
+    cursor.execute('DELETE FROM test_run')
+    database.commit()
+
+    assert rubyTestRun == pythonTestRun, \
+        "test_run rows created by Ruby parser:\n{}\n" \
+        "does not match rows created by Python parser:\n{}"\
+        .format(rubyTestRun, pythonTestRun)
+
+    assert rubyResults == pythonResults, \
+        "results rows created by Ruby parser:\n{}\n" \
+        "does not match rows created by Python parser:\n{}"\
+        .format(rubyResults, pythonResults)
+
+    cursor.close()
