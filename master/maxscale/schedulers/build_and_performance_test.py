@@ -1,6 +1,10 @@
 from buildbot.plugins import schedulers, util
 from . import properties
+from . import common
 from maxscale.config import constants
+from maxscale.change_source.maxscale import check_branch_fn_perf
+
+
 
 
 BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
