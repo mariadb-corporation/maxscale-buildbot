@@ -22,7 +22,19 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=BUILD_AND_PERFORMANCE_TEST_PROPERTIES
 )
 
-SCHEDULERS = [MANUAL_SCHEDULER]
+DEFAULT_PROPERTIES = properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
+
+CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
+    name="build_and_performance_test_on_push",
+    change_filter=util.ChangeFilter(project='maxscale', branch_fn=check_branch_fn_perf),
+    treeStableTimer=60,
+    codebases=constants.MAXSCALE_CODEBASE,
+    builderNames=["build_and_performance_test"],
+    properties=DEFAULT_PROPERTIES
+)
+
+
+SCHEDULERS = [MANUAL_SCHEDULER, CHANGE_SOURCE_SCHEDULER]
 
 # Add schedulers for every active branch to be built every night
 # The list of branches is defined by constants.NIGHTLY_SCHEDS

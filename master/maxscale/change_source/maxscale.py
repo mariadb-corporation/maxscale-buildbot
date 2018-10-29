@@ -11,6 +11,13 @@ def check_branch_fn(branch):
     return False
 
 
+def check_branch_fn_perf(branch):
+    for branch_item in MAXSCALE_PERF_BRANCHES_LIST:
+        if re.search(branch_item["branch"], branch.split('/')[-1]):
+            return True
+    return False
+
+
 def get_test_set_by_branch(branch):
     for branch_item in MAXSCALE_BRANCHES_LIST:
         if re.search(branch_item["branch"], branch):
