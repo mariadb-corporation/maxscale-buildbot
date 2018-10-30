@@ -2,7 +2,7 @@ import re
 from buildbot.changes.gitpoller import GitPoller
 from maxscale.config import constants
 from maxscale.config.branches_list_file import MAXSCALE_BRANCHES_LIST
-
+from maxscale.config.branches_list_file import MAXSCALE_PERF_BRANCHES_LIST
 
 def check_branch_fn(branch):
     for branch_item in MAXSCALE_BRANCHES_LIST:
