@@ -46,7 +46,7 @@ BUILD_ALL_BOXES = [
     "centos_6_libvirt",
     "ubuntu_trusty_libvirt",
     "ubuntu_xenial_libvirt",
-    "ubuntu_bionic_aws",
+    "ubuntu_bionic_libvirt",
     "debian_jessie_libvirt",
     "debian_stretch_libvirt",
     "sles_12_aws",
@@ -65,7 +65,10 @@ DB_VERSIONS = [
     '5.6',
     '5.7',
     '10.3.6',
-    '10.3.7'
+    '10.3.7',
+    '10.3.8',
+    '10.3.9',
+    '10.3.10'
 ]
 
 DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug '
@@ -78,7 +81,7 @@ MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
 # Define branches for nightly build_all builds
-NIGHTLY_SCHEDS = ['2.2', 'develop', '2.1']
+NIGHTLY_SCHEDS = ['2.3', '2.2', 'develop', '2.1']
 
 NIGHTLY_MAIL_LIST = ['markus.makela@mariadb.com', 'johan.wikman@mariadb.com', 'esa.korhonen@mariadb.com', 'niclas.antti@mariadb.com']
 

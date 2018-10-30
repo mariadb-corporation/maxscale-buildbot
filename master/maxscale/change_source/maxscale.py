@@ -5,6 +5,11 @@ from maxscale.config.branches_list_file import MAXSCALE_BRANCHES_LIST
 
 
 def check_branch_fn(branch):
+    """
+    Checks if branch is in the list of MaxScale branches
+    :param branch: Name of the MaxScale branch
+    :return: True if branch is found
+    """
     for branch_item in MAXSCALE_BRANCHES_LIST:
         if re.search(branch_item["branch"], branch.split('/')[-1]):
             return True
@@ -12,6 +17,11 @@ def check_branch_fn(branch):
 
 
 def get_test_set_by_branch(branch):
+    """
+    Returns test set for a given branch or None if nothing found
+    :param branch: Name of the MaxScale branch
+    :return: Test set name
+    """
     for branch_item in MAXSCALE_BRANCHES_LIST:
         if re.search(branch_item["branch"], branch):
             return branch_item["test_set"]
