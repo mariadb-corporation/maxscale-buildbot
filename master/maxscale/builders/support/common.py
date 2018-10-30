@@ -278,11 +278,20 @@ class RsyncShellSequence(ShellSequence):
     to every other unique worker's host
     """
     def createRsyncSequence(self, hosts):
+        """
+        Creates a list of shell commands for synchronization of .config directory on each given host
+        :param hosts: List of host addresses
+        :return: List with rsync shell command for each host
+        """
         return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d "
                                       "vagrant@{}.mariadb.com:~/.config/mdbci/repo.d".format(host),
                               logfile="rsync to {}.mariadb.com".format(host)) for host in hosts]
 
     def getRemoteWorkersHosts(self):
+        """
+        Creates a list of unique hosts which holds running workers excluding host of the current worker
+        :return: List of host addresses
+        """
         hosts = set()
         currentHost = None
         for worker in workers.WORKER_CREDENTIALS:
