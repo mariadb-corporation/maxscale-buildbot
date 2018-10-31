@@ -44,7 +44,7 @@ def runPerformanceTest(**kwargs):
             "cd ~/maxscale-performance-test/; \
              unset COMP_WORDBREAKS; \
              ./bin/performance_test -v \
-             --server-config=~/performance_test_servers/performance-test_network_config \
+             --server-config=~/.config/performance_test/performance-test_network_config \
              --remote-test-app tests/run_sysbench.sh \
              --db-server-2-config slave-config.sql.erb \
              --db-server-3-config slave-config.sql.erb \

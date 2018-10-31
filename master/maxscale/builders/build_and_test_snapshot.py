@@ -35,19 +35,6 @@ def createFactory():
     factory = BuildFactory()
     factory.addSteps(common.setMissingTarget())
     factory.addStep(steps.Trigger(
-        name="Call the 'build' scheduler. Build Ubuntu",
-        schedulerNames=['build'],
-        waitForFinish=True,
-        haltOnFailure=True,
-        copy_properties=COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES,
-        set_properties={
-            'box': 'ubuntu_xenial_libvirt',
-            'try_already_running': 'yes',
-            'target': util.Interpolate("%(prop:target)s-perf"),
-            'virtual_builder_name': 'Build for ubuntu_xenial_libvirt',
-        }
-    ))
-    factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler. Build CentOS",
         schedulerNames=['build'],
         waitForFinish=True,

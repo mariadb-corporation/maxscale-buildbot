@@ -2,7 +2,7 @@ import re
 from buildbot.changes.gitpoller import GitPoller
 from maxscale.config import constants
 from maxscale.config.branches_list_file import MAXSCALE_BRANCHES_LIST
-
+from maxscale.config.branches_list_file import MAXSCALE_PERF_BRANCHES_LIST
 
 def check_branch_fn(branch):
     """
@@ -11,6 +11,13 @@ def check_branch_fn(branch):
     :return: True if branch is found
     """
     for branch_item in MAXSCALE_BRANCHES_LIST:
+        if re.search(branch_item["branch"], branch.split('/')[-1]):
+            return True
+    return False
+
+
+def check_branch_fn_perf(branch):
+    for branch_item in MAXSCALE_PERF_BRANCHES_LIST:
         if re.search(branch_item["branch"], branch.split('/')[-1]):
             return True
     return False

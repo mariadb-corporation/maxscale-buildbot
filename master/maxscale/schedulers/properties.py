@@ -4,12 +4,12 @@ from maxscale.config import constants
 from maxscale.config import workers
 
 
-def build_box():
+def build_box(default=constants.BOXES[0]):
     return util.ChoiceStringParameter(
         name="box",
         label="Box",
         choices=constants.BOXES,
-        default=constants.BOXES[0])
+        default=default)
 
 
 def build_full_name():
