@@ -98,12 +98,12 @@ class BuildResultsWriter:
         print("Performed insert (results): {}".format(query % values))
 
     def findCoreDumpPath(self, runTestDir, testName):
-        coreDumpPathRegex = re.compile(r".*\/run_test[^\/.+]+(\/.+)")
+        coreDumpPathRegex = re.compile(br".*\/run_test[^\/.+]+(\/.+)")
         dir = "/home/vagrant/LOGS/{}/LOGS/{}".format(runTestDir, testName)
         if not os.path.isdir(dir):
             return ""
-        result = subprocess.run(["find {} | grep core | sed -e 's|/[^/]*$|/*|g".format(dir)],
-                                stdout=subprocess.PIPE).stdout
+        result = subprocess.check_output(["find {} | grep core | sed -e 's|/[^/]*$|/*|g'".format(dir)],
+                                         shell=True)
         if not result or not coreDumpPathRegex.match(result):
             return ""
         return coreDumpPathRegex.match(result)[0]
