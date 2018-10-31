@@ -27,16 +27,6 @@ def configureCommonProperties(properties):
     }
 
 
-def showTestResult(**kwargs):
-    return common.StdoutShellCommand(
-        name="test_result",
-        collectStdout=True,
-        command=util.Interpolate(r"cat %(prop:builddir)s/results_%(prop:buildnumber)s "
-                                 r"%(prop:builddir)s/coredumps_%(prop:buildnumber)s "
-                                 r"| sed -E 's/\\n\\//g'"),
-        **kwargs)
-
-
 def runPerformanceTest(**kwargs):
     return steps.ShellCommand(
         name="Run performance tests",
@@ -88,7 +78,7 @@ def createRunTestSteps():
     testSteps.append(runPerformanceTest(alwaysRun=True))
     testSteps.append(parsePerformanceTestResults(alwaysRun=True))
     testSteps.append(writePerformanceTestResults(alwaysRun=True))
-    testSteps.append(showTestResult(alwaysRun=True))
+    testSteps.extend(common.showTestResult(alwaysRun=True))
     testSteps.extend(common.cleanBuildDir())
     return testSteps
 
