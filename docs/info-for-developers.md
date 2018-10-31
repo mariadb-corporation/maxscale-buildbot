@@ -34,7 +34,7 @@ All build's properties are imported to the script as a local variables. Followin
 
 ### Worker and host assignment
 Worker assignment function can be changed by passing [`common.assignWorker`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L197) to `nextWorker` argument of builder configurations.
-By default worker will be chosen from the list of workernames for this build. List of available workers can be narrowed down to workers from a specific host by setting a desired host's address as a `host` property of build.
+By default worker will be chosen from the list of workernames for this build. List of available workers can be narrowed down to workers from a specific host be setting a desired host's address as a `host` property of build.
 That way only workers from specified host will be eligible for that build.
 
 [`common.assignBestHost`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L212) can be used to assign optimal host for a build. It returns host with the least instances of this build running.

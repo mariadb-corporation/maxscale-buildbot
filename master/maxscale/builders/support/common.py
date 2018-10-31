@@ -6,7 +6,6 @@ from buildbot.steps.shell import ShellCommand
 from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
-from maxscale import builders
 from maxscale import workers
 
 
@@ -309,3 +308,137 @@ class RsyncShellSequence(ShellSequence):
         if not hosts:
             self.descriptionDone = "No remote hosts found"
         return self.runShellSequence(self.commands)
+
+
+def downloadScript(scriptName, **kwargs):
+    """Downloads script with the given name from scripts directory to the current worker"""
+    return [steps.FileDownload(
+        name="Transferring {} to worker".format(scriptName),
+        mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
+        workerdest=util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName)),
+        mode=0o755,
+        **kwargs
+    )]
+
+
+def remoteParseCtestLogAndStoreIt():
+    """Parse ctest results and store them in the LOGS directory"""
+    def remote():
+        buildId = "{}-{}".format(buildername, buildnumber)
+        outputDirectory = os.path.join(builddir, buildId, "ctest_sublogs")
+        subprocess.run(["{}/scripts/parse_ctest_log.py".format(builddir),
+                        buildLogFile,
+                        "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
+                        "-r", "-f",
+                        "-j", jsonResultsFile,
+                        "-s", outputDirectory])
+
+        storeDirectory = os.path.join(HOME, "LOGS", buildId, "LOGS")
+        for logDirectory in os.listdir(outputDirectory):
+            targetDirectory = os.path.join(storeDirectory, logDirectory)
+            os.umask(0o002)
+            os.makedirs(targetDirectory, exist_ok=True)
+            shutil.copy(os.path.join(outputDirectory, logDirectory, "ctest_sublog"), targetDirectory)
+
+    return support.executePythonScript(
+        "Parse ctest results log and save it to logs directory",
+        remote, alwaysRun=True)
+
+
+def remoteStoreCoredumps():
+    """Find the coredumps and store them in the LOGS directory"""
+    def remote():
+        result = subprocess.check_output(
+            ["{}/scripts/coredump_finder.py".format(builddir),
+             "{}-{}".format(buildername, buildnumber), "url"])
+        coredumpLogFile = open(os.path.join(builddir, "coredumps_{}".format(buildnumber)), "w")
+        coredumpLogFile.write("COREDUMPS \\\n")
+        if result == "":
+            coredumpLogFile.write("Coredumps were not found for build {}".format(buildnumber))
+        else:
+            for dump in result.decode("utf_8").split("\n"):
+                coredumpLogFile.write("{} \\\n".format(dump))
+        buildId = "{}-{}".format(buildername, buildnumber)
+        shutil.copy(buildLogFile, os.path.join(HOME, "LOGS", buildId))
+
+    return support.executePythonScript(
+        "Find and store coredumps", remote, alwaysRun=True)
+
+
+def writeBuildResultsToDatabase(**kwargs):
+    """Call the script to save results to the database"""
+    return [steps.SetPropertyFromCommand(
+        name="Save test results to the database",
+        command=[util.Interpolate("%(prop:builddir)s/scripts/write_build_results.py"),
+                 util.Property("jsonResultsFile")],
+        extract_fn=extractDatabaseBuildid,
+        **kwargs)]
+
+
+def extractDatabaseBuildid(rc, stdout, stderr):
+    keyPhrase = "LAST_WRITE_BUILD_RESULTS_ID"
+    for line in stdout.split("\n"):
+        if line.startswith(keyPhrase):
+            return {keyPhrase: line[len(keyPhrase) + 2:]}
+    return {}
+
+
+def showTestResult(**kwargs):
+    """
+    Stores results of a test run into the buildbot's database
+    for retrieving later during email composition
+    :param kwargs:
+    :return:
+    """
+    return [StdoutShellCommand(
+        name="test_result",
+        collectStdout=True,
+        command=util.Interpolate(r"cat %(prop:builddir)s/results_%(prop:buildnumber)s "
+                                 r"%(prop:builddir)s/coredumps_%(prop:buildnumber)s "
+                                 r"| sed -E 's/\\n\\//g'"),
+        **kwargs)]
+
+
+def remoteRunScriptAndLog():
+    """
+    Runs shell script which name is given in a property 'script_name' of a builder on a worker
+    and save results to the log file
+    """
+    def remote():
+        if not os.path.exists("maxscale-system-test/mdbci"):
+            os.mkdir("default-maxscale-branch")
+            subprocess.run(["git", "clone", repository, "default-maxscale-branch/MaxScale"])
+            shutil.copytree("default-maxscale-branch/MaxScale/maxscale-system-test/mdbci", "maxscale-system-test")
+
+        logFile = open(buildLogFile, "w")
+        process = subprocess.Popen(["maxscale-system-test/mdbci/{}".format(script_name)],
+                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for byteLine in process.stdout:
+            line = byteLine.decode("utf-8", "replace")
+            sys.stdout.write(line)
+            logFile.write(line)
+        process.wait()
+        logFile.close()
+
+        testLogFile = open(resultFile, "w")
+        testLogFile.write(str(process.returncode))
+        testLogFile.close()
+        sys.exit(process.returncode)
+
+    return support.executePythonScript(
+        "Run MaxScale tests using MDBCI", remote)
+
+
+def parseCtestLog():
+    """Downloads and runs ctect log parser"""
+    return downloadScript("parse_ctest_log.py", alwaysRun=True) + remoteParseCtestLogAndStoreIt()
+
+
+def writeBuildsResults():
+    """Downloads and runs script for saving build results to database"""
+    return downloadScript("write_build_results.py", alwaysRun=True) + writeBuildResultsToDatabase(alwaysRun=True)
+
+
+def findCoredump():
+    """Downloads and runs coredump finder"""
+    return downloadScript("coredump_finder.py", alwaysRun=True) + remoteStoreCoredumps()
