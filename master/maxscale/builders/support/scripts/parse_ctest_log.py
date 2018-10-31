@@ -309,10 +309,12 @@ class CTestParser:
             ctestInfo = self.failedCtestInfo if self.args.only_failed else self.allCtestInfo
             file.write(NEW_LINE_JENKINS_FORMAT.join([BUILD_LOG_PARSING_RESULT]
                                                     + self.generateHrResult(ctestInfo)))
+            file.write("\n")
 
     def saveAllResultsToJsonFile(self):
         with open(self.args.output_log_json_file, "w") as file:
             file.write(self.generateMrResults(self.allCtestInfo))
+            file.write("\n")
 
     def showCtestParsedInfo(self):
         if not self.args.human_readable:
