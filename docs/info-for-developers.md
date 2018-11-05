@@ -37,6 +37,14 @@ Worker assignment function can be changed by passing [`common.assignWorker`](htt
 By default worker will be chosen from the list of workernames for this build. List of available workers can be narrowed down to workers from a specific host be setting a desired host's address as a `host` property of build.
 That way only workers from specified host will be eligible for that build.
 
+### Dynamic Trigger
+Sometimes it is necessary to run large amount of instances of single task each with different set of properties but on the same codebase. To do this from a single trigger step [Dynamic Trigger](http://docs.buildbot.net/current/manual/cfg-buildsteps.html#dynamic-trigger) can be used.
+You need to create a class which inherits Buildbot's `Trigger` step and define a method `getSchedulersAndProperties` in it. The method must return a list of objects where each objects must contain name of a triggered build, its properties and if this build is important.
+An example of such function can be seen in the implementation of [Build All](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/build_all.py#L10) task. At the time of execution all existing property of the initial build can be accessed from within this function using `get_properties` method.
+Multiple builds request created this way can be automatically collapsed by Buildbot so it is recommended to disable request collapse in the triggered build settings using `collapseRequests` argument.
+
+Every build which was triggered this way will be displayed in the same step of initial builds but but as separate builds on the 'Builders' page of WEB UI. To hide triggered builds from UI `virtual_builder_name` property must be set.
+
 [`common.assignBestHost`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/builders/support/common.py#L212) can be used to assign optimal host for a build. It returns host with the least instances of this build running.
 
 ## Schedulers
