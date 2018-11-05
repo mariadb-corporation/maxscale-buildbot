@@ -52,6 +52,18 @@ The schedulers located in the [master/maxscale/schedulers](https://github.com/ma
 
 See [Schedulers configuration official docs](http://docs.buildbot.net/current/manual/cfg-schedulers.html).
 
+### Schedulers properties
+
+Scheduler properties are parameters that will be passed to builds launched by this scheduler. They can be defined in two different forms: a list of objects derived from [`BaseParameter`](http://docs.buildbot.net/current/manual/cfg-schedulers.html#nestedparameter) class (those are provided by the Buildbot) and a dictionary with parameter name as a key.
+
+The first one can be used solely for manual scheduler, like `ForceScheduler`. Each parameter will have its own editable field in the WEB UI and can store a default value for it.
+All of the MaxScale Buildbot properties of this kind are stored in the [`properties`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/properties.py) module in the `scheduler` subdirectory.
+This module also provides [function](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/schedulers/properties.py#L205) which extracts default values from the pre-defined list of parameters and builds a dictionary with property name as a key and its default value as value.
+This allows to define a single list of properties for manual scheduler and create a corresponding dictionary for automatic counterpart of this scheduler, if they share the same set of properties.
+
+Properties in the second form are defined for every automatic scheduler. Its a simple dictionary with keys and values with the restriction that all values must be defined at runtime.
+That means `Deferred` objects are not allowed as a values. And if property needs to be set at the start of a build than it should be done in one of build steps. Buildbot provides multiple [steps](http://docs.buildbot.net/current/manual/cfg-buildsteps.html#setting-properties) for that purpose.
+
 ## Change Source
 
 The Change Source component is responsible for configuration of a repository tracker. To monitor changes in the Maxscale repository, the GitPoller component is configured with a given function that restricts the list of branches that are followed by shadowing (see [master/maxscale/change_source/maxscale.py](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/maxscale/change_source/maxscale.py)).
