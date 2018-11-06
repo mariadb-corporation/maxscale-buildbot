@@ -22,7 +22,7 @@ class ModuleTracker(MetaPathFinder):
         :param target:
         :return:
         """
-        if fullname.startswith("maxscale") or fullname is __name__:
+        if fullname.startswith("maxscale") or fullname == __name__:
             self.maxscaleModules.append(fullname)
 
     def install(self):
