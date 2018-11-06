@@ -12,6 +12,7 @@ List of components:
 * Change source
 * Auth
 * Services (MailNotifiers)
+* Automatic module loader
 
 ## Builders
 
@@ -94,5 +95,11 @@ The service components describe the rules for sending email-notifications to eac
 ### ExpandedStepsFormatter
 By default Buildbot provides build context only for steps of the main build without providing data on triggered builds.
 ExpandedStepsFormatter looks directly through database for additional data on triggered build's steps using Buildbot's [DATA API](http://docs.buildbot.net/current/developer/data.html)
+
+
+## Automatic module loader
+Buildbot provides ability to reload configuration without restarting master using `buildbot reconfig master` command. However only main configuration file `master.cfg` is reloaded.
+Module [autoreloader.py](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/master/autoreload.py) removes all previously imported and tracked modules from `sys.modules` list which allows them to be reloaded on the next import.
+`autoreload.py` must be imported and installed to the main config file before importing any other modules. After that it tracks all imported modules from `maxscale` module. That means it does not reload any Python or Buildbot module as some of this module are not designed to be reloaded and can behave unpredictably.
 
 See [Reporters configuration official docs](http://docs.buildbot.net/current/manual/cfg-reporters.html).
