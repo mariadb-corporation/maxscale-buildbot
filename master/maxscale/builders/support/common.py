@@ -282,7 +282,7 @@ class RsyncShellSequence(ShellSequence):
         :param hosts: List of host addresses
         :return: List with rsync shell command for each host
         """
-        return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d "
+        return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d/ "
                                       "vagrant@{}.mariadb.com:~/.config/mdbci/repo.d".format(host),
                               logfile="rsync to {}.mariadb.com".format(host)) for host in hosts]
 
