@@ -1,4 +1,5 @@
 import datetime
+from collections import defaultdict
 from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
 from buildbot.process.results import SKIPPED
@@ -200,6 +201,24 @@ def setMissingTarget():
         doStepIf=lambda step: step.build.getProperty('target') is None,
         hideStepIf=lambda results, s: results == SKIPPED
     )]
+
+
+def assignBuildRequest(builder, buildRequestQueue):
+    """
+    Chooses first request from the build request queue that can be run on any available worker
+    :param builder: Builder of the requested build
+    :param buildRequestQueue: List of pending build requests
+    :return: Build request that can start a build
+    """
+    workerToHostMap = workers.workerToHostMap()
+    availableWorkers = defaultdict(list)
+    for wfb in builder.workers:
+        if wfb.isAvailable():
+            availableWorkers[workerToHostMap[wfb.worker.workername]].append(wfb.worker.workername)
+
+    for buildRequest in buildRequestQueue:
+        if availableWorkers.get(buildRequest.properties.getProperty("host")):
+            return buildRequest
 
 
 def assignWorker(builder, workerForBuilerList, buildRequest):

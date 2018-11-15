@@ -78,6 +78,7 @@ BUILDERS = [
         name="run_test",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
+        nextBuild=common.assignBuildRequest,
         factory=createTestFactory(),
         tags=["test"],
         env=ENVIRONMENT,

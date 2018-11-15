@@ -62,6 +62,7 @@ BUILDERS = [
         name="run_test_snapshot",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
+        nextBuild=common.assignBuildRequest,
         factory=createTestShapshotFactory(),
         tags=['test'],
         env=RUN_TEST_SNAPSHOT_ENVIRONMENT,
