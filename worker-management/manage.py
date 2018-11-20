@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+""""
+This module provides the interface to manage the state of configured workers.
+It allows to setup the virtual environment, install dependencies into it and
+then to execute BuildBot worker commands.
+"""
+
+
 import sys
 import os.path
 import argparse
@@ -19,7 +26,7 @@ def determineHost(host, domain):
     ]
     for checkHost in possibleHosts:
         try:
-            info = socket.gethostbyname(checkHost)
+            socket.gethostbyname(checkHost)
         except BaseException:
             continue
         return checkHost
@@ -67,6 +74,17 @@ WORKERS_DIR = "~/buildbot-workers"
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
+def executeActionOnHost(hosts, user, description, action):
+    """Execute an action for every host"""
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    for hostIp in hosts:
+        logging.info(description.format(hostIp=hostIp))
+        client.connect(hostIp, username=user)
+        action(client, hosts[hostIp])
+        client.close()
+
+
 def setupVirtualEnv(sshClient):
     if isDirectoryAbsent(sshClient, PYTHON_VENV):
         logging.info("Creating python virtual environment in {}".format(PYTHON_VENV))
@@ -75,43 +93,50 @@ def setupVirtualEnv(sshClient):
     absolutePythonEnvDir, _ = runCommand(sshClient, "cd {}; pwd".format(PYTHON_VENV))
     sftClient = sshClient.open_sftp()
     sftClient.put("{}/requirements-worker.txt".format(CURRENT_DIR), "{}/requirements.txt".format(absolutePythonEnvDir))
+    workerWrapper = "{}/bin/run-worker.py".format(absolutePythonEnvDir)
+    sftClient.put("{}/run-worker.py".format(CURRENT_DIR), workerWrapper)
+    sftClient.chmod(workerWrapper, 0o755)
     runCommand(sshClient, "{}/bin/pip3 install -U -r {}/requirements.txt".format(PYTHON_VENV, PYTHON_VENV))
+
+
+def configureVirtualEnvironment(hosts, arguments):
+    def performAction(client, _):
+        setupVirtualEnv(client)
+
+    executeActionOnHost(hosts, arguments.user, "Configuring virtual environment on host '{hostIp}'", performAction)
 
 
 def createWorkerConfig(sshClient, config, masterHost):
     logging.info("Creating configuration for worker '{}'.".format(config["name"]))
     runCommand(sshClient, "mkdir -p {}".format(WORKERS_DIR))
     runCommand(sshClient, "rm -rf {dir}/{name}".format(dir=WORKERS_DIR, **config))
-    runCommand(sshClient, "{venv}/bin/buildbot-worker create-worker --umask=0o002 {dir}/{name} {server} {name} {password}".format(
+    runCommand(sshClient, "{venv}/bin/run-worker.py create-worker --umask=0o002 {dir}/{name} {server} {name} {password}".format(
         venv=PYTHON_VENV, dir=WORKERS_DIR, server=masterHost, **config))
     runCommand(sshClient, "echo '{host}' > {dir}/{name}/info/host".format(dir=WORKERS_DIR, **config))
 
 
 def installWorkers(hosts, arguments):
-    stopWorkers(hosts, arguments)
-    client = paramiko.SSHClient()
-    client.load_system_host_keys()
-    for hostIp in hosts:
-        logging.info("Configuring host {}".format(hostIp))
-        client.connect(hostIp, username=arguments.user)
+    def performAction(client, host):
         setupVirtualEnv(client)
-        for worker in hosts[hostIp]:
+        for worker in host:
             createWorkerConfig(client, worker, arguments.master)
-        client.close()
+
+    stopWorkers(hosts, arguments)
+    executeActionOnHost(hosts, arguments.user, "Configuring host '{hostIp}'", performAction)
 
 
 def callBuildbotAction(action, hosts, arguments):
-    client = paramiko.SSHClient()
-    client.load_system_host_keys()
-    for hostIp in hosts:
-        logging.info("Executing action '{}' workers on host '{}'".format(action, hostIp))
-        client.connect(hostIp, username=arguments.user)
-        for worker in hosts[hostIp]:
+    def performAction(client, host):
+        for worker in host:
             if isDirectoryAbsent(client, "{dir}/{name}".format(dir=WORKERS_DIR, **worker)):
-                logging.debug("Worker '{name}' configuration does not exist, doing nothing".format(**worker))
+                logging.error("Worker '{name}' configuration does not exist, doing nothing".format(**worker))
                 continue
-            runCommand(client, "{venv}/bin/buildbot-worker {action} {dir}/{name}".format(
+            runCommand(client, "{venv}/bin/run-worker.py {action} {dir}/{name}".format(
                 venv=PYTHON_VENV, dir=WORKERS_DIR, action=action, **worker))
+
+    logging.info("Executing action '{}'".format(action))
+    executeActionOnHost(hosts, arguments.user, "Executing command on host '{hostIp}", performAction)
+
 
 def restartWorkers(hosts, arguments):
     callBuildbotAction("restart", hosts, arguments)
@@ -127,6 +152,7 @@ def startWorkers(hosts, arguments):
 
 AVAILABLE_ACTIONS = {
     "install": installWorkers,
+    "configureVenv": configureVirtualEnvironment,
     "restart": restartWorkers,
     "stop": stopWorkers,
     "start": startWorkers
