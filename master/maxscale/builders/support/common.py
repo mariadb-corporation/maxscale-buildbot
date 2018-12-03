@@ -217,7 +217,8 @@ def assignBuildRequest(builder, buildRequestQueue):
             availableWorkers[workerToHostMap[wfb.worker.workername]].append(wfb.worker.workername)
 
     for buildRequest in buildRequestQueue:
-        if availableWorkers.get(buildRequest.properties.getProperty("host")):
+        host = buildRequest.properties.getProperty("host")
+        if availableWorkers.get(host) or not host:
             return buildRequest
 
 
