@@ -245,29 +245,49 @@ def assignBestHost(builder, workersForBuilders, buildRequest):
     :param buildRequest: build request
     :return: List of workersForBuilders for a specific host
     """
-    # Go directly to worker assignment if host in specified
+    # Proceed directly to worker assignment if host is specified
     if buildRequest.properties.getProperty("host"):
         return assignWorker(buildRequest, workersForBuilders, buildRequest)
 
     workerToHostMap = workers.workerToHostMap()
-    occupiedWorkers = {}
     hostToWorkersMap = {}
-    availableWFB = []
-
     for name, host in workerToHostMap.items():
         hostToWorkersMap[host] = hostToWorkersMap.get(host, []) + [name]
-        occupiedWorkers[host] = len(hostToWorkersMap[host])
 
-    for wfb in workersForBuilders:
-        if wfb.isAvailable() and builder.name == wfb.builder_name:
-            occupiedWorkers[workerToHostMap[wfb.worker.workername]] -= 1
-
-    bestHost = sorted(occupiedWorkers.items(), key=lambda item: item[1])[0]
-    for wfb in workersForBuilders:
-        if wfb.worker.workername in hostToWorkersMap[bestHost[0]]:
-            availableWFB.append(wfb)
-
+    availableWFB = collectAvailableWorkers(workersForBuilders, workerToHostMap, hostToWorkersMap)
     return assignWorker(builder, availableWFB, buildRequest)
+
+
+def findBestHost(workersForBuilders, workerToHostMap, hostToWorkersMap):
+    """
+    Finds host with least amount of tasks running on a builder
+    :param workersForBuilders: List of workerForBuilders
+    :param workerToHostMap: Map where each worker contains its host
+    :param hostToWorkersMap: Map where each host contains its workers
+    :return: Name of hosts
+    """
+    occupiedWorkers = dict(map(lambda item: (item[0], len(item[1])), hostToWorkersMap.items()))
+    for wfb in workersForBuilders:
+        if wfb.isAvailable():
+            occupiedWorkers[workerToHostMap[wfb.worker.workername]] -= 1
+    bestHost = sorted(occupiedWorkers.items(), key=lambda item: item[1])[0]
+    return bestHost[0]
+
+
+def collectAvailableWorkers(workersForBuilders, workerToHostMap, hostToWorkersMap):
+    """
+    Collects available workers from the least loaded host
+    :param workersForBuilders: List of workerForBuilders
+    :param workerToHostMap: Map where each worker contains its host
+    :param hostToWorkersMap: Map where each host contains its workers
+    :return: List of available workers on the best host
+    """
+    availableWFB = []
+    bestHost = findBestHost(workersForBuilders, workerToHostMap, hostToWorkersMap)
+    for wfb in workersForBuilders:
+        if wfb.worker.workername in hostToWorkersMap[bestHost]:
+            availableWFB.append(wfb)
+    return availableWFB
 
 
 def generateRepositories():
