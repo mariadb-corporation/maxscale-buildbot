@@ -5,8 +5,6 @@ from maxscale.config import constants
 from maxscale.change_source.maxscale import check_branch_fn_perf
 
 
-
-
 BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
     properties.build_target(),
     properties.backend_database(),
@@ -54,7 +52,7 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyScheduler = schedulers.Nightly(
         name="build_and_performance_test_{}_nightly".format(branch),
         builderNames=["build_and_test"],
-        hour=launchTime % 24, minute=1,
+        hour=launchTime % 24, minute=0,
         codebases={"": {
             "branch": branch,
             "repository": constants.MAXSCALE_REPOSITORY

@@ -17,7 +17,7 @@ BUILD_AND_TEST_PROPERTIES = [
     properties.smoke_tests(),
     properties.big_number_of_vms(),
     properties.backend_use_ssl(),
-    properties.host("max-tst-01"),
+    properties.host(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
@@ -39,12 +39,13 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "nightly_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
+    nightlyProperties['host'] = "max-tst-02"
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_{}_nightly".format(branch),
         builderNames=["build_and_test"],
-        hour=launchTime % 24, minute=1,
+        hour=launchTime % 24, minute=0,
         codebases={"": {
             "branch": branch,
             "repository": constants.MAXSCALE_REPOSITORY
