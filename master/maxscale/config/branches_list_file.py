@@ -5,7 +5,7 @@ MAXSCALE_BRANCHES_LIST = [
     },
     {
         "branch": "MXS-.*",
-        "test_set": "-L HEAVY"
+        "test_set": "-LE HEAVY"
     },
     {
         "branch": r"^2\.2$",
@@ -13,7 +13,7 @@ MAXSCALE_BRANCHES_LIST = [
     },
     {
         "branch": r"^2\.3$",
-        "test_set": "-LE HEAVY"
+        "test_set": "-LE UNSTABLE"
     }
 ]
 

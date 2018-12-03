@@ -20,16 +20,17 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 prop = properties.extractDefaultValues(PERFORMACE_TEST_PROPERTIES)
 prop['target'] = "maxscale-2.2.15-release"
 
-PERIODIC_SCHEDULER = schedulers.Periodic(
-    name="run_performance_test_half_hour",
-    builderNames=["run_performance_test"],
-    periodicBuildTimer=10*60,
-    properties=prop
-)
+#PERIODIC_SCHEDULER = schedulers.Periodic(
+#   name="run_performance_test_half_hour",
+#    builderNames=["run_performance_test"],
+#    periodicBuildTimer=10*60,
+#    properties=prop
+#)
 
 REPOSITORY_SCHEDULER = schedulers.Triggerable(
     name="run_performance_test_trigger",
     builderNames=["run_performance_test"],
 )
 
-SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER, REPOSITORY_SCHEDULER]
+#SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER, REPOSITORY_SCHEDULER]
+SCHEDULERS = [MANUAL_SCHEDULER, REPOSITORY_SCHEDULER]
