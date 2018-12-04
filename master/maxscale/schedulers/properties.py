@@ -35,12 +35,12 @@ def build_target():
         default="develop")
 
 
-def cmake_flags():
+def cmake_flags(default=constants.DEFAULT_CMAKE_FLAGS):
     return util.StringParameter(
         name="cmake_flags",
         label="CMake flags",
         size=50,
-        default=constants.DEFAULT_CMAKE_FLAGS)
+        default=default)
 
 
 def keep_virtual_machines():

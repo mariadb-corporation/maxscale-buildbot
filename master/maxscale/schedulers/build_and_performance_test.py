@@ -9,7 +9,7 @@ BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
     properties.build_target(),
     properties.backend_database(),
     properties.database_version(),
-    properties.cmake_flags(),
+    properties.cmake_flags(constants.DEFAULT_RELEASE_CMAKE_FLAGS),
     properties.host("max-tst-01"),
     properties.maxscale_threads(),
     properties.sysbench_threads(),
