@@ -35,7 +35,7 @@ def runPerformanceTest(**kwargs):
              unset COMP_WORDBREAKS; \
              ./bin/performance_test -v \
              --server-config=~/.config/performance_test/performance-test_network_config \
-             --remote-test-app tests/run_sysbench.sh \
+             --remote-test-app ~/.config/performance_test/run_sysbench.sh \
              --db-server-2-config slave-config.sql.erb \
              --db-server-3-config slave-config.sql.erb \
              --db-server-4-config slave-config.sql.erb \
