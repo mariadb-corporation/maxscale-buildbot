@@ -1,5 +1,6 @@
 from buildbot.plugins import schedulers, util
 from . import properties
+from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale.config import constants
 
 
@@ -40,6 +41,7 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties["name"] = "nightly_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['test_set'] = get_test_set_by_branch(branch)
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
