@@ -298,7 +298,7 @@ def perf_cnf_template(default="base.cnf.erb"):
     return util.ChoiceStringParameter(
         name="perf_cnf_template",
         label="Mascale.cnf template",
-        choices=PERF_CNF_TEMPLATES,
+        choices=constants.PERF_CNF_TEMPLATES,
         default=default
     )
 
@@ -308,7 +308,7 @@ def perf_port(default="4006"):
     return util.ChoiceStringParameter(
         name="perf_port",
         label="Maxscale port to which sysbench connects",
-        choices=PERF_PORTS,
+        choices=constants.PERF_PORTS,
         default=default
     )
 
