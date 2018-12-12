@@ -105,3 +105,12 @@ MDBCI_CODEBASE = {
         "repository": MDBCI_REPOSITORY
     },
 }
+
+PERF_CNF_TEMPLATES = [
+    'base.cnf.erb',
+]
+
+PERF_PORTS = [
+    '4006',
+    '4008'
+]

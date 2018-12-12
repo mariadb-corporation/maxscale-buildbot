@@ -15,6 +15,8 @@ ENVIRONMENT = {
     "version": util.Property("version"),
     "maxscale_threads": util.Property("maxscale_threads"),
     "sysbench_threads": util.Property("sysbench_threads"),
+    "perf_runtime": util.Property("perf_runtime"),
+    "perf_port": util.Property("perf_port"),
 }
 
 
@@ -40,7 +42,7 @@ def runPerformanceTest(**kwargs):
              --db-server-3-config slave-config.sql.erb \
              --db-server-4-config slave-config.sql.erb \
              --mariadb-version %(prop:version)s \
-             --maxscale-config base.cnf.erb \
+             --maxscale-config %(prop:perf_cnf_template)s \
              --maxscale-version %(prop:target)s \
              --keep-servers true \
              > %(prop:builddir)s/results_%(prop:buildnumber)s \

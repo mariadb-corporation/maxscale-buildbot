@@ -8,6 +8,9 @@ PERFORMACE_TEST_PROPERTIES = [
     properties.host("max-tst-01"),
     properties.maxscale_threads(),
     properties.sysbench_threads(),
+    properties.perf_cnf_template(),
+    properties.perf_port(),
+    properties.perf_runtime(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
@@ -34,3 +37,4 @@ REPOSITORY_SCHEDULER = schedulers.Triggerable(
 
 #SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER, REPOSITORY_SCHEDULER]
 SCHEDULERS = [MANUAL_SCHEDULER, REPOSITORY_SCHEDULER]
+

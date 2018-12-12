@@ -13,6 +13,9 @@ BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
     properties.host("max-tst-01"),
     properties.maxscale_threads(),
     properties.sysbench_threads(),
+    properties.perf_cnf_template(),
+    properties.perf_port(),
+    properties.perf_runtime(),
     properties.build_box('ubuntu_bionic_libvirt'),
 ]
 
