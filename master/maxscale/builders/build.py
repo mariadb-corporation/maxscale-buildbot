@@ -41,6 +41,8 @@ def remoteBuildMaxscale():
     if not os.path.isdir("BUILD/mdbci"):
         shutil.copytree("default-maxscale-branch/MaxScale/BUILD/mdbci", "BUILD/")
     results = subprocess.run(["BUILD/mdbci/build.sh"])
+    if results.returncode != 0:
+        results = subprocess.run(["BUILD/mdbci/build.sh"])
     sys.exit(results.returncode)
 
 
