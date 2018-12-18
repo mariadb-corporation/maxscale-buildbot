@@ -291,3 +291,31 @@ def sysbench_threads():
         label="Number of sysbench threads",
         default="16"
     )
+
+
+def perf_cnf_template(default="base.cnf.erb"):
+    """Template for Maxscale.cnf for performance tests"""
+    return util.ChoiceStringParameter(
+        name="perf_cnf_template",
+        label="Mascale.cnf template",
+        choices=constants.PERF_CNF_TEMPLATES,
+        default=default
+    )
+
+
+def perf_port(default="4006"):
+    """Maxscale port for performance tests"""
+    return util.ChoiceStringParameter(
+        name="perf_port",
+        label="Maxscale port to which sysbench connects",
+        choices=constants.PERF_PORTS,
+        default=default
+    )
+
+
+def perf_runtime():
+    return util.StringParameter(
+        name="perf_runtime",
+        label="Time to run sysbench",
+        default="121"
+    )
