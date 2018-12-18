@@ -15,7 +15,7 @@ ENVIRONMENT = {
     "version": util.Property("version"),
     "maxscale_threads": util.Property("maxscale_threads"),
     "sysbench_threads": util.Property("sysbench_threads"),
-    "perf_runtime": util.Property("perf_runtime"),
+    "perf_runtime": util.Interpolate("%(prop:perf_runtime)s"),
     "perf_port": util.Property("perf_port"),
 }
 
