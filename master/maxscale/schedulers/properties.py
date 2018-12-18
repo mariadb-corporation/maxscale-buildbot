@@ -314,8 +314,8 @@ def perf_port(default="4006"):
 
 
 def perf_runtime():
-    return util.StringParameter(
+    return util.IntParameter(
         name="perf_runtime",
         label="Time to run sysbench",
-        default="121"
+        default=121
     )
