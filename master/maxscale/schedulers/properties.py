@@ -27,12 +27,12 @@ def build_name():
         default="test01")
 
 
-def build_target():
+def build_target(default="develop"):
     return util.StringParameter(
         name="target",
         label="Target",
         size=50,
-        default="develop")
+        default=default)
 
 
 def cmake_flags(default=constants.DEFAULT_CMAKE_FLAGS):
