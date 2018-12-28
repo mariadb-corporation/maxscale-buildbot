@@ -21,6 +21,9 @@ COMMON_PROPERTIES = [
     "owners",
     "maxscale_threads",
     "sysbench_threads",
+    "perf_runtime",
+    "perf_port",
+    "perf_cnf_template"
 ]
 
 
@@ -47,7 +50,7 @@ def create_factory():
         copy_properties=COMMON_PROPERTIES,
         set_properties={
             'test_branch': util.Property('branch'),
-            'host' : 'max-tst-01',
+            'host': 'max-tst-01',
         }
     ))
 

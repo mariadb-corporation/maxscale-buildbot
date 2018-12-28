@@ -29,7 +29,6 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 REPOSITORY_SCHEDULER = schedulers.Triggerable(
     name="run_performance_test_trigger",
     builderNames=["run_performance_test"],
-    properties=properties.extractDefaultValues(PERFORMACE_TEST_PROPERTIES)
 )
 
 #SCHEDULERS = [MANUAL_SCHEDULER, PERIODIC_SCHEDULER, REPOSITORY_SCHEDULER]
