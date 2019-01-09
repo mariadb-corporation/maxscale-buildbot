@@ -54,7 +54,7 @@ for branch in constants.NIGHTLY_SCHEDS:
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_performance_test_{}_nightly".format(branch),
-        builderNames=["build_and_test"],
+        builderNames=["build_and_performance_test"],
         hour=launchTime % 24, minute=0,
         codebases={"": {
             "branch": branch,
