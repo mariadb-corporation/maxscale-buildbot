@@ -7,6 +7,7 @@ from buildbot.steps.shell import ShellCommand
 from buildbot.steps.shellsequence import ShellSequence
 from twisted.internet import defer
 from maxscale.builders.support import support
+from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale import workers
 
 
@@ -488,3 +489,14 @@ def writeBuildsResults():
 def findCoredump():
     """Downloads and runs coredump finder"""
     return downloadScript("coredump_finder.py", alwaysRun=True) + remoteStoreCoredumps()
+
+
+@util.renderer
+def renderTestSet(properties):
+    """
+    Returns test set value if it's present, otherwise returns test set filtered by branch
+    :param properties:
+    :return: Test set
+    """
+    return properties.getProperty("test_set") \
+        or get_test_set_by_branch(properties.getProperty('branch'))

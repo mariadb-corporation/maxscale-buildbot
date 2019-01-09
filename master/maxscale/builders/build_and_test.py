@@ -18,7 +18,6 @@ COMMON_PROPERTIES = [
     "version",
     "cmake_flags",
     "do_not_destroy_vm",
-    "test_set",
     "ci_url",
     "smoke",
     "big",
@@ -48,6 +47,7 @@ def create_factory():
         copy_properties=COMMON_PROPERTIES,
         set_properties={
             'test_branch': util.Property('branch'),
+            "test_set": common.renderTestSet,
         }
     ))
 

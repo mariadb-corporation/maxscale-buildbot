@@ -5,7 +5,6 @@ from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
 from maxscale.builders.support import common
-from maxscale.change_source.maxscale import get_test_set_by_branch
 
 COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "branch",
@@ -18,17 +17,6 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     "host",
     "owners",
 ]
-
-
-@util.renderer
-def renderTestSet(properties):
-    """
-    Returns test set value if it's present, otherwise returns test set filtered by branch
-    :param properties:
-    :return: Test set
-    """
-    return properties.getProperty("test_set") \
-        or get_test_set_by_branch(properties.getProperty('branch'))
 
 
 def createFactory():
@@ -56,7 +44,7 @@ def createFactory():
             "box": util.Property("box"),
             "target": util.Property("target"),
             "test_branch": util.Property("branch"),
-            "test_set": renderTestSet,
+            "test_set": common.renderTestSet,
             "backend_ssl": util.Property("backend_ssl"),
         }
     ))
