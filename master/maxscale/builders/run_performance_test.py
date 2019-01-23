@@ -58,6 +58,10 @@ def testConnecton():
                                        flunkOnFailure=False, haltOnFailure=False)
 
 
+def restartVpn(**kwargs):
+    return steps.ShellCommand('sudo $HOME/restart_vpn.sh', **kwargs)
+
+
 def runPerformanceTest():
 
     def remoteCode():
