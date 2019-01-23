@@ -2,6 +2,7 @@ import os
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
 from maxscale.builders.support import common, support
+from buildbot.process.results import SUCCESS
 from maxscale import workers
 
 
@@ -31,12 +32,16 @@ def configureCommonProperties(properties):
 
 
 def testConnecton():
+    """
+    Tests if nodes specified in performance-test_network_config are available
+    :return:
+    """
 
     def remoteCode():
         import re
         with open('{}/{}'.format(os.environ['HOME'], networkConfigPath), encoding="UTF-8") as configFile:
             networkConfig = {}
-            configRegexp = re.compile(r'^(\S+)_(network|hostname)=(\S+)$')
+            configRegexp = re.compile(r'^(\S+)_(network|whoami|keyfile)=(\S+)$')
             for line in configFile:
                 if configRegexp.match(line):
                     match = configRegexp.search(line)
@@ -45,21 +50,27 @@ def testConnecton():
                     networkConfig[match.group(1)].update({match.group(2): match.group(3)})
 
             for node, config in networkConfig.items():
-                host = '{}@{}'.format(config['hostname'], config['network'])
+                host = '{}@{}'.format(config['whoami'], config['network'])
                 print('Testing connection to {}'.format(host))
-                result = subprocess.call('ssh -qo ConnectTimeout=10 {} exit'.format(host), shell=True)
+                result = subprocess.call('ssh -i {} -o ConnectTimeout=10 {} exit'
+                                         .format(config['keyfile'], host), shell=True)
                 if result:
                     print("Connection to {} timed out".format(host))
                     sys.exit(result)
 
         sys.exit(0)
 
-    return support.executePythonScript('Testing connection to remote machine', remoteCode,
+    return support.executePythonScript('Testing connection to the remote machine', remoteCode,
                                        flunkOnFailure=False, haltOnFailure=False)
 
 
 def restartVpn(**kwargs):
-    return steps.ShellCommand('sudo $HOME/restart_vpn.sh', **kwargs)
+    """
+    Executes script that restarts VPN
+    :param kwargs:
+    :return:
+    """
+    return steps.ShellCommand(command='sudo $HOME/restart_vpn.sh', flunkOnFailure=False, haltOnFailure=False, **kwargs)
 
 
 def runPerformanceTest():
