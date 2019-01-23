@@ -2,7 +2,7 @@ import os
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
 from maxscale.builders.support import common, support
-from buildbot.process.results import SUCCESS
+from buildbot.process.results import SUCCESS, SKIPPED
 from maxscale import workers
 
 
@@ -51,26 +51,16 @@ def testConnecton():
 
             for node, config in networkConfig.items():
                 host = '{}@{}'.format(config['whoami'], config['network'])
-                print('Testing connection to {}'.format(host))
                 result = subprocess.call('ssh -i {} -o ConnectTimeout=10 {} exit'
                                          .format(config['keyfile'], host), shell=True)
                 if result:
-                    print("Connection to {} timed out".format(host))
-                    sys.exit(result)
+                    os.system('sudo $HOME/restart_vpn.sh')
+                    sys.exit(0)
 
         sys.exit(0)
 
     return support.executePythonScript('Testing connection to the remote machine', remoteCode,
                                        flunkOnFailure=False, haltOnFailure=False)
-
-
-def restartVpn(**kwargs):
-    """
-    Executes script that restarts VPN
-    :param kwargs:
-    :return:
-    """
-    return steps.ShellCommand(command='sudo $HOME/restart_vpn.sh', flunkOnFailure=False, haltOnFailure=False, **kwargs)
 
 
 def runPerformanceTest():
