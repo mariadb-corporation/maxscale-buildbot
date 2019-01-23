@@ -54,13 +54,11 @@ def testConnecton():
                 result = subprocess.call('ssh -i {} -o ConnectTimeout=10 {} exit'
                                          .format(config['keyfile'], host), shell=True)
                 if result:
-                    os.system('sudo $HOME/restart_vpn.sh')
-                    sys.exit(0)
+                    sys.exit(subprocess.call('sudo $HOME/restart_vpn.sh', shell=True))
 
         sys.exit(0)
 
-    return support.executePythonScript('Testing connection to the remote machine', remoteCode,
-                                       flunkOnFailure=False, haltOnFailure=False)
+    return support.executePythonScript('Testing connection to the remote machine', remoteCode)
 
 
 def runPerformanceTest():
