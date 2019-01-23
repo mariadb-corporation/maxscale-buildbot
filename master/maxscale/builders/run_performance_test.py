@@ -26,7 +26,36 @@ def configureCommonProperties(properties):
         "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
         "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
+        "networkConfigPath": '.config/performance_test/performance-test_network_config'
     }
+
+
+def testConnecton():
+
+    def remoteCode():
+        import re
+        with open('{}/{}'.format(os.environ['HOME'], networkConfigPath), encoding="UTF-8") as configFile:
+            networkConfig = {}
+            configRegexp = re.compile(r'^(\S+)_(network|hostname)=(\S+)$')
+            for line in configFile:
+                if configRegexp.match(line):
+                    match = configRegexp.search(line)
+                    if match.group(1) not in networkConfig:
+                        networkConfig[match.group(1)] = {}
+                    networkConfig[match.group(1)].update({match.group(2): match.group(3)})
+
+            for node, config in networkConfig.items():
+                host = '{}@{}'.format(config['hostname'], config['network'])
+                print('Testing connection to {}'.format(host))
+                result = subprocess.call('ssh -qo ConnectTimeout=10 {} exit'.format(host), shell=True)
+                if result:
+                    print("Connection to {} timed out".format(host))
+                    sys.exit(result)
+
+        sys.exit(0)
+
+    return support.executePythonScript('Testing connection to remote machine', remoteCode,
+                                       flunkOnFailure=False, haltOnFailure=False)
 
 
 def runPerformanceTest():
@@ -38,8 +67,9 @@ def runPerformanceTest():
 
         logFile = open('{}/results_{}'.format(builddir, buildnumber), 'w')
         process = subprocess.Popen(['./bin/performance_test', '-v',
-                                    '--server-config', '{}/.config/performance_test/performance-test_network_config'.format(os.environ['HOME']),
-                                    '--remote-test-app', '{}/.config/performance_test/run_sysbench.sh'.format(os.environ['HOME']),
+                                    '--server-config', '{}/{}'.format(os.environ['HOME'], networkConfigPath),
+                                    '--remote-test-app',
+                                    '{}/.config/performance_test/run_sysbench.sh'.format(os.environ['HOME']),
                                     '--db-server-2-config', 'slave-config.sql.erb',
                                     '--db-server-3-config', 'slave-config.sql.erb',
                                     '--db-server-4-config', 'slave-config.sql.erb',
@@ -86,6 +116,7 @@ def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
+    testSteps.extend(testConnecton())
     testSteps.extend(runPerformanceTest())
     testSteps.append(parsePerformanceTestResults(alwaysRun=True))
     testSteps.append(writePerformanceTestResults(alwaysRun=True))
