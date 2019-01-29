@@ -51,7 +51,7 @@ def testConnecton():
 
             for node, config in networkConfig.items():
                 host = '{}@{}'.format(config['whoami'], config['network'])
-                result = subprocess.call('ssh -i {} -o ConnectTimeout=10 {} exit'
+                result = subprocess.call('ssh -i {} -o ConnectTimeout=20 {} exit'
                                          .format(config['keyfile'], host), shell=True)
                 if result:
                     sys.exit(subprocess.call('sudo $HOME/restart_vpn.sh', shell=True))
