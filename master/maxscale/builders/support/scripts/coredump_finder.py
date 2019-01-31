@@ -13,6 +13,7 @@ options.add_argument("output_format", help="Output format (url|files)", choices=
 def main(args=None):
     args = options.parse_args(args=args)
     HOME = os.environ["HOME"]
+    LOG_SERVER = 'http://max-tst-01.mariadb.com'
     logsPath = "{}/LOGS".format(HOME)
     buildPath = "{}/{}".format(logsPath, args.build_id)
 
@@ -21,13 +22,16 @@ def main(args=None):
         sys.exit(1)
 
     if args.output_format == "url":
-        sys.exit(subprocess.run(['find {} | grep core | sed -e "s|{}/|http://max-tst-01.mariadb.com/|"'
-                                .format(buildPath, HOME)], shell=True).returncode)
+        def coredumpPath(dirpath, filename):
+            return "{}/{}".format(dirpath, filename).replace(HOME, LOG_SERVER)
+    else:
+        def coredumpPath(dirpath, filename):
+            return "{}/*".format(dirpath).replace('{}/LOGS'.format(HOME), '*')
+    coredumps = []
+    for dirpath, dirnames, filenames in os.walk(buildPath):
+        coredumps.extend([coredumpPath(dirpath, name) for name in filenames if name.startswith('core')])
 
-    pwd = os.getcwd()
-    os.chdir(buildPath)
-    subprocess.run([r"find ./ | grep core | sed -e 's|/[^/]*$|/*|g'"], shell=True)
-    os.chdir(pwd)
+    sys.stdout.write('{}\n'.format('\n'.join(coredumps)))
 
 
 if os.path.samefile(__file__, sys.argv[0]):
