@@ -23,15 +23,15 @@ def main(args=None):
 
     if args.output_format == "url":
         def coredumpPath(dirpath, filename):
-            return "{}/{}".format(dirpath, filename).replace(HOME, LOG_SERVER)
+            return "{}/{}".format(dirpath.rstrip('/'), filename).replace(HOME, LOG_SERVER)
     else:
         def coredumpPath(dirpath, filename):
-            return "{}/*".format(dirpath).replace('{}/LOGS'.format(HOME), '*')
-    coredumps = []
+            return "{}/*".format(dirpath.rstrip('/')).replace('{}/LOGS'.format(HOME), '*')
+        
     for dirpath, dirnames, filenames in os.walk(buildPath):
-        coredumps.extend([coredumpPath(dirpath, name) for name in filenames if name.startswith('core')])
-
-    sys.stdout.write('{}\n'.format('\n'.join(coredumps)))
+        for name in filenames:
+            if name.startswith('core'):
+                print(coredumpPath(dirpath, name))
 
 
 if os.path.samefile(__file__, sys.argv[0]):
