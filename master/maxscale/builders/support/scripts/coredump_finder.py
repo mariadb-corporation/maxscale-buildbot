@@ -27,7 +27,7 @@ def main(args=None):
     else:
         def coredumpPath(dirpath, filename):
             return "{}/*".format(dirpath.rstrip('/')).replace('{}/LOGS'.format(HOME), '*')
-        
+
     for dirpath, dirnames, filenames in os.walk(buildPath):
         for name in filenames:
             if name.startswith('core'):

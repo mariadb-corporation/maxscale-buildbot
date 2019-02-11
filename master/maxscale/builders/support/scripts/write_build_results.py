@@ -16,14 +16,14 @@ ENV_FILE_OPTION = '--env-file'
 HELP_OPTION = '--help'
 
 # Db parameters
-DEFAULT_FILE = '/home/vagrant/build_parser_db_password'
+DEFAULT_FILE = '{}/build_parser_db_password'.format(os.environ['HOME'])
 DB_NAME = 'test_results_db'
 
 # parse_ctest_log.rb keys definition
 TEST_NAME = 'test_name'
 TEST_TIME = 'test_time'
 TEST_SUCCESS = 'test_success'
-FAILED = 'Failed'
+PASSED = 'Passed'
 
 ERROR = 'Error'
 
@@ -99,14 +99,14 @@ class BuildResultsWriter:
 
     def findCoreDumpPath(self, runTestDir, testName):
         coreDumpPathRegex = re.compile(br".*\/run_test[^\/.+]+(\/.+)")
-        dir = "/home/vagrant/LOGS/{}/LOGS/{}".format(runTestDir, testName)
+        dir = "{}/LOGS/{}/LOGS/{}".format(os.environ['HOME'], runTestDir, testName)
         if not os.path.isdir(dir):
             return ""
         result = subprocess.check_output(["find {} | grep core | sed -e 's|/[^/]*$|/*|g'".format(dir)],
                                          shell=True)
         if not result or not coreDumpPathRegex.match(result):
             return ""
-        return coreDumpPathRegex.match(result)[0]
+        return coreDumpPathRegex.match(result).group(0)
 
     def writeBuildResultsToDb(self, results):
         tests = []
@@ -129,7 +129,7 @@ class BuildResultsWriter:
             for test in tests:
                 print("Preparing to write test={} into results".format(test))
                 name = test[TEST_NAME]
-                result = int(test[TEST_SUCCESS] == FAILED)
+                result = int(test[TEST_SUCCESS] != PASSED)
                 testTime = test[TEST_TIME]
                 coreDumpPath = self.findCoreDumpPath(results["logs_dir"], name)
                 self.writeResultsTable(id, name, result, testTime, coreDumpPath)
@@ -145,6 +145,7 @@ def main(args=None):
         if args.env_file:
             with open(args.env_file, "w") as file:
                 file.write("{} {}".format(DB_WRITE_ERROR, e.__cause__))
+        sys.exit(1)
 
 
 if os.path.samefile(__file__, sys.argv[0]):
