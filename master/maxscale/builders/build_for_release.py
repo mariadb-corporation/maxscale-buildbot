@@ -2,6 +2,7 @@ from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from buildbot.steps.trigger import Trigger
 from maxscale.builders.build import ENVIRONMENT
+from maxscale.builders.support import common
 from maxscale.config import constants
 from maxscale import workers
 
@@ -88,6 +89,8 @@ BUILDERS = [
     BuilderConfig(
         name="build_for_release",
         workernames=workers.workerNames(),
+        nextWorker=common.assignWorker,
+        nextBuild=common.assignBuildRequest,
         factory=createBuildFactory(),
         tags=["build"],
         env=ENVIRONMENT
