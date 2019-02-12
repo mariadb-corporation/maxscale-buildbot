@@ -30,7 +30,7 @@ def main(args=None):
 
     for dirpath, dirnames, filenames in os.walk(buildPath):
         for name in filenames:
-            if name.startswith('core'):
+            if "core" in name:
                 print(coredumpPath(dirpath, name))
 
 
