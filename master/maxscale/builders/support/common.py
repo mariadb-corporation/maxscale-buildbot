@@ -463,6 +463,7 @@ def remoteRunScriptAndLog():
         for byteLine in process.stdout:
             line = byteLine.decode("utf-8", "replace")
             sys.stdout.write(line)
+            sys.stdout.flush()
             logFile.write(line)
         process.wait()
         logFile.close()
