@@ -64,7 +64,7 @@ BUILD_LOG_PARSING_RESULT = 'BUILD_LOG_PARSING_RESULT'
 
 ERROR = 'Error'
 CTEST_NOT_EXECUTED_ERROR = 'CTest has never executed'
-CTEST_SUMMARY_NOTE_FOUND = 'CTest summary has not found'
+CTEST_SUMMARY_NOTE_FOUND = 'CTest summary was not found'
 
 CTEST_ARGUMENTS_HR = 'CTest arguments'
 CTEST_ARGUMENTS_MR = 'ctest_arguments'
@@ -120,16 +120,17 @@ class CTestParser:
         self.failedCtestInfo = []
         self.failCtestCounter = 0
         self.maxscaleEntity = []
+        self.testSetName = None
 
-    def parseCtestLog(self):
-        ctestFirstLineRegex = re.compile("Constructing a list of tests")
-        ctestLastLineRegex = re.compile("tests passed,.+tests failed out of (.+)")
+    def parseLog(self):
+        ctestStartLineRegex = re.compile("Constructing a list of tests")
         maxscaleCommitRegex = re.compile(r"MaxScale\s+.*\d+\.*\d*\.*\d*\s+-\s+(.+)")
         cmakeFlagsRegex = re.compile(r"CMake flags:\s+(.+)")
         maxscaleSourceRegex = re.compile(r"Source:\s+(.+)")
         logsDirRegex = re.compile(r"^Logs go to \/home\/vagrant\/LOGS\/(.+)$")
         maxscaleVersionStartRegex = re.compile(".*Maxscale_full_version_start:.*")
         maxscaleVersionEndRegex = re.compile(".*Maxscale_full_version_end.*")
+        testSetRegex = re.compile(r"test_set='(.*)'$")
         maxscaleVersionStartFound = False
         maxscaleVersionEndFound = False
 
@@ -149,32 +150,78 @@ class CTestParser:
                     self.maxscaleSource = maxscaleSourceRegex.search(line).group(1).strip()
                 if logsDirRegex.search(line) and not self.logsDir:
                     self.logsDir = logsDirRegex.search(line).group(1).strip()
-                if ctestFirstLineRegex.search(line):
+                if testSetRegex.search(line):
+                    testSet = testSetRegex.search(line).group(1).strip()
+                    if testSet.startswith("NAME#"):
+                        self.testSetName = testSet.split()[-1].strip('./')
+                        break
+                if ctestStartLineRegex.search(line):
                     self.ctestExecuted = True
                     break
 
-            if self.ctestExecuted:
-                ctestLog = []
-                testQuantity = 0
-                for line in file:
-                    if ctestLastLineRegex.search(line):
-                        self.ctestSummary = line.strip()
-                        testQuantity = ctestLastLineRegex.search(line).group(1)
-                        break
-                    ctestLog.append(line)
-
-                self.findTestsInfo(ctestLog)
-                if not self.ctestSummary:
-                    self.ctestSummary = "timed out, {} tests failed out of {} executed"\
-                        .format(len(self.failedCtestInfo[TESTS]), len(self.allCtestInfo[TESTS]))
-                    testQuantity = len(self.allCtestInfo[TESTS])
-
-                self.allCtestInfo.update({TESTS_COUNT: testQuantity})
-                self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
+            if self.testSetName:
+                self.parseNamedTest(file)
+            elif self.ctestExecuted:
+                self.parseCtest(file)
             else:
                 self.ctestSummary = CTEST_SUMMARY_NOTE_FOUND
                 self.allCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
                 self.failedCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
+
+    def parseNamedTest(self, file):
+        processExitCodeRegex = re.compile("process finished with exit code (.*)")
+        testTimeStampRegex = re.compile(r"^\d{2}:\d{2}:\d{2}\.\d{3} (\d+\.\d+):")
+        testTime = None
+        testResult = FAILED
+        testQuantity = 1
+
+        for line in file:
+            if testTimeStampRegex.search(line):
+                testTime = testTimeStampRegex.search(line).group(1)
+            if processExitCodeRegex.search(line):
+                if processExitCodeRegex.search(line).group(1) == '0':
+                    testResult = PASSED
+
+        testInfo = {
+            TEST_NUMBER: '1',
+            TEST_NAME: self.testSetName,
+            TEST_SUCCESS: testResult,
+            TEST_TIME: testTime
+        }
+        self.allCtestIndexes.append('1')
+        self.allCtestInfo.append(testInfo)
+        if testResult != PASSED:
+            self.failCtestCounter = 1
+            self.failedCtestIndexes.append(1)
+            self.failedCtestInfo.append(testInfo)
+
+        self.allCtestInfo = {FAILED_TESTS_COUNT: self.failCtestCounter, TESTS: self.allCtestInfo}
+        self.failedCtestInfo = {FAILED_TESTS_COUNT: self.failCtestCounter, TESTS: self.failedCtestInfo}
+        self.allCtestInfo.update({TESTS_COUNT: testQuantity})
+        self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
+        self.ctestExecuted = True
+        self.ctestSummary = "{}% tests passed, {} tests failed out of {}"\
+            .format((testQuantity - self.failCtestCounter) * 100 / testQuantity, self.failCtestCounter, testQuantity)
+
+    def parseCtest(self, file):
+        ctestEndLineRegex = re.compile("tests passed,.+tests failed out of (.+)")
+        ctestLog = []
+        testQuantity = 0
+        for line in file:
+            if ctestEndLineRegex.search(line):
+                self.ctestSummary = line.strip()
+                testQuantity = ctestEndLineRegex.search(line).group(1)
+                break
+            ctestLog.append(line)
+
+        self.findTestsInfo(ctestLog)
+        if not self.ctestSummary:
+            self.ctestSummary = "timed out, {} tests failed out of {} executed" \
+                .format(len(self.failedCtestInfo[TESTS]), len(self.allCtestInfo[TESTS]))
+            testQuantity = len(self.allCtestInfo[TESTS])
+
+        self.allCtestInfo.update({TESTS_COUNT: testQuantity})
+        self.failedCtestInfo.update({TESTS_COUNT: testQuantity})
 
     def findTestsInfo(self, ctestLog):
         if self.args.ctest_sublogs_path:
@@ -323,7 +370,7 @@ class CTestParser:
             self.showHrResults(self.failedCtestInfo if self.args.only_failed else self.allCtestInfo)
 
     def parse(self):
-        self.parseCtestLog()
+        self.parseLog()
         self.showCtestParsedInfo()
         if self.args.output_log_file:
             self.saveResultsToFile()

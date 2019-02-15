@@ -465,6 +465,7 @@ def remoteRunScriptAndLog():
             sys.stdout.write(line)
             sys.stdout.flush()
             logFile.write(line)
+        logFile.write("process finished with exit code {}".format(process.returncode))
         process.wait()
         logFile.close()
 
