@@ -319,3 +319,10 @@ def perf_runtime():
         label="Time to run sysbench",
         default=121
     )
+
+def use_valgrind():
+    return util.ChoiceStringParameter(
+        name="use_valgrind",
+        label="Use valgrind",
+        choices=["no", "yes"],
+        default="no")

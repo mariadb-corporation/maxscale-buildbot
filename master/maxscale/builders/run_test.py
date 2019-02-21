@@ -26,6 +26,7 @@ ENVIRONMENT = {
     "template": util.Property("template"),
     "config_to_clone": util.Property("config_to_clone"),
     "test_branch": util.Property("branch"),
+    "use_valgrind": util.Property("use_valgrind"),
 }
 
 
