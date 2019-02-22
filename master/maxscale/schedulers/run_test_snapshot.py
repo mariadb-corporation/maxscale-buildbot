@@ -28,6 +28,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
         properties.test_template(),
         properties.test_branch(),
         properties.host(),
+        properties.use_valgrind(),
     ]
 )
 

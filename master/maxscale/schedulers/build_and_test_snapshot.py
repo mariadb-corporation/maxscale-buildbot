@@ -12,6 +12,7 @@ COMMON_PROPERTIES = [
     properties.database_version(),
     properties.ci_url(),
     properties.backend_use_ssl(),
+    properties.use_valgrind(),
 ]
 
 BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
