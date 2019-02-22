@@ -24,7 +24,8 @@ RUN_TEST_SNAPSHOT_ENVIRONMENT = {
     "big": util.Property('big'),
     "backend_ssl": util.Property('backend_ssl'),
     "template": util.Property('template'),
-    "test_branch": util.Property('branch')
+    "test_branch": util.Property('branch'),
+    "use_valgrind": util.Property("use_valgrind"),
 }
 
 

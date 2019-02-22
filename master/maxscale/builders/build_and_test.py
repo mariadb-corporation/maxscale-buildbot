@@ -48,6 +48,7 @@ def create_factory():
         set_properties={
             'test_branch': util.Property('branch'),
             "test_set": common.renderTestSet,
+            "use_valgrind": util.Property("use_valgrind"),
         }
     ))
 

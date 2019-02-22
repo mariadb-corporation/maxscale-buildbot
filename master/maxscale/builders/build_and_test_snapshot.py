@@ -46,6 +46,7 @@ def createFactory():
             "test_branch": util.Property("branch"),
             "test_set": common.renderTestSet,
             "backend_ssl": util.Property("backend_ssl"),
+            "use_valgrind": util.Property("use_valgrind"),
         }
     ))
     return factory
