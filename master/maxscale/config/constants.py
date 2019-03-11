@@ -50,9 +50,7 @@ BUILD_ALL_BOXES = [
     "debian_jessie_libvirt",
     "debian_stretch_libvirt",
     "sles_12_aws",
-    "suse_15_libvirt",
-    "rhel_6_aws",
-    "rhel_7_aws"
+    "suse_15_libvirt"
 ]
 
 DB_VERSIONS = [
