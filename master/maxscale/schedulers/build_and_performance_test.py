@@ -28,6 +28,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 )
 
 DEFAULT_PROPERTIES = properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
+ON_PUSH_PROPERTIES = DEFAULT_PROPERTIES.copy().update({"target": util.Property('branch')})
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_performance_test_on_push",
@@ -35,7 +36,7 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     treeStableTimer=60,
     codebases=constants.MAXSCALE_CODEBASE,
     builderNames=["build_and_performance_test"],
-    properties=DEFAULT_PROPERTIES
+    properties=ON_PUSH_PROPERTIES
 )
 
 
