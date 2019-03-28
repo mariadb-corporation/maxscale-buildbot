@@ -27,8 +27,8 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=BUILD_AND_PERFORMANCE_TEST_PROPERTIES
 )
 
-DEFAULT_PROPERTIES = properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
-ON_PUSH_PROPERTIES = DEFAULT_PROPERTIES.copy().update({"target": util.Property('branch')})
+ON_PUSH_PROPERTIES = (properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
+                                .update({"target": util.Property('branch')}))
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_performance_test_on_push",
