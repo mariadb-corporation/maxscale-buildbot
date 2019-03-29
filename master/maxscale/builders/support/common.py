@@ -9,6 +9,7 @@ from twisted.internet import defer
 from maxscale.builders.support import support
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale import workers
+from enum import IntEnum
 
 
 def cloneRepository():
@@ -189,19 +190,37 @@ def getFormattedDateTime(format):
     return formatDateTime
 
 
-def setMissingTarget():
+class TargetInitOptions(IntEnum):
+    GENERATE = 1
+    SET_FROM_BRANCH = 2
+
+
+def initTargetProperty():
     """
-    Sets 'target' property of the build to <branch>-buildbot-<starttime> if it isn't set yet
+    Sets 'target' property of the build to:
+        - <branch>-buildbot-<starttime> if it isn't set yet or property 'targetInitMode' is TargetInitOptions.GENERATE;
+        - <branch> if property 'targetInitMode' is TargetInitOptions.SET_FROM_BRANCH.
     :return: list of steps
     """
-    return [steps.SetProperty(
-        name=util.Interpolate("Set 'target' property"),
-        property="target",
-        value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
-                               startTime=getFormattedDateTime("%b%d-%H:%M:%S")),
-        doStepIf=lambda step: step.build.getProperty('target') is None,
-        hideStepIf=lambda results, s: results == SKIPPED
-    )]
+    return [
+        steps.SetProperty(
+            name=util.Interpolate("Set 'target' property"),
+            property="target",
+            value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
+                                   startTime=getFormattedDateTime("%b%d-%H:%M:%S")),
+            doStepIf=lambda step: step.build.getProperty('target') is None and
+                     step.build.getProperty('targetInitMode') is None or
+                     step.build.getProperty('targetInitMode') == TargetInitOptions.GENERATE,
+            hideStepIf=lambda results, s: results == SKIPPED
+        ),
+        steps.SetProperty(
+            name=util.Interpolate("Set 'target' property"),
+            property="target",
+            value=util.Property("branch"),
+            doStepIf=lambda step: step.build.getProperty('targetInitMode') == TargetInitOptions.SET_FROM_BRANCH,
+            hideStepIf=lambda results, s: results == SKIPPED
+        )
+    ]
 
 
 def assignBuildRequest(builder, buildRequestQueue):

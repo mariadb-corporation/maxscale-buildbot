@@ -21,7 +21,7 @@ COMMON_BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 
 def createFactory():
     factory = BuildFactory()
-    factory.addSteps(common.setMissingTarget())
+    factory.addSteps(common.initTargetProperty())
     factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler. Build CentOS",
         schedulerNames=['build'],

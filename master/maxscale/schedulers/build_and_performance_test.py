@@ -3,6 +3,7 @@ from . import properties
 from . import common
 from maxscale.config import constants
 from maxscale.change_source.maxscale import check_branch_fn_perf
+from maxscale.builders.support.common import TargetInitOptions
 
 
 BUILD_AND_PERFORMANCE_TEST_PROPERTIES = [
@@ -28,7 +29,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 )
 
 ON_PUSH_PROPERTIES = (properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
-                                .update({"target": util.Property('branch')}))
+                                .update({"targetInitMode": TargetInitOptions.SET_FROM_BRANCH}))
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_performance_test_on_push",
@@ -51,7 +52,7 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_PERFORMANCE_TEST_PROPERTIES)
     nightlyProperties["name"] = "nightly_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    del nightlyProperties["target"]
+    nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_performance_test_{}_nightly".format(branch),
