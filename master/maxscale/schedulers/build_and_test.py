@@ -42,6 +42,7 @@ for branch in constants.NIGHTLY_SCHEDS:
     nightlyProperties["name"] = "nightly_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(

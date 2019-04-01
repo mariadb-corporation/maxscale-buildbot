@@ -73,6 +73,10 @@ DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug '
                        '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
                        '-DWITH_ASAN=N')
 
+DEFAULT_DAILY_TEST_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DCMAKE_BUILD_TYPE=Debug '
+                       '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
+                       '-DWITH_ASAN=N')
+
 DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
                                '-DBUILD_CDC=Y')
 
