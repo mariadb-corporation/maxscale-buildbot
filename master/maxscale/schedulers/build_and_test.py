@@ -42,7 +42,7 @@ BUILD_INTERVAL = 3
 launchTime = 20
 for branch_item in NIGHTLY_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
-    nightlyProperties["name"] = "nightly_test_{}".format(branch)
+    nightlyProperties["name"] = "nightly_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
     nightlyProperties['test_set'] = branch_item["test_set"]
@@ -67,7 +67,7 @@ BUILD_INTERVAL = 5
 launchTime = 12
 for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
-    nightlyProperties["name"] = "valgrind_test_{}".format(branch)
+    nightlyProperties["name"] = "valgrind_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
     nightlyProperties['use_valgrind'] = "yes"
@@ -94,7 +94,7 @@ BUILD_INTERVAL = 5
 launchTime = 12
 for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
-    nightlyProperties["name"] = "diff_distro_test_{}".format(branch)
+    nightlyProperties["name"] = "diff_distro_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
     nightlyProperties['use_valgrind'] = "yes"
