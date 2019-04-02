@@ -67,11 +67,6 @@ DIFF_DISTRO_BRANCHES_LIST = [
     {
         "branch": "2.3",
         "test_set": "-LE UNSTABLE",
-        "box": "ubuntu_bionic_libvirt"
-    },
-    {
-        "branch": "2.3",
-        "test_set": "-LE UNSTABLE",
         "box": "suse_15_libvirt"
     },
 ]
