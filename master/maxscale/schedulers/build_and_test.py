@@ -94,7 +94,7 @@ BUILD_INTERVAL = 5
 launchTime = 12
 for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
-    nightlyProperties["name"] = "diff_distro_test_{}".format(branch_item["branch"])
+    nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
     nightlyProperties['use_valgrind'] = "yes"
@@ -104,7 +104,7 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
-        name="build_and_test_distros_{}_weekly".format(branch_item["branch"]),
+        name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"], box=branch_item["box"]),
         builderNames=["build_and_test"],
         hour=launchTime % 24, minute=0,
         dayOfWeek=6,
