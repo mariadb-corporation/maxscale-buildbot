@@ -50,7 +50,7 @@ for branch_item in NIGHTLY_BRANCHES_LIST:
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
-        name="build_and_test_{}_nightly".format(branch),
+        name="build_and_test_{}_nightly".format(branch_item["branch"]),
         builderNames=["build_and_test"],
         hour=launchTime % 24, minute=0,
         codebases={"": {
@@ -76,7 +76,7 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
-        name="build_and_test_{}_nightly".format(branch),
+        name="build_and_test_valgrind_{}_weekly".format(branch_item["branch"]),
         builderNames=["build_and_test"],
         hour=launchTime % 24, minute=0,
         dayOfWeek=5,
@@ -104,10 +104,10 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
-        name="build_and_test_{}_nightly".format(branch),
+        name="build_and_test_distros_{}_weekly".format(branch_item["branch"]),
         builderNames=["build_and_test"],
         hour=launchTime % 24, minute=0,
-        dayOfWeek=5,
+        dayOfWeek=6,
         codebases={"": {
             "branch": branch_item["branch"],
             "repository": constants.MAXSCALE_REPOSITORY
