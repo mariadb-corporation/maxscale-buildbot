@@ -2,6 +2,9 @@ from buildbot.plugins import schedulers, util
 from . import properties
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale.config import constants
+from maxscale.config.branches_list_file import VALGRIND_BRANCHES_LIST
+from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
+from maxscale.config.branches_list_file import DIFF_DISTRO_BRANCHES_LIST
 
 
 BUILD_AND_TEST_PROPERTIES = [
@@ -37,7 +40,7 @@ SCHEDULERS = [MANUAL_SCHEDULER]
 # (see maxscale/config/constants.py)
 BUILD_INTERVAL = 3
 launchTime = 20
-for branch_item in constants.NIGHTLY_BRANCHES_LIST:
+for branch_item in NIGHTLY_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "nightly_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
@@ -62,7 +65,7 @@ for branch_item in constants.NIGHTLY_BRANCHES_LIST:
 # Add scheduler for test with Valgrind
 BUILD_INTERVAL = 5
 launchTime = 12
-for branch_item in constants.VALGRIND_BRANCHES_LIST:
+for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "valgrind_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
@@ -89,7 +92,7 @@ for branch_item in constants.VALGRIND_BRANCHES_LIST:
 # Add scheduler for test with Valgrind
 BUILD_INTERVAL = 5
 launchTime = 12
-for branch_item in constants.DIFF_DISTRO_BRANCHES_LIST:
+for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "diff_distro_test_{}".format(branch)
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
