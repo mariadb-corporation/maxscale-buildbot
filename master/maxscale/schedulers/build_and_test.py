@@ -2,6 +2,9 @@ from buildbot.plugins import schedulers, util
 from . import properties
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale.config import constants
+from maxscale.config.branches_list_file import VALGRIND_BRANCHES_LIST
+from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
+from maxscale.config.branches_list_file import DIFF_DISTRO_BRANCHES_LIST
 
 
 BUILD_AND_TEST_PROPERTIES = [
@@ -37,20 +40,76 @@ SCHEDULERS = [MANUAL_SCHEDULER]
 # (see maxscale/config/constants.py)
 BUILD_INTERVAL = 3
 launchTime = 20
-for branch in constants.NIGHTLY_SCHEDS:
+for branch_item in NIGHTLY_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
-    nightlyProperties["name"] = "nightly_test_{}".format(branch)
+    nightlyProperties["name"] = "nightly_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
     del nightlyProperties["target"]
 
     nightlyScheduler = schedulers.Nightly(
-        name="build_and_test_{}_nightly".format(branch),
+        name="build_and_test_{}_nightly".format(branch_item["branch"]),
         builderNames=["build_and_test"],
         hour=launchTime % 24, minute=0,
         codebases={"": {
-            "branch": branch,
+            "branch": branch_item["branch"],
+            "repository": constants.MAXSCALE_REPOSITORY
+        }},
+        properties=nightlyProperties
+    )
+    SCHEDULERS.append(nightlyScheduler)
+    launchTime += BUILD_INTERVAL
+
+# Add scheduler for test with Valgrind
+BUILD_INTERVAL = 5
+launchTime = 12
+for branch_item in VALGRIND_BRANCHES_LIST:
+    nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+    nightlyProperties["name"] = "valgrind_test_{}".format(branch_item["branch"])
+    nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
+    nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['use_valgrind'] = "yes"
+    nightlyProperties['test_set'] = branch_item["test_set"]
+    nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
+    del nightlyProperties["target"]
+
+    nightlyScheduler = schedulers.Nightly(
+        name="build_and_test_valgrind_{}_weekly".format(branch_item["branch"]),
+        builderNames=["build_and_test"],
+        hour=launchTime % 24, minute=0,
+        dayOfWeek=5,
+        codebases={"": {
+            "branch": branch_item["branch"],
+            "repository": constants.MAXSCALE_REPOSITORY
+        }},
+        properties=nightlyProperties
+    )
+    SCHEDULERS.append(nightlyScheduler)
+    launchTime += BUILD_INTERVAL
+
+# Add scheduler for test with Valgrind
+BUILD_INTERVAL = 5
+launchTime = 12
+for branch_item in DIFF_DISTRO_BRANCHES_LIST:
+    nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+    nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
+    nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
+    nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['use_valgrind'] = "yes"
+    nightlyProperties['test_set'] = branch_item["test_set"]
+    nightlyProperties['box'] = branch_item["box"]
+    nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
+    del nightlyProperties["target"]
+
+    nightlyScheduler = schedulers.Nightly(
+        name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"], box=branch_item["box"]),
+        builderNames=["build_and_test"],
+        hour=launchTime % 24, minute=0,
+        dayOfWeek=6,
+        codebases={"": {
+            "branch": branch_item["branch"],
             "repository": constants.MAXSCALE_REPOSITORY
         }},
         properties=nightlyProperties
