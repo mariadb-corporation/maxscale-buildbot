@@ -1,6 +1,7 @@
-buildbot[bundle]==2.0.1
+buildbot[bundle]==2.1.0
 pyOpenSSL==19.0.0
 service-identity==18.1.0
 requests==2.21.0
 paramiko==2.4.2
 -r worker-management/requirements-worker.txt
+mysqlclient==1.4.2
