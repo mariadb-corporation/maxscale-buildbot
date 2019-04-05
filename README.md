@@ -25,6 +25,11 @@ create database maxscale_buildbot character set utf8 collate utf8_bin;
 grant all privileges on maxscale_buildbot.* to buildbot@localhost identified by '<password>';
 ```
 
+In order to mitigate the issue of short build step names, the database schema must be updated:
+```mysql
+ALTER TABLE steps MODIFY name varchar(150);
+```
+
 ### Application configuration
 
 1. Clone repository or get a repository slice.
