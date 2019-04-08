@@ -74,7 +74,7 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties['use_valgrind'] = "yes"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
-    del nightlyProperties["target"]
+    nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_valgrind_{}_weekly".format(branch_item["branch"]),
@@ -102,7 +102,7 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['box'] = branch_item["box"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
-    del nightlyProperties["target"]
+    nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"], box=branch_item["box"]),
