@@ -5,6 +5,7 @@ from maxscale.config import constants
 from maxscale.config.branches_list_file import VALGRIND_BRANCHES_LIST
 from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
 from maxscale.config.branches_list_file import DIFF_DISTRO_BRANCHES_LIST
+from maxscale.builders.support.common import TargetInitOptions
 
 
 BUILD_AND_TEST_PROPERTIES = [
@@ -47,7 +48,7 @@ for branch_item in NIGHTLY_BRANCHES_LIST:
     nightlyProperties['host'] = "max-tst-02"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
-    del nightlyProperties["target"]
+    nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_{}_nightly".format(branch_item["branch"]),
@@ -73,7 +74,7 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties['use_valgrind'] = "yes"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
-    del nightlyProperties["target"]
+    nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_valgrind_{}_weekly".format(branch_item["branch"]),
@@ -101,7 +102,7 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['box'] = branch_item["box"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
-    del nightlyProperties["target"]
+    nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"], box=branch_item["box"]),
