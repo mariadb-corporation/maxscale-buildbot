@@ -63,8 +63,8 @@ for branch_item in NIGHTLY_BRANCHES_LIST:
     launchTime += BUILD_INTERVAL
 
 # Add scheduler for test with Valgrind
-BUILD_INTERVAL = 5
-launchTime = 12
+BUILD_INTERVAL = 8
+launchTime = 8
 for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "valgrind_test_{}".format(branch_item["branch"])
@@ -90,8 +90,8 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     launchTime += BUILD_INTERVAL
 
 # Add scheduler for test with Valgrind
-BUILD_INTERVAL = 5
-launchTime = 12
+BUILD_INTERVAL = 8
+launchTime = 8
 for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
