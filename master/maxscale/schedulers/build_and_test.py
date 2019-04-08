@@ -89,7 +89,7 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     SCHEDULERS.append(nightlyScheduler)
     launchTime += BUILD_INTERVAL
 
-# Add scheduler for test with Valgrind
+# Add scheduler for test with different distros
 BUILD_INTERVAL = 8
 launchTime = 8
 for branch_item in DIFF_DISTRO_BRANCHES_LIST:
@@ -97,7 +97,7 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
     nightlyProperties['host'] = "max-tst-02"
-    nightlyProperties['use_valgrind'] = "yes"
+    nightlyProperties['use_valgrind'] = "no"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['box'] = branch_item["box"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
