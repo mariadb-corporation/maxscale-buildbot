@@ -34,6 +34,7 @@ BOXES = [
     'rhel_5_aws',
     'rhel_6_aws',
     'rhel_7_aws',
+    'rhel_8_libvirt',
     'fedora_19_aws',
     'fedora_20_aws',
     'fedora_21_aws',
