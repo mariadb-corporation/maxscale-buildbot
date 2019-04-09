@@ -44,6 +44,7 @@ BOXES = [
 BUILD_ALL_BOXES = [
     "centos_7_libvirt",
     "centos_6_libvirt",
+    "rhel_8_libvirt",
     "ubuntu_trusty_libvirt",
     "ubuntu_xenial_libvirt",
     "ubuntu_bionic_libvirt",
