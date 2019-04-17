@@ -372,7 +372,7 @@ class CTestParser:
 
     def parse(self):
         self.parseCtestLog()
-        self.parseLeakSummaryFromTestsLogs('/home/vagrant/LOGS/{}/LOGS'.format(self.logsDir))
+        self.parseLeakSummaryFromTestsLogs("{}/LOGS/{}/LOGS".format(os.environ["HOME"], self.logsDir))
         self.showCtestParsedInfo()
         if self.args.output_log_file:
             self.saveResultsToFile()
