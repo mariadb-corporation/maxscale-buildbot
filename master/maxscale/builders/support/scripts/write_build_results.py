@@ -87,11 +87,11 @@ class BuildResultsWriter:
         print("Performed insert (test_run, id = {}: {}".format(id, query % values))
         return id
 
-    def writeResultsTable(self, id, test, result, testTime, coreDumpPath):
+    def writeResultsTable(self, id, test, result, testTime, coreDumpPath, leakSummary):
         cursor = self.client.cursor()
-        query = ("INSERT INTO results (id, test, result, test_time, core_dump_path) "
-                 "VALUES (%s, %s, %s, %s, %s)")
-        values = (id, test, result, testTime, coreDumpPath)
+        query = ("INSERT INTO results (id, test, result, test_time, core_dump_path, leak_summary) "
+                 "VALUES (%s, %s, %s, %s, %s, %s)")
+        values = (id, test, result, testTime, coreDumpPath, leakSummary)
         cursor.execute(query, values)
         self.client.commit()
         cursor.close()
@@ -117,6 +117,7 @@ class BuildResultsWriter:
                     TEST_SUCCESS: test[TEST_SUCCESS],
                     TEST_TIME: test[TEST_TIME]
                 })
+        testsLeakSummary = results["leak_summary"]
 
         id = self.writeTestRunTable(*(results[key] for key in (
             "job_build_number", "timestamp", "target", "box",
@@ -132,7 +133,11 @@ class BuildResultsWriter:
                 result = int(test[TEST_SUCCESS] != PASSED)
                 testTime = test[TEST_TIME]
                 coreDumpPath = self.findCoreDumpPath(results["logs_dir"], name)
-                self.writeResultsTable(id, name, result, testTime, coreDumpPath)
+                if (name in testsLeakSummary) and (testsLeakSummary[name]):
+                    leakSummary = ";\n".join(testsLeakSummary[name])
+                else:
+                    leakSummary = None
+                self.writeResultsTable(id, name, result, testTime, coreDumpPath, leakSummary)
 
 
 def main(args=None):
