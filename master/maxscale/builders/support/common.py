@@ -397,6 +397,7 @@ def remoteParseCtestLogAndStoreIt():
                         "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
                         "-r", "-f",
                         "-j", jsonResultsFile,
+                        "-l", leakSummaryResultsFile,
                         "-s", outputDirectory])
 
         storeDirectory = os.path.join(HOME, "LOGS", buildId, "LOGS")
@@ -461,6 +462,7 @@ def showTestResult(**kwargs):
         collectStdout=True,
         command=util.Interpolate(r"cat %(prop:builddir)s/results_%(prop:buildnumber)s "
                                  r"%(prop:builddir)s/coredumps_%(prop:buildnumber)s "
+                                 r"%(prop:builddir)s/leak_summary_%(prop:buildnumber)s 2>/dev/null "
                                  r"| sed -E 's/\\n\\//g'"),
         **kwargs)]
 

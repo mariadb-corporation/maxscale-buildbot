@@ -10,6 +10,7 @@ import argparse
 LOG_FILE_OPTION = 'log_file'
 OUTPUT_LOG_FILE_OPTION = '--output-log-file'
 OUTPUT_LOG_JSON_FILE_OPTION = '--output-log-json-file'
+OUTPUT_LEAK_SUMMARY_FILE_OPTION = '--output-leak-summary-file'
 ONLY_FAILED_OPTION = '--only-failed'
 HUMAN_READABLE_OPTION = '--human-readable'
 CTEST_SUBLOGS_PATH = '--ctest-sublogs-path'
@@ -84,6 +85,9 @@ LOGS_DIR_MR = "logs_dir"
 MAXSCALE_SYSTEM_TEST_COMMIT_HR = "MaxScale system test commit"
 MAXSCALE_SYSTEM_TEST_COMMIT_MR = "maxscale_system_test_commit"
 
+LEAK_SUMMARY_HR = 'Leak Summary'
+LEAK_SUMMARY_MR = 'leak_summary'
+
 MAXSCALE_FULL = "Maxscale full version"
 
 NEW_LINE_JENKINS_FORMAT = " \\n\\\n"
@@ -99,6 +103,9 @@ options.add_argument("-o", OUTPUT_LOG_FILE_OPTION, metavar="file_path",
 options.add_argument("-j", OUTPUT_LOG_JSON_FILE_OPTION, metavar="json_file_path",
                      help="CTEST PARSER OUTPUT LOG JSON FILE (there will be "
                           "saved all test results - passed and failed)")
+options.add_argument("-l", OUTPUT_LEAK_SUMMARY_FILE_OPTION, metavar="leak_summary_file_path",
+                     help="CTEST PARSER OUTPUT TESTS LEAK SUMARRY FILE (there will be "
+                          "saved all nonzero test leak summary results)")
 options.add_argument("-s", CTEST_SUBLOGS_PATH, help="Path to ctest sublogs")
 
 
@@ -120,6 +127,7 @@ class CTestParser:
         self.failedCtestInfo = []
         self.failCtestCounter = 0
         self.maxscaleEntity = []
+        self.leakSummary = {}
 
     def parseCtestLog(self):
         ctestFirstLineRegex = re.compile("Constructing a list of tests")
@@ -175,6 +183,47 @@ class CTestParser:
                 self.ctestSummary = CTEST_SUMMARY_NOTE_FOUND
                 self.allCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
                 self.failedCtestInfo = {TESTS_COUNT: NOT_FOUND, FAILED_TESTS_COUNT: NOT_FOUND, TESTS: []}
+
+    def parseLeakSummaryFromFile(self, fileName):
+        leakSummaryFirstLineRegex = re.compile(r"^==\d+==\s+LEAK SUMMARY:$")
+        leakSummaryEndLineRegex = re.compile(r"^==\d+==\s$")
+        # Example of line: `==12030==      possibly lost: 15 bytes in 26 blocks`
+        # where '==12030==      ' is first group, '15' is second group, '26' is third group
+        fieldRegex = re.compile(r"^(==\d+==\s+)[\w\s]*\w:\s+([0-9]*\,?[0-9]+) bytes in ([0-9]*\,?[0-9]+) blocks")
+
+        fields = []
+        leakSummaryBlockBegin = False
+        with open(fileName, encoding="UTF-8") as file:
+            for line in file:
+                if leakSummaryFirstLineRegex.search(line):
+                    leakSummaryBlockBegin = True
+                if leakSummaryEndLineRegex.search(line) and leakSummaryBlockBegin:
+                    break
+                if fieldRegex.search(line) and leakSummaryBlockBegin:
+                    matchedGroups = re.match(fieldRegex, line)
+                    bytesCount = matchedGroups.group(2)
+                    if bytesCount != '0':
+                        linePrefix = matchedGroups.group(1)
+                        fields.append(line.replace(linePrefix, '').strip('\n'))
+        return fields
+
+    def parseLeakSummaryFromTestsLogs(self, testsLogsDir):
+        if not os.path.exists(testsLogsDir):
+            return
+        # Example of line: /home/vagrant/LOGS/run_test-927/LOGS/long_test/000/valgrind00.log
+        # where 'long_test' is first group, '000' is second group
+        testNameRegex = re.compile(r"{}/([^/]+)/([^/]+)".format(testsLogsDir))
+        proc = subprocess.run(['find {} -iname "valgrind*.log"'.format(testsLogsDir)],
+                              shell=True, encoding='utf-8', stdout=subprocess.PIPE)
+        testsLeakSummary = {}
+        valgrindFiles = list(filter(None, proc.stdout.split('\n')))
+        for fileName in valgrindFiles:
+            matchedGroups = re.match(testNameRegex, fileName)
+            testChildDir = matchedGroups.group(2)
+            if testChildDir == '000':
+                testName = matchedGroups.group(1)
+                testsLeakSummary[testName] = self.parseLeakSummaryFromFile(fileName)
+        self.leakSummary = testsLeakSummary
 
     def findTestsInfo(self, ctestLog):
         if self.args.ctest_sublogs_path:
@@ -261,6 +310,14 @@ class CTestParser:
             buildParams[value] = envValue
         return buildParams
 
+    def generateHrLeakSummaryResult(self):
+        hrLeakSummary = []
+        if self.leakSummary:
+            hrLeakSummary.append("{}:".format(LEAK_SUMMARY_HR))
+            for testName, leakSummaryInfo in self.leakSummary.items():
+                hrLeakSummary.append("\t{}: {}".format(testName, '; '.join(leakSummaryInfo)))
+        return hrLeakSummary
+
     def generateHrResult(self, parsedCtestData):
         hrTests = []
         hrTests.append(self.ctestSummary)
@@ -276,6 +333,7 @@ class CTestParser:
         hrTests.append("{}: {}".format(LOGS_DIR_HR, logsDir))
         hrTests.append("{}: {}".format(CMAKE_FLAGS_HR, cmakeFlags))
         hrTests.append("{}: {}".format(MAXSCALE_SYSTEM_TEST_COMMIT_HR, self.getTestCodeCommit()))
+        hrTests.extend(self.generateHrLeakSummaryResult())
         hrTests.extend(self.generateRunTestBuildParametersHr())
         if not self.ctestExecuted:
             hrTests.append("{}: {}".format(ERROR, CTEST_NOT_EXECUTED_ERROR))
@@ -293,6 +351,7 @@ class CTestParser:
             CMAKE_FLAGS_MR: self.cmakeFlags or NOT_FOUND,
             LOGS_DIR_MR: self.logsDir or NOT_FOUND,
             CTEST_ARGUMENTS_MR: self.generateCtestArguments(),
+            LEAK_SUMMARY_MR: self.leakSummary
         })
         if not self.ctestExecuted:
             res.update({ERROR: CTEST_NOT_EXECUTED_ERROR})
@@ -316,6 +375,11 @@ class CTestParser:
             file.write(self.generateMrResults(self.allCtestInfo))
             file.write("\n")
 
+    def saveLeakSummaryResultsToFile(self):
+        with open(self.args.output_leak_summary_file, "w") as file:
+            file.write(NEW_LINE_JENKINS_FORMAT.join(self.generateHrLeakSummaryResult()))
+            file.write("\n")
+
     def showCtestParsedInfo(self):
         if not self.args.human_readable:
             self.showMrResults(self.failedCtestInfo if self.args.only_failed else self.allCtestInfo)
@@ -324,11 +388,14 @@ class CTestParser:
 
     def parse(self):
         self.parseCtestLog()
+        self.parseLeakSummaryFromTestsLogs("{}/LOGS/{}/LOGS".format(os.environ["HOME"], self.logsDir))
         self.showCtestParsedInfo()
         if self.args.output_log_file:
             self.saveResultsToFile()
         if self.args.output_log_json_file:
             self.saveAllResultsToJsonFile()
+        if self.args.output_leak_summary_file:
+            self.saveLeakSummaryResultsToFile()
 
 
 def main(args=None):
