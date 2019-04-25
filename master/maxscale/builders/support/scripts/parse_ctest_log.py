@@ -10,7 +10,6 @@ import argparse
 LOG_FILE_OPTION = 'log_file'
 OUTPUT_LOG_FILE_OPTION = '--output-log-file'
 OUTPUT_LOG_JSON_FILE_OPTION = '--output-log-json-file'
-OUTPUT_LEAK_SUMMARY_FILE_OPTION = '--output-leak-summary-file'
 ONLY_FAILED_OPTION = '--only-failed'
 HUMAN_READABLE_OPTION = '--human-readable'
 CTEST_SUBLOGS_PATH = '--ctest-sublogs-path'
@@ -103,9 +102,6 @@ options.add_argument("-o", OUTPUT_LOG_FILE_OPTION, metavar="file_path",
 options.add_argument("-j", OUTPUT_LOG_JSON_FILE_OPTION, metavar="json_file_path",
                      help="CTEST PARSER OUTPUT LOG JSON FILE (there will be "
                           "saved all test results - passed and failed)")
-options.add_argument("-l", OUTPUT_LEAK_SUMMARY_FILE_OPTION, metavar="leak_summary_file_path",
-                     help="CTEST PARSER OUTPUT TESTS LEAK SUMARRY FILE (there will be "
-                          "saved all nonzero test leak summary results)")
 options.add_argument("-s", CTEST_SUBLOGS_PATH, help="Path to ctest sublogs")
 
 
@@ -213,10 +209,10 @@ class CTestParser:
         # Example of line: /home/vagrant/LOGS/run_test-927/LOGS/long_test/000/valgrind00.log
         # where 'long_test' is first group, '000' is second group
         testNameRegex = re.compile(r"{}/([^/]+)/([^/]+)".format(testsLogsDir))
-        proc = subprocess.run(['find {} -iname "valgrind*.log"'.format(testsLogsDir)],
-                              shell=True, encoding='utf-8', stdout=subprocess.PIPE)
+        findOutput = subprocess.check_output(['find {} -iname "valgrind*.log"'.format(testsLogsDir)], shell=True)\
+                               .decode("utf-8")
         testsLeakSummary = {}
-        valgrindFiles = list(filter(None, proc.stdout.split('\n')))
+        valgrindFiles = list(filter(None, findOutput.split('\n')))
         for fileName in valgrindFiles:
             matchedGroups = re.match(testNameRegex, fileName)
             testChildDir = matchedGroups.group(2)
@@ -333,12 +329,12 @@ class CTestParser:
         hrTests.append("{}: {}".format(LOGS_DIR_HR, logsDir))
         hrTests.append("{}: {}".format(CMAKE_FLAGS_HR, cmakeFlags))
         hrTests.append("{}: {}".format(MAXSCALE_SYSTEM_TEST_COMMIT_HR, self.getTestCodeCommit()))
-        hrTests.extend(self.generateHrLeakSummaryResult())
         hrTests.extend(self.generateRunTestBuildParametersHr())
         if not self.ctestExecuted:
             hrTests.append("{}: {}".format(ERROR, CTEST_NOT_EXECUTED_ERROR))
         for me in self.maxscaleEntity:
             hrTests.append("{}: {}".format(MAXSCALE_FULL, me))
+        hrTests.extend(self.generateHrLeakSummaryResult())
         return hrTests
 
     def generateMrResults(self, parsedCtestData):
@@ -375,11 +371,6 @@ class CTestParser:
             file.write(self.generateMrResults(self.allCtestInfo))
             file.write("\n")
 
-    def saveLeakSummaryResultsToFile(self):
-        with open(self.args.output_leak_summary_file, "w") as file:
-            file.write(NEW_LINE_JENKINS_FORMAT.join(self.generateHrLeakSummaryResult()))
-            file.write("\n")
-
     def showCtestParsedInfo(self):
         if not self.args.human_readable:
             self.showMrResults(self.failedCtestInfo if self.args.only_failed else self.allCtestInfo)
@@ -394,8 +385,6 @@ class CTestParser:
             self.saveResultsToFile()
         if self.args.output_log_json_file:
             self.saveAllResultsToJsonFile()
-        if self.args.output_leak_summary_file:
-            self.saveLeakSummaryResultsToFile()
 
 
 def main(args=None):
