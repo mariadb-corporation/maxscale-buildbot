@@ -17,6 +17,7 @@ RUN_TEST_PROPERTIES = [
     properties.backend_use_ssl(),
     properties.use_snapshots(),
     properties.use_valgrind(),
+    properties.use_callgrind(),
     properties.do_not_revert_virtual_machines(),
     properties.test_template(),
     properties.configuration_to_clone(),

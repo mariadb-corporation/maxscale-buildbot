@@ -24,6 +24,7 @@ BUILD_AND_TEST_PROPERTIES = [
     properties.backend_use_ssl(),
     properties.host(),
     properties.use_valgrind(),
+    properties.use_callgrind(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
