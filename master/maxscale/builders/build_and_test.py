@@ -49,6 +49,7 @@ def create_factory():
             'test_branch': util.Property('branch'),
             "test_set": common.renderTestSet,
             "use_valgrind": util.Property("use_valgrind"),
+            "use_callgrind": util.Property("use_callgrind"),
         }
     ))
 
