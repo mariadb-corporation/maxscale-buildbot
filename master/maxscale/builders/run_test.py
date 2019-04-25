@@ -36,7 +36,6 @@ def configureCommonProperties(properties):
         "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
         "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
-        "leakSummaryResultsFile": util.Interpolate("%(prop:builddir)s/leak_summary_%(prop:buildnumber)s"),
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s")
     }
 
