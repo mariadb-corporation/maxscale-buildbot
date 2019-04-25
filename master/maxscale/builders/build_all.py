@@ -63,6 +63,7 @@ def createBuildFactory():
             "big",
             "host",
             "owners",
+            "run_upgrade_test"
         ],
         set_properties={
             "virtual_builder_name": "build"
