@@ -10,6 +10,7 @@ PERFORMACE_TEST_PROPERTIES = [
     properties.perf_cnf_template(),
     properties.perf_port(),
     properties.perf_runtime(),
+    properties.use_callgrind(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(

@@ -18,6 +18,7 @@ ENVIRONMENT = {
     "sysbench_threads": util.Property("sysbench_threads"),
     "perf_runtime": util.Interpolate("%(prop:perf_runtime)s"),
     "perf_port": util.Property("perf_port"),
+    "use_callgrind": util.Property("use_callgrind"),
 }
 
 
