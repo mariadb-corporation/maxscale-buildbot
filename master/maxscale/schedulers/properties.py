@@ -191,7 +191,7 @@ def test_template():
     return util.ChoiceStringParameter(
         name="template",
         label="Template",
-        choices=['default', 'nogalera', 'twomaxscales'],
+        choices=['default', 'clustrix'],
         default='default')
 
 
@@ -324,5 +324,12 @@ def use_valgrind():
     return util.ChoiceStringParameter(
         name="use_valgrind",
         label="Use valgrind",
+        choices=["no", "yes"],
+        default="no")
+
+def use_callgrind():
+    return util.ChoiceStringParameter(
+        name="use_callgrind",
+        label="Use callgrind",
         choices=["no", "yes"],
         default="no")
