@@ -191,7 +191,7 @@ def test_template():
     return util.ChoiceStringParameter(
         name="template",
         label="Template",
-        choices=['default', 'nogalera', 'twomaxscales'],
+        choices=['default', 'clustrix'],
         default='default')
 
 
