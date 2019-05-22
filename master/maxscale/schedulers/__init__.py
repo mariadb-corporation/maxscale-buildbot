@@ -11,6 +11,7 @@ from . import destroy
 from . import generate_and_sync_repod
 from . import run_performance_test
 from . import build_mdbci
+from . import publish_release
 
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
@@ -26,4 +27,5 @@ MAXSCALE_SCHEDULERS = list(itertools.chain(
     generate_and_sync_repod.SCHEDULERS,
     run_performance_test.SCHEDULERS,
     build_mdbci.SCHEDULERS,
+    publish_release.SCHEDULERS,
 ))
