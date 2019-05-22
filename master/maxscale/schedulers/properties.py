@@ -333,3 +333,10 @@ def use_callgrind():
         label="Use callgrind",
         choices=["no", "yes"],
         default="no")
+
+def version_number():
+    return util.StringParameter(
+        name="version_number",
+        label="version_number",
+        default="2.x.x")
+
