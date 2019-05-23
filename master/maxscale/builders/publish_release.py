@@ -14,7 +14,7 @@ def copyToDl02():
     """Copy stuff to dl02.mariadb.com"""
     return [steps.ShellCommand(
         name="Copy stuff to dl02.mariadb.com",
-        command=["~/.config/mdbci/publish_release.sh", util.Property("versionNumber")],
+        command=["~/.config/mdbci/publish_release.sh", util.Property("version_number")],
         alwaysRun=True)]
 
 
