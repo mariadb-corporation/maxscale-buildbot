@@ -14,12 +14,13 @@ def copyToDl02():
     """Copy stuff to dl02.mariadb.com"""
     return [steps.ShellCommand(
         name="Copy stuff to dl02.mariadb.com",
-        command=["~/.config/mdbci/publish_release.sh", util.Property("version_number")],
+        command=[util.Interpolate("%(prop:HOME)s/.config/mdbci/publish_release.sh"), util.Property("version_number")],
         alwaysRun=True)]
 
 
 def createBuildSteps():
     buildSteps = []
+    buildSteps.extend(common.getWorkerHomeDirectory())
     buildSteps.extend(copyToDl02())
     return buildSteps
 
