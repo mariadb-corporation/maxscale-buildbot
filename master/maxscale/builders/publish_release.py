@@ -9,25 +9,24 @@ ENVIRONMENT = {
     "version_number": util.Property("version_number"),
 }
 
+
 def copyToDl02():
     """Copy stuff to dl02.mariadb.com"""
     return [steps.ShellCommand(
         name="Copy stuff to dl02.mariadb.com",
-        command=["~/.config/mdbci/publish_release.sh ", util.Property("versionNumber")],
+        command=util.Interpolate("~/.config/mdbci/publish_release.sh %(prop:versionNumber)s"),
         alwaysRun=True)]
 
 
 def createBuildSteps():
     buildSteps = []
-    buildSteps.extend(support.executePythonScript(
-        "Copy stuff to dl02.mariadb.com", copyToDl02))
+    buildSteps.extend(copyToDl02())
     return buildSteps
 
 
 def createBuildFactory():
     factory = util.BuildFactory()
-    buildSteps = createBuildSteps()
-    factory.addSteps(buildSteps)
+    factory.addSteps(createBuildSteps())
     return factory
 
 
@@ -43,4 +42,3 @@ BUILDERS = [
         collapseRequests=False
     )
 ]
-
