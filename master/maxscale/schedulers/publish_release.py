@@ -11,7 +11,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="publish_release",
     builderNames=["publish_release"],
     buttonName="Publish Release",
-    codebases=properties.codebaseParameter(),
+    codebases=properties.emptyCodebase(),
     properties=PUBLISH_RELEASE_PROPERTIES
 )
 

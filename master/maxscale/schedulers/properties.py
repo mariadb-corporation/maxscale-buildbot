@@ -260,6 +260,10 @@ def codebaseMdbciParameter():
     )]
 
 
+def emptyCodebase():
+    return [util.CodebaseParameter(codebase='', hide=True)]
+
+
 def versionNumber():
     return util.StringParameter(
         name="version_number",
