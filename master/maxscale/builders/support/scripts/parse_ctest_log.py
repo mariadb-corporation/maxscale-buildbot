@@ -155,18 +155,16 @@ class CTestParser:
                     self.logsDir = logsDirRegex.search(line).group(1).strip()
                 if ctestFirstLineRegex.search(line):
                     self.ctestExecuted = True
-                    break
-
-            if self.ctestExecuted:
-                ctestLog = []
-                testQuantity = 0
-                for line in file:
+                    ctestLog = []
+                    testQuantity = 0
+                if self.ctestExecuted:
                     if ctestLastLineRegex.search(line):
                         self.ctestSummary = line.strip()
                         testQuantity = ctestLastLineRegex.search(line).group(1)
                         break
                     ctestLog.append(line)
 
+            if self.ctestExecuted:
                 self.findTestsInfo(ctestLog)
                 if not self.ctestSummary:
                     self.ctestSummary = "timed out, {} tests failed out of {} executed"\
