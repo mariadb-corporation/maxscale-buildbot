@@ -1,34 +1,42 @@
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from maxscale.builders.support import common, support
+from maxscale.builders.support import common
 from maxscale import workers
 
+AUTO_SET_ENV_PROPERTIES = [
+    "target",
+    "box",
+    "product",
+    "version",
+    "do_not_destroy_vm",
+    "test_set",
+    "ci_url",
+    "smoke",
+    "big",
+    "backend_ssl",
+    "use_snapshots",
+    "no_vm_revert",
+    "template",
+    "config_to_clone",
+    "use_valgrind",
+    "use_callgrind"
+]
+SIMPLE_PROPERTIES = [
+    "builddir",
+    "buildername",
+    "buildnumber",
+    "branch"
+]
+NEEDED_PROPERTIES = AUTO_SET_ENV_PROPERTIES + SIMPLE_PROPERTIES
 
-ENVIRONMENT = {
+ENVIRONMENT = common.autoSetEnvironment(AUTO_SET_ENV_PROPERTIES, {
     "WORKSPACE": util.Interpolate('%(prop:builddir)s/build'),
     "JOB_NAME": util.Property("buildername"),
     "BUILD_NUMBER": util.Interpolate("%(prop:buildnumber)s"),
     "BUILD_TIMESTAMP": util.Interpolate('%(kw:datetime)s',
                                         datetime=common.getFormattedDateTime("%Y-%m-%d %H-%M-%S")),
-    "name": util.Property("name"),
-    "target": util.Property("target"),
-    "box": util.Property("box"),
-    "product": util.Property("product"),
-    "version": util.Property("version"),
-    "do_not_destroy_vm": util.Property("do_not_destroy_vm"),
-    "test_set": util.Property("test_set"),
-    "ci_url": util.Property("ci_url"),
-    "smoke": util.Property("smoke"),
-    "big": util.Property("big"),
-    "backend_ssl": util.Property("backend_ssl"),
-    "use_snapshots": util.Property("use_snapshots"),
-    "no_vm_revert": util.Property("no_vm_revert"),
-    "template": util.Property("template"),
-    "config_to_clone": util.Property("config_to_clone"),
-    "test_branch": util.Property("branch"),
-    "use_valgrind": util.Property("use_valgrind"),
-    "use_callgrind": util.Property("use_callgrind"),
-}
+    "test_branch": util.Property("branch")
+})
 
 
 @util.renderer
