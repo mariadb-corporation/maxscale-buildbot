@@ -7,23 +7,10 @@ from maxscale import workers
 from maxscale.builders.support import common
 from maxscale.config import constants
 
-COMMON_PROPERTIES = [
-    "name",
-    "repository",
-    "branch",
-    "target",
-    "build_experimental",
-    "box",
-    "product",
-    "version",
-    "cmake_flags",
-    "do_not_destroy_vm",
-    "ci_url",
-    "smoke",
-    "big",
-    "host",
-    "owners",
-]
+from .run_test import NEEDED_PROPERTIES as RUN_TEST_NEEDED_PROPERTIES
+from .build import NEEDED_PROPERTIES as BUILD_TEST_NEEDED_PROPERTIES
+
+NEEDED_PROPERTIES = list(set(RUN_TEST_NEEDED_PROPERTIES + BUILD_TEST_NEEDED_PROPERTIES))
 
 
 def create_factory():
@@ -34,7 +21,7 @@ def create_factory():
         schedulerNames=['build'],
         waitForFinish=True,
         haltOnFailure=True,
-        copy_properties=COMMON_PROPERTIES,
+        copy_properties=BUILD_TEST_NEEDED_PROPERTIES,
         set_properties={
             'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
         }
@@ -44,12 +31,9 @@ def create_factory():
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
         waitForFinish=True,
-        copy_properties=COMMON_PROPERTIES,
+        copy_properties=RUN_TEST_NEEDED_PROPERTIES,
         set_properties={
-            'test_branch': util.Property('branch'),
-            "test_set": common.renderTestSet,
-            "use_valgrind": util.Property("use_valgrind"),
-            "use_callgrind": util.Property("use_callgrind"),
+            "test_set": common.renderTestSet
         }
     ))
 

@@ -6,26 +6,15 @@ from maxscale.config.branches_list_file import VALGRIND_BRANCHES_LIST
 from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
 from maxscale.config.branches_list_file import DIFF_DISTRO_BRANCHES_LIST
 from maxscale.builders.support.common import TargetInitOptions
+from maxscale.builders.support.common import setSchedulerProperties
 
+from maxscale.builders.build_and_test import NEEDED_PROPERTIES
 
-BUILD_AND_TEST_PROPERTIES = [
-    properties.build_name(),
-    properties.build_target(),
-    properties.build_experimental_features(),
-    properties.build_box(),
-    properties.backend_database(),
-    properties.database_version(),
-    properties.cmake_flags(),
-    properties.keep_virtual_machines(),
-    properties.test_set(),
-    properties.ci_url(),
-    properties.smoke_tests(),
-    properties.big_number_of_vms(),
-    properties.backend_use_ssl(),
+BUILD_AND_TEST_PROPERTIES = setSchedulerProperties(NEEDED_PROPERTIES, [
+    properties.repository_path(),
     properties.host(),
-    properties.use_valgrind(),
-    properties.use_callgrind(),
-]
+    properties.build_name()
+])
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test",
