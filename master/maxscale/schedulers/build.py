@@ -1,20 +1,14 @@
 from buildbot.plugins import schedulers
+from maxscale.builders.support.common import setSchedulerProperties
 from maxscale.config import constants
 from . import properties
 
-BUILD_PROPERTIES = [
-    properties.build_box(),
-    properties.build_target(),
-    properties.cmake_flags(),
-    properties.keep_virtual_machines(),
-    properties.build_experimental_features(),
+from maxscale.builders.build import NEEDED_PROPERTIES
+
+BUILD_PROPERTIES = setSchedulerProperties(NEEDED_PROPERTIES, [
     properties.repository_path(),
-    properties.try_already_running(),
-    properties.run_upgrade_test(),
-    properties.old_target(),
-    properties.ci_url(),
     properties.host(),
-]
+])
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="build",

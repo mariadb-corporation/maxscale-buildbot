@@ -5,21 +5,30 @@ from buildbot.plugins import util, steps
 from maxscale import workers
 from maxscale.builders.support import common, support
 
-ENVIRONMENT = {
+AUTO_SET_ENV_PROPERTIES = [
+    "MDBCI_VM_PATH",
+    "box",
+    "target",
+    "cmake_flags",
+    "do_not_destroy_vm",
+    "build_experimental",
+    "try_already_running",
+    "run_upgrade_test",
+    "old_target",
+    "ci_url",
+]
+SIMPLE_PROPERTIES = [
+    "builddir",
+    "buildername",
+    "buildnumber"
+]
+NEEDED_PROPERTIES = AUTO_SET_ENV_PROPERTIES + SIMPLE_PROPERTIES
+
+ENVIRONMENT = common.autoSetEnvironment(AUTO_SET_ENV_PROPERTIES, {
     "JOB_NAME": util.Property("buildername"),
     "BUILD_ID": util.Interpolate('%(prop:buildnumber)s'),
-    "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
-    "MDBCI_VM_PATH": util.Property('MDBCI_VM_PATH'),
-    "box": util.Property('box'),
-    "target": util.Property('target'),
-    "cmake_flags": util.Property('cmake_flags'),
-    "do_not_destroy_vm": util.Property('do_not_destroy_vm'),
-    "build_experimental": util.Property('build_experimental'),
-    "try_already_running": util.Property('try_already_running'),
-    "run_upgrade_test": util.Property('run_upgrade_test'),
-    "old_target": util.Property('old_target'),
-    "ci_url": util.Property('ci_url')
-}
+    "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s')
+})
 
 
 @util.renderer
