@@ -1,0 +1,23 @@
+Our product - database proxy server MariaDB Maxscale requires complex test environment: as any proxy it needs clients and back-end simulation. Typical test environment consists of 10 or more virtual machines (e.g. 4 for Master/Slave replication setup, 4 for Galera Cluster and 2 for redundant Maxscale setup). Every node in the test setup can contain different versions of MariaDB or MySQL database server with different setting. Modular Maxscale architecture increases the number of different combinations of test setups.
+For simple project with 2 - 3 continuous integration (CI) tasks Jenkins offers web-based user interface, but it is unacceptable for any more complex projects. Everything have to be in the form of code and stored in the repository. 
+At the moment of Maxscale project start the most convenient tool to represent Jenkins configuration as a code was Jenkins Job Builder (JJB). JJB uses YAML representation for all Jenkins jobs. Jobs described in YAML is hard to debug, JJB has issues with multiple @#include@, several Jenkins plugins are required to implement complex job triggering logic, matrix jobs, nested jobs. Huge number of 3rd party plugins causes reliability and security level decrease (especially without going to the commercial support and certified plugins). It is hard to implement complex triggering logic - simple matrix jobs do not allow to run some configurations more often then others, run some configurations with limited number of tests, etc. It leads to creation specific Jenkins jobs for every test configuration, the total number of jobs increases rapidly, managing of Jenkins setup becomes more and more time-consuming task.
+Partly these problems can be solved by Jenkins pipelines and job DSL plugin. 
+JJB is still needed to fully convert pipeline description into code.
+Job DSL plugin requires re-writing of all existing jobs in different language. In this case there is no difference between moving to job DSL plugin and moving to different CI tool.
+BuildBot was selected as a new CI tool for Maxscale.
+BuildBot is written in Python and all CI tasks can also be written in Python. It allows to implement "everything is code" approach out of the box. Implementation of any complex tasks triggering logic is also easy: in BuildBot it is a simple coding task with help of powerful object oriented language.
+Our own small addition - @PythonFunctionRenderer(object)@ allows to execute Python code on any BuildBot worker (remote server). That means build or test procedures can be also Python code.
+BuildBot's virtual builders allow to implement nested tasks. The disadvantage of nested tasks in BuildBot is hard way to transfer parameters: all parameters have to be manually added to the every step description. It increases the probability of bugs - some parameters can be easily lost and automatically replaced by default values.
+Moving to BuildBot gave following adventures: 
+* the number of task decreased from 60+ to 13 (but every task now has more complex triggering logic)
+* everything is written in one language (Python instead of combination of YAML, Groovy, job DSL)
+* no mess of 3rd party plugins
+* much less resource consumption
+However:
+* schedulers checking and debugging is possible only by "dry-run" (Jenkins has convenient indicator "next scheduled run")
+* parameters transfer between step of nested task has to be tracked manually at all stages
+* even very simple task requires @builder@, @scheduler@ writing and manual including them into main configuration files (@builders/__init__.py@, @schedulers/__init__.py@)
+* quite high "entrance knowledge level"
+* no possibility to change parameters after "rebuild" button
+* user interface is very basic
+
