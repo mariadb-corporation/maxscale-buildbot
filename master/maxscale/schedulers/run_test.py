@@ -1,12 +1,11 @@
 from buildbot.plugins import schedulers
-from maxscale.builders.support.common import setSchedulerProperties
 from maxscale.config import constants
 from . import common
 from . import properties
 
 from maxscale.builders.run_test import NEEDED_PROPERTIES
 
-RUN_TEST_PROPERTIES = setSchedulerProperties(NEEDED_PROPERTIES, [
+RUN_TEST_PROPERTIES = properties.setSchedulerProperties(NEEDED_PROPERTIES, [
     properties.build_name(),
     properties.host(),
 ])

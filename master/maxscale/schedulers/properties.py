@@ -385,3 +385,13 @@ def getPropertyByName(name):
     if name not in propertyNamesAndFunc:
         return None
     return propertyNamesAndFunc[name]()
+
+
+def setSchedulerProperties(builderPropsList, customSchedulerProps=[]):
+    schedulerProps = []
+    for propertyName in list(set(builderPropsList)):
+        property = getPropertyByName(propertyName)
+        if property is not None:
+            schedulerProps.append(property)
+    schedulerProps.extend(customSchedulerProps)
+    return schedulerProps

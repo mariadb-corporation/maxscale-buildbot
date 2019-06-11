@@ -12,9 +12,6 @@ from maxscale.builders.support import support
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale import workers
 from enum import IntEnum
-# `from maxscale.schedulers.properties import getPropertyByName` don't work
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'schedulers'))
-from properties import getPropertyByName
 
 
 def autoSetEnvironment(autoSetPropsList, customEnvProps={}):
@@ -23,16 +20,6 @@ def autoSetEnvironment(autoSetPropsList, customEnvProps={}):
         env[propertyName] = util.Property(propertyName)
     env.update(customEnvProps)
     return env
-
-
-def setSchedulerProperties(builderPropsList, customSchedulerProps=[]):
-    schedulerProps = []
-    for propertyName in list(set(builderPropsList)):
-        property = getPropertyByName(propertyName)
-        if property is not None:
-            schedulerProps.append(property)
-    schedulerProps.extend(customSchedulerProps)
-    return schedulerProps
 
 
 def cloneRepository():
