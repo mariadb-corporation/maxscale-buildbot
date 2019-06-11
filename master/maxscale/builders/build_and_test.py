@@ -7,10 +7,10 @@ from maxscale import workers
 from maxscale.builders.support import common
 from maxscale.config import constants
 
-from .run_test import NEEDED_PROPERTIES as RUN_TEST_NEEDED_PROPERTIES
-from .build import NEEDED_PROPERTIES as BUILD_TEST_NEEDED_PROPERTIES
+from .run_test import REQUIRED_PROPERTIES as RUN_TEST_REQUIRED_PROPERTIES
+from .build import REQUIRED_PROPERTIES as BUILD_TEST_REQUIRED_PROPERTIES
 
-NEEDED_PROPERTIES = list(set(RUN_TEST_NEEDED_PROPERTIES + BUILD_TEST_NEEDED_PROPERTIES))
+REQUIRED_PROPERTIES = list(set(RUN_TEST_REQUIRED_PROPERTIES + BUILD_TEST_REQUIRED_PROPERTIES))
 
 
 def create_factory():
@@ -21,7 +21,7 @@ def create_factory():
         schedulerNames=['build'],
         waitForFinish=True,
         haltOnFailure=True,
-        copy_properties=BUILD_TEST_NEEDED_PROPERTIES,
+        copy_properties=BUILD_TEST_REQUIRED_PROPERTIES,
         set_properties={
             'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
         }
@@ -31,7 +31,7 @@ def create_factory():
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
         waitForFinish=True,
-        copy_properties=RUN_TEST_NEEDED_PROPERTIES,
+        copy_properties=RUN_TEST_REQUIRED_PROPERTIES,
         set_properties={
             "test_set": common.renderTestSet
         }

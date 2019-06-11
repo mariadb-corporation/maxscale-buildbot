@@ -2,9 +2,9 @@ from buildbot.plugins import schedulers
 from maxscale.config import constants
 from . import properties
 
-from maxscale.builders.build import NEEDED_PROPERTIES
+from maxscale.builders.build import REQUIRED_PROPERTIES
 
-BUILD_PROPERTIES = properties.setSchedulerProperties(NEEDED_PROPERTIES, [
+BUILD_PROPERTIES = properties.setSchedulerProperties(REQUIRED_PROPERTIES, [
     properties.repository_path(),
     properties.host(),
 ])

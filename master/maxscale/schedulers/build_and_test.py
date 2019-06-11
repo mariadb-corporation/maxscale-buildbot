@@ -7,9 +7,9 @@ from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
 from maxscale.config.branches_list_file import DIFF_DISTRO_BRANCHES_LIST
 from maxscale.builders.support.common import TargetInitOptions
 
-from maxscale.builders.build_and_test import NEEDED_PROPERTIES
+from maxscale.builders.build_and_test import REQUIRED_PROPERTIES
 
-BUILD_AND_TEST_PROPERTIES = properties.setSchedulerProperties(NEEDED_PROPERTIES, [
+BUILD_AND_TEST_PROPERTIES = properties.setSchedulerProperties(REQUIRED_PROPERTIES, [
     properties.repository_path(),
     properties.host(),
     properties.build_name()

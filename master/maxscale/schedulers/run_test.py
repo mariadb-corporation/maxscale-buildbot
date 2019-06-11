@@ -3,9 +3,9 @@ from maxscale.config import constants
 from . import common
 from . import properties
 
-from maxscale.builders.run_test import NEEDED_PROPERTIES
+from maxscale.builders.run_test import REQUIRED_PROPERTIES
 
-RUN_TEST_PROPERTIES = properties.setSchedulerProperties(NEEDED_PROPERTIES, [
+RUN_TEST_PROPERTIES = properties.setSchedulerProperties(REQUIRED_PROPERTIES, [
     properties.build_name(),
     properties.host(),
 ])

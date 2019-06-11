@@ -27,7 +27,7 @@ SIMPLE_PROPERTIES = [
     "buildnumber",
     "branch"
 ]
-NEEDED_PROPERTIES = AUTO_SET_ENV_PROPERTIES + SIMPLE_PROPERTIES
+REQUIRED_PROPERTIES = AUTO_SET_ENV_PROPERTIES + SIMPLE_PROPERTIES
 
 ENVIRONMENT = common.autoSetEnvironment(AUTO_SET_ENV_PROPERTIES, {
     "WORKSPACE": util.Interpolate('%(prop:builddir)s/build'),
