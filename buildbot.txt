@@ -15,9 +15,11 @@ Moving to BuildBot gave following adventures:
 * much less resource consumption
 However:
 * schedulers checking and debugging is possible only by "dry-run" (Jenkins has convenient indicator "next scheduled run")
-* parameters transfer between step of nested task has to be tracked manually at all stages
-* even very simple task requires @builder@, @scheduler@ writing and manual including them into main configuration files (@builders/__init__.py@, @schedulers/__init__.py@)
+* parameters transfer between step of nested task has to be tracked manually at all stages. By default parameters are specified as strings and single typo can lead to hard-to-find bugs. Currently we are working on the solution
+* even very simple task requires @builder@, @scheduler@ writing and manual including them into main configuration files (@builders/__init__.py@, @schedulers/__init__.py@). The BuildBot does not provide a build-in scheme for the developers to split the configuration file into several ones. This issue is not trivial due to Python dynamic nature and interpreter properties. Therefore the developers are required to propose a solution of their own.
+In our current setup it is currently needed to add information into several files. We should explore the possibility to get this information automatically
 * quite high "entrance knowledge level"
 * no possibility to change parameters after "rebuild" button
-* user interface is very basic
+* user interface is very basic. There are possibilities to extend it: writing Dashboards with Flask or Bottle frameworks or implement plugin¶
+
 
