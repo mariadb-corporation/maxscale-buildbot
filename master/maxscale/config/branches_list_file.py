@@ -55,6 +55,14 @@ NIGHTLY_BRANCHES_LIST = [
     {
         "branch": "2.3",
         "test_set": "-LE UNSTABLE"
+    },
+    {
+        "branch": "2.4",
+        "test_set": "-LE UNSTABLE"
+    },
+    {
+        "branch": "2.4.0",
+        "test_set": "-LE UNSTABLE"
     }
 ]
 
