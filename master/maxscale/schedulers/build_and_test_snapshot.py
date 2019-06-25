@@ -22,6 +22,7 @@ BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
 ] + COMMON_PROPERTIES
 
 DEFAULT_PROPERTIES = properties.extractDefaultValues(COMMON_PROPERTIES)
+DEFAULT_PROPERTIES['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_snapshot_on_push",
@@ -30,7 +31,6 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     codebases=constants.MAXSCALE_CODEBASE,
     builderNames=["build_and_test_snapshot"],
     properties=DEFAULT_PROPERTIES
-    properties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
