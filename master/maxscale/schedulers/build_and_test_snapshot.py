@@ -30,6 +30,7 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     codebases=constants.MAXSCALE_CODEBASE,
     builderNames=["build_and_test_snapshot"],
     properties=DEFAULT_PROPERTIES
+    properties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
