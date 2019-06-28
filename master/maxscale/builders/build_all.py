@@ -1,13 +1,18 @@
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util
+from buildbot.process.properties import Property
 from buildbot.steps.trigger import Trigger
 from maxscale import workers
 from maxscale.builders.support import common
-from maxscale.config import constants
 from .build import ENVIRONMENT
 
 
 class BuildAllTrigger(Trigger):
+
+    def __init__(self, build_boxes, **kwargs):
+        self.__build_items = Property(build_boxes)
+        super().__init__(**kwargs)
+
     """
     Implements custom trigger step which triggers 'build' task on a virtual builder for every marked checkbox
     """
@@ -18,7 +23,7 @@ class BuildAllTrigger(Trigger):
         :return: List which contains schedulers for every marked checkbox
         """
         schedulers = []
-        for checkboxName, checkboxValue in self.set_properties["build_box_checkbox_container"].items():
+        for checkboxName, checkboxValue in self.__build_items.items():
             if checkboxValue:
                 propertiesToSet = {}
                 propertiesToSet.update(self.set_properties)
@@ -42,27 +47,22 @@ def createBuildFactory():
     """
     factory = util.BuildFactory()
     factory.addStep(BuildAllTrigger(
+        build_boxes="build_box_checkbox_container",
         name="build_all",
         schedulerNames=['build'],
         waitForFinish=True,
         copy_properties=[
-            "big",
             "branch",
-            "build_box_checkbox_container",
             "build_experimental",
             "ci_url",
             "cmake_flags",
             "do_not_destroy_vm",
             "host",
-            "name",
             "old_target",
             "owners",
-            "product",
             "repository",
-            "run_upgrade_test"
-            "smoke",
+            "run_upgrade_test",
             "target",
-            "test_set",
             "try_already_running",
             "version",
         ],
