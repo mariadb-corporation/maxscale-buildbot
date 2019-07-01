@@ -29,7 +29,11 @@ MAXSCALE_PERF_BRANCHES_LIST = [
     },
     {
         "branch": r"^2\.3$"
+    },    
+    {
+        "branch": r"^2\.4$"
     }
+
 ]
 
 VALGRIND_BRANCHES_LIST = [
@@ -58,10 +62,6 @@ NIGHTLY_BRANCHES_LIST = [
     },
     {
         "branch": "2.4",
-        "test_set": "-LE UNSTABLE"
-    },
-    {
-        "branch": "2.4.0",
         "test_set": "-LE UNSTABLE"
     }
 ]

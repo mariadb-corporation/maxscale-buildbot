@@ -90,7 +90,7 @@ MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
 # Define branches for nightly build_all builds
-NIGHTLY_SCHEDS = ['2.3', '2.2', 'develop']
+NIGHTLY_SCHEDS = ['2.4', '2.3', '2.2', 'develop']
 
 NIGHTLY_MAIL_LIST = ['markus.makela@mariadb.com', 'johan.wikman@mariadb.com', 'esa.korhonen@mariadb.com', 'niclas.antti@mariadb.com']
 
