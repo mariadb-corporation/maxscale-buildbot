@@ -3,7 +3,6 @@ from buildbot.plugins import util
 from buildbot.steps.trigger import Trigger
 from maxscale import workers
 from maxscale.builders.support import common
-from maxscale.config import constants
 from .build import ENVIRONMENT
 
 
@@ -46,24 +45,20 @@ def createBuildFactory():
         schedulerNames=['build'],
         waitForFinish=True,
         copy_properties=[
-            "name",
-            "repository",
             "branch",
             "build_box_checkbox_container",
-            "target",
             "build_experimental",
-            "product",
-            "version",
+            "ci_url",
             "cmake_flags",
             "do_not_destroy_vm",
-            "try_already_running",
-            "test_set",
-            "ci_url",
-            "smoke",
-            "big",
             "host",
+            "old_target",
             "owners",
-            "run_upgrade_test"
+            "repository",
+            "run_upgrade_test",
+            "target",
+            "try_already_running",
+            "version",
         ],
         set_properties={
             "virtual_builder_name": "build"

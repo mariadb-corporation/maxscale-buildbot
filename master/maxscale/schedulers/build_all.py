@@ -2,7 +2,6 @@ from buildbot.plugins import schedulers
 from maxscale.schedulers.build import BUILD_PROPERTIES
 from maxscale.config import constants
 from . import properties
-from . import common
 
 BUILD_ALL_PROPERTIES = [properties.buildBoxCheckboxContainer()] + BUILD_PROPERTIES[1:]
 
