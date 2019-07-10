@@ -39,7 +39,8 @@ BOXES = [
     'fedora_20_aws',
     'fedora_21_aws',
     'fedora_22_aws',
-    'fedora_23_aws'
+    'fedora_23_aws',
+    'docker'
 ]
 
 BUILD_ALL_BOXES = [
