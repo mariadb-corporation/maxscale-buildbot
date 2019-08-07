@@ -49,8 +49,6 @@ def createBuildSteps():
         "Create full repo", remoteBuildMaxscale))
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
-    buildSteps.extend(common.removeLock())
-    buildSteps.extend(common.syncRepod())
     return buildSteps
 
 
