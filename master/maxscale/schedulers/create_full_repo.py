@@ -18,7 +18,7 @@ TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
 )
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
-    name="build_force",
+    name="create_full_repo_force",
     buttonName="Force build",
     builderNames=["create_full_repo"],
     codebases=properties.codebaseParameter(),
