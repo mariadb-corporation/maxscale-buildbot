@@ -35,6 +35,14 @@ def build_target(default="develop"):
         default=default)
 
 
+def major_ver(default="2.3"):
+    return util.StringParameter(
+        name="major_ver",
+        label="major_ver",
+        size=50,
+        default=default)
+
+
 def cmake_flags(default=constants.DEFAULT_CMAKE_FLAGS):
     return util.StringParameter(
         name="cmake_flags",
