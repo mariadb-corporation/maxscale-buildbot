@@ -111,7 +111,7 @@ def backend_database():
     return util.ChoiceStringParameter(
         name="product",
         label="Product",
-        choices=['mariadb', 'mysql'],
+        choices=['mariadb', 'mysql', 'mdbe'],
         default='mariadb')
 
 
