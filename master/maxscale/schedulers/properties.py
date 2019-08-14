@@ -191,7 +191,7 @@ def test_template():
     return util.ChoiceStringParameter(
         name="template",
         label="Template",
-        choices=['default', 'clustrix'],
+        choices=['default', 'clustrix', 'docker'],
         default='default')
 
 
