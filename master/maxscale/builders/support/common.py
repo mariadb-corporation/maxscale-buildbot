@@ -5,6 +5,7 @@ from buildbot.process.buildstep import ShellMixin
 from buildbot.process.results import SKIPPED
 from buildbot.steps.shell import ShellCommand
 from buildbot.steps.shellsequence import ShellSequence
+from buildbot.steps.trigger import Trigger
 from twisted.internet import defer
 from maxscale.builders.support import support
 from maxscale.change_source.maxscale import get_test_set_by_branch
@@ -520,3 +521,31 @@ def renderTestSet(properties):
     """
     return properties.getProperty("test_set") \
         or get_test_set_by_branch(properties.getProperty('branch'))
+
+
+class BuildAllTrigger(Trigger):
+    """
+    Implements custom trigger step which triggers task on a virtual builder for every marked checkbox
+    """
+    def getSchedulersAndProperties(self):
+        """
+        Overrides method getSchedulersAndProperties of Trigger class
+        so that it returns a scheduler for every marked checkbox
+        :return: List which contains schedulers for every marked checkbox
+        """
+        schedulers = []
+        for checkboxName, checkboxValue in self.set_properties["build_box_checkbox_container"].items():
+            if checkboxValue:
+                propertiesToSet = {}
+                propertiesToSet.update(self.set_properties)
+                propertiesToSet.update({"box": checkboxName})
+                propertiesToSet.update({"virtual_builder_name":
+                                        "{}_{}".format(self.set_properties["virtual_builder_name"], checkboxName)})
+                for schedulerName in self.schedulerNames:
+                    schedulers.append({
+                        "sched_name": schedulerName,
+                        "props_to_set": propertiesToSet,
+                        "unimportant": schedulerName in self.unimportantSchedulerNames
+                    })
+
+        return schedulers

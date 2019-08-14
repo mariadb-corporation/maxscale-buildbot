@@ -13,6 +13,8 @@ from . import run_performance_test
 from . import build_mdbci
 from . import publish_release
 from . import create_full_repo
+from . import create_full_repo_all
+
 
 MAXSCALE_BUILDERS = list(itertools.chain(
     build.BUILDERS,
@@ -29,4 +31,5 @@ MAXSCALE_BUILDERS = list(itertools.chain(
     build_mdbci.BUILDERS,
     publish_release.BUILDERS,
     create_full_repo.BUILDERS,
+    create_full_repo_all.BUILDERS,
 ))
