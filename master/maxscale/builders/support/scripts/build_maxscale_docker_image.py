@@ -28,7 +28,9 @@ def placeRepositoryFile(repository):
 
 def buildAndPublishDockerImage(name, tag, registry):
     logging.info("Generating the Docker image")
-    imageName = "{}/{}:{}".format(registry, name, tag)
+    cutRegistry = registry.replace('https://', '', 1)
+    fixedTag = tag.replace(':', '-')
+    imageName = "{}/{}:{}".format(cutRegistry, name, fixedTag)
     logging.info("Full image name: %s", imageName)
     subprocess.run(["docker", "image", "build", "-t", imageName, "."], check=True)
     logging.info("Publishing image to registry: %s", registry)
