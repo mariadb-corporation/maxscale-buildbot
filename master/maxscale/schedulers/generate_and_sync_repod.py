@@ -6,4 +6,10 @@ NIGHTLY_SCHEDULER = schedulers.Nightly(
         hour=9, minute=00,
     )
 
-SCHEDULERS = [NIGHTLY_SCHEDULER]
+MANUAL_SCHEDULER = schedulers.ForceScheduler(
+    name="generate_and_sync_repod_manually",
+    buttonName="Start generation",
+    builderNames=["generate_and_sync_repod"]
+)
+
+SCHEDULERS = [NIGHTLY_SCHEDULER, MANUAL_SCHEDULER]

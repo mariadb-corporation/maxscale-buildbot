@@ -122,3 +122,18 @@ PERF_PORTS = [
     '4006',
     '4008'
 ]
+
+# Definitions for the Docker product creation
+MAXSCALE_CI_DOCKER_PRODUCT_NAME = 'mariadb/maxscale-ci'
+
+DOCKER_REGISTRY = 'https://maxscale-docker-registry.mariadb.net:5000'
+
+MAXSCALE_DOCKER_REPOSITORY = 'https://github.com/mariadb-corporation/maxscale-docker'
+
+MAXSCALE_DOCKER_CODEBASE = {
+    "": {
+        "branch": "master",
+        "revision": "",
+        "repository": MAXSCALE_DOCKER_REPOSITORY
+    },
+}

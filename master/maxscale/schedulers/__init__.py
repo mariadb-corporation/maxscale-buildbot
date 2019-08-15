@@ -14,6 +14,7 @@ from . import build_mdbci
 from . import publish_release
 from . import create_full_repo
 from . import create_full_repo_all
+from . import build_docker_image
 
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
@@ -32,4 +33,5 @@ MAXSCALE_SCHEDULERS = list(itertools.chain(
     publish_release.SCHEDULERS,
     create_full_repo.SCHEDULERS,
     create_full_repo_all.SCHEDULERS,
+    build_docker_image.SCHEDULERS,
 ))
