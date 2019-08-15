@@ -29,6 +29,36 @@ BUILD_TARGETS = [
 ]
 
 
+def extractMajorVersion(versionNumber):
+    """
+    Returns major version, extracted it from string
+    :param versionNumber:
+    :return: Major version
+    """
+    return ".".join(versionNumber.split('.')[:2])
+
+
+@util.renderer
+def getMajorVersion(properties):
+    """
+    Returns major version, extracted it from version_number property
+    :param properties:
+    :return: Major version
+    """
+    return extractMajorVersion(properties.getProperty("version_number"))
+
+
+@util.renderer
+def constructTargetString(properties):
+    """
+    Returns target
+    :param properties:
+    :return: Target
+    """
+    majorVersion = extractMajorVersion(properties.getProperty("version_number"))
+    return '{}-all-versions'.format(majorVersion)
+
+
 class BuildForReleaseTrigger(Trigger):
     """
     Implements custom trigger step which triggers 'build_all'
@@ -82,6 +112,22 @@ def createBuildFactory():
     factory = util.BuildFactory()
     buildSteps = createBuildSteps()
     factory.addSteps(buildSteps)
+    factory.addStep(steps.Trigger(
+        name="Call the 'create_full_repo_all' scheduler",
+        schedulerNames=['create_full_repo_all_triggerable'],
+        waitForFinish=True,
+        copy_properties=[
+            "branch",
+            "repository",
+            "host",
+            "owners",
+            "version",
+        ],
+        set_properties={
+            "major_ver": getMajorVersion,
+            "target": constructTargetString
+        }
+    ))
     return factory
 
 
