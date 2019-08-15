@@ -21,7 +21,6 @@ def createCreateFullRepoFactory():
             "owners",
             "repository",
             "version",
-            "box",
             "target",
             "do_not_destroy_vm",
             "ci_url",

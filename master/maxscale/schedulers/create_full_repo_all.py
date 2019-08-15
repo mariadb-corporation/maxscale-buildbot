@@ -15,7 +15,11 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(
     name="create_full_repo_all_triggerable",
     builderNames=["create_full_repo_all"],
-    properties=properties.extractDefaultValues([properties.buildBoxCheckboxContainer()])
+    properties=properties.extractDefaultValues([
+        properties.buildBoxCheckboxContainer(),
+        properties.keep_virtual_machines(),
+        properties.ci_url(),
+    ])
 )
 
 SCHEDULERS = [MANUAL_SCHEDULER, TRIGGERABLE_SCHEDULER]
