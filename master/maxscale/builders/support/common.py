@@ -512,6 +512,27 @@ def findCoredump():
     return downloadScript("coredump_finder.py", alwaysRun=True) + remoteStoreCoredumps()
 
 
+def downloadAndRunScript(scriptName, args=(), **kwargs):
+    """
+    Downloads the script to remote location and executes it
+    :param: scriptName name of the local script to execute
+    """
+    remoteScriptName = util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName))
+    downloadStep = steps.FileDownload(
+        name="Transferring {} to worker".format(scriptName),
+        mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
+        workerdest=remoteScriptName,
+        mode=0o755
+    )
+    executeStep = steps.ShellCommand(
+        name="Execute script: {}".format(scriptName),
+        command=[remoteScriptName, *args],
+        timeout=1800,
+        **kwargs
+    )
+    return [downloadStep, executeStep]
+
+
 @util.renderer
 def renderTestSet(properties):
     """

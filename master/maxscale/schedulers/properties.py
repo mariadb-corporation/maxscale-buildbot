@@ -102,7 +102,7 @@ def old_target():
 def ci_url():
     return util.StringParameter(
         name="ci_url",
-        label="ci url",
+        label="MaxScale CI Server URL",
         size=50,
         default=constants.CI_SERVER_URL)
 
@@ -332,12 +332,14 @@ def perf_runtime():
         default=121
     )
 
+
 def use_valgrind():
     return util.ChoiceStringParameter(
         name="use_valgrind",
         label="Use valgrind",
         choices=["no", "yes"],
         default="no")
+
 
 def use_callgrind():
     return util.ChoiceStringParameter(
@@ -346,9 +348,52 @@ def use_callgrind():
         choices=["no", "yes"],
         default="no")
 
+
 def version_number():
     return util.StringParameter(
         name="version_number",
         label="version_number",
         default="2.x.x")
 
+
+def dockerProductName():
+    return util.StringParameter(
+        name="docker_product_name",
+        label="Docker product name",
+        default=constants.MAXSCALE_CI_DOCKER_PRODUCT_NAME
+    )
+
+
+def dockerRegistryURL():
+    return util.StringParameter(
+        name="docker_registry_url",
+        label="Docker registry to put images to",
+        default=constants.DOCKER_REGISTRY
+    )
+
+def maxscaleDockerRepository():
+    return util.StringParameter(
+        name="maxscale_docker_repository",
+        label="MaxScale Docker generation repository",
+        default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]
+    )
+
+def maxscaleDockerRepositoryBranch():
+    return util.StringParameter(
+        name="maxscale_docker_repository_branch",
+        label="Branch of MaxScale Docker generation repo",
+        default=constants.MAXSCALE_DOCKER_CODEBASE[""]["branch"]
+    )
+
+def maxscaleDockerCodebase():
+    return util.CodebaseParameter(
+        "",
+        label="Main repository",
+        branch=util.StringParameter(name="branch",
+                                    default=constants.MAXSCALE_DOCKER_CODEBASE[""]["branch"]),
+        revision=util.FixedParameter(name="revision",
+                                     default=constants.MAXSCALE_DOCKER_CODEBASE[""]["revision"]),
+        project=util.FixedParameter(name="project", default=""),
+        repository=util.StringParameter(name="repository",
+                                        default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]),
+    )
