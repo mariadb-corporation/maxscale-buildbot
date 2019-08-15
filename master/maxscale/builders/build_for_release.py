@@ -29,6 +29,15 @@ BUILD_TARGETS = [
 ]
 
 
+def extractMajorVersion(versionNumber):
+    """
+    Returns major version, extracted it from string
+    :param versionNumber:
+    :return: Major version
+    """
+    return ".".join(versionNumber.split('.')[:2])
+
+
 @util.renderer
 def getMajorVersion(properties):
     """
@@ -36,8 +45,7 @@ def getMajorVersion(properties):
     :param properties:
     :return: Major version
     """
-    versionNumber = properties.getProperty("version_number")
-    return ".".join(versionNumber.split('.')[:2])
+    return extractMajorVersion(properties.getProperty("version_number"))
 
 
 @util.renderer
@@ -47,7 +55,7 @@ def constructTargetString(properties):
     :param properties:
     :return: Target
     """
-    majorVersion = getMajorVersion(properties)
+    majorVersion = extractMajorVersion(properties.getProperty("version_number"))
     return '{}-all-versions'.format(majorVersion)
 
 
