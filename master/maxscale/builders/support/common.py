@@ -208,7 +208,7 @@ def initTargetProperty():
             name=util.Interpolate("Set 'target' property"),
             property="target",
             value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
-                                   startTime=getFormattedDateTime("%b%d-%H:%M:%S")),
+                                   startTime=getFormattedDateTime("%Y-%b-%d-%H-%M-%S")),
             doStepIf=lambda step: step.build.getProperty('target') is None and
                      step.build.getProperty('targetInitMode') is None or
                      step.build.getProperty('targetInitMode') == TargetInitOptions.GENERATE,
