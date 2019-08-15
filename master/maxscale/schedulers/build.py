@@ -1,5 +1,4 @@
 from buildbot.plugins import schedulers
-from maxscale.config import constants
 from . import properties
 
 BUILD_PROPERTIES = [
