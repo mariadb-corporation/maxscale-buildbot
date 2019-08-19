@@ -28,7 +28,7 @@ def placeRepositoryFile(repository):
 
 def buildAndPublishDockerImage(name, tag, registry):
     logging.info("Generating the Docker image")
-    cutRegistry = registry.replace('https://', '', 1)
+    cutRegistry = registry.replace('https://', '', 1).strip('/')
     fixedTag = tag.replace(':', '-')
     imageName = "{}/{}:{}".format(cutRegistry, name, fixedTag)
     logging.info("Full image name: %s", imageName)
