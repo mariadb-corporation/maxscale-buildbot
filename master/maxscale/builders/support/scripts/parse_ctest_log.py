@@ -126,7 +126,7 @@ class CTestParser:
         self.leakSummary = {}
 
     def parseTestFromTestsList(self, line, testIndex):
-        testRegex = re.compile("Test #(\d+): (.+)")
+        testRegex = re.compile("Test\s+#(\d+):\s+(.+)")
         if testRegex.search(line):
             return {
                 TEST_INDEX_NUMBER: testIndex,
@@ -144,9 +144,9 @@ class CTestParser:
         except ValueError:
             self.failedCtestIndexes.append(testInfo[TEST_NUMBER])
             self.failedCtestInfo.append(testInfo)
+            self.failCtestCounter += 1
         else:
             self.failedCtestInfo[index] = testInfo
-        self.failCtestCounter += 1
 
     def addTestToAllCtest(self, testInfo):
         try:
