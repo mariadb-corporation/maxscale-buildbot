@@ -125,6 +125,38 @@ class CTestParser:
         self.maxscaleEntity = []
         self.leakSummary = {}
 
+    def parseTestFromTestsList(self, line, testIndex):
+        testRegex = re.compile("Test\s+#(\d+):\s+(.+)")
+        if testRegex.search(line):
+            return {
+                TEST_INDEX_NUMBER: testIndex,
+                TEST_NUMBER: testRegex.search(line).group(1).strip(),
+                TEST_NAME: testRegex.search(line).group(2).strip(),
+                TEST_SUCCESS: FAILED,
+                TEST_TIME: 0
+            }
+        else:
+            return None
+
+    def addTestToFailedCtest(self, testInfo):
+        try:
+            index = self.failedCtestIndexes.index(testInfo[TEST_NUMBER])
+        except ValueError:
+            self.failedCtestIndexes.append(testInfo[TEST_NUMBER])
+            self.failedCtestInfo.append(testInfo)
+            self.failCtestCounter += 1
+        else:
+            self.failedCtestInfo[index] = testInfo
+
+    def addTestToAllCtest(self, testInfo):
+        try:
+            index = self.allCtestIndexes.index(testInfo[TEST_NUMBER])
+        except ValueError:
+            self.allCtestIndexes.append(testInfo[TEST_NUMBER])
+            self.allCtestInfo.append(testInfo)
+        else:
+            self.allCtestInfo[index] = testInfo
+
     def parseCtestLog(self):
         ctestFirstLineRegex = re.compile("Constructing a list of tests")
         ctestLastLineRegex = re.compile("tests passed,.+tests failed out of (.+)")
@@ -136,6 +168,9 @@ class CTestParser:
         maxscaleVersionEndRegex = re.compile(".*Maxscale_full_version_end.*")
         maxscaleVersionStartFound = False
         maxscaleVersionEndFound = False
+        fullTestsListStartRegex = re.compile("^===Full test list begin===$")
+        fullTestsListEndRegex = re.compile("^===Full test list end===$")
+        fullTestsListIsCurrent = False
 
         with open(self.args.log_file, encoding="UTF-8") as file:
             for line in file:
@@ -145,6 +180,15 @@ class CTestParser:
                     self.maxscaleEntity.append(line.strip())
                 if maxscaleVersionStartRegex.search(line):
                     maxscaleVersionStartFound = True
+                if fullTestsListStartRegex.search(line):
+                    fullTestsListIsCurrent = True
+                if fullTestsListEndRegex.search(line):
+                    fullTestsListIsCurrent = False
+                if fullTestsListIsCurrent:
+                    testInfo = self.parseTestFromTestsList(line, len(self.allCtestInfo) + 1)
+                    if testInfo is not None:
+                        self.addTestToAllCtest(testInfo)
+                        self.addTestToFailedCtest(testInfo)
                 if maxscaleCommitRegex.search(line) and not self.maxscaleCommit:
                     self.maxscaleCommit = maxscaleCommitRegex.search(line).group(1)
                 if cmakeFlagsRegex.search(line) and not self.cmakeFlags:
@@ -238,24 +282,24 @@ class CTestParser:
                 ctestSublog = []
                 testNumber = testEndRegex.search(line).group(3)
                 testTime = testEndRegex.search(line).group(6)
-                self.allCtestIndexes.append(testNumber)
-                self.allCtestInfo.append({
+                testInfo = {
                     TEST_INDEX_NUMBER: testIndexNumber,
                     TEST_NUMBER: testNumber,
                     TEST_NAME: testName,
                     TEST_SUCCESS: testSuccess,
                     TEST_TIME: testTime
-                })
-                if testSuccess != PASSED:
-                    self.failCtestCounter += 1
-                    self.failedCtestIndexes.append(testNumber)
-                    self.failedCtestInfo.append({
-                        TEST_INDEX_NUMBER: testIndexNumber,
-                        TEST_NUMBER: testNumber,
-                        TEST_NAME: testName,
-                        TEST_SUCCESS: testSuccess,
-                        TEST_TIME: testTime
-                    })
+                }
+                self.addTestToAllCtest(testInfo)
+                if testSuccess == PASSED:
+                    try:
+                        testIndex = self.failedCtestIndexes.index(testNumber)
+                    except ValueError:
+                        pass
+                    else:
+                        self.failCtestCounter -= 1
+                        self.failedCtestInfo[testIndex:testIndex + 1] = []
+                else:
+                    self.addTestToFailedCtest(testInfo)
         self.allCtestInfo = {FAILED_TESTS_COUNT: self.failCtestCounter, TESTS: self.allCtestInfo}
         self.failedCtestInfo = {FAILED_TESTS_COUNT: self.failCtestCounter, TESTS: self.failedCtestInfo}
 
