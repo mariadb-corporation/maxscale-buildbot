@@ -50,6 +50,7 @@ def create_factory():
             "test_set": common.renderTestSet,
             "use_valgrind": util.Property("use_valgrind"),
             "use_callgrind": util.Property("use_callgrind"),
+            "backend_ssl": util.Property("backend_ssl")
         }
     ))
 
