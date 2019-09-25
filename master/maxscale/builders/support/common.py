@@ -224,6 +224,32 @@ def initTargetProperty():
     ]
 
 
+class NameInitOptions(IntEnum):
+    GENERATE = 1
+    KEEP_ORIGINAL = 2
+
+
+def initNameProperty():
+    """
+    Sets 'name' property of the build to:
+        - <branch>-buildbot-<starttime> if it isn't set yet or property 'nameInitMode' is NameInitOptions.GENERATE;
+        - <name> if property 'nameInitMode' is NameInitOptions.KEEP_ORIGINAL.
+    :return: list of steps
+    """
+    return [
+        steps.SetProperty(
+            name=util.Interpolate("Set 'name' property"),
+            property="name",
+            value=util.Interpolate("%(prop:branch)s-buildbot-%(kw:startTime)s",
+                                   startTime=getFormattedDateTime("%Y-%b-%d-%H-%M-%S")),
+            doStepIf=lambda step: step.build.getProperty('name') is None and
+                     step.build.getProperty('nameInitMode') is None or
+                     step.build.getProperty('nameInitMode') == NameInitOptions.GENERATE,
+            hideStepIf=lambda results, s: results == SKIPPED
+        )
+    ]
+
+
 def assignBuildRequest(builder, buildRequestQueue):
     """
     Chooses first request from the build request queue that can be run on any available worker

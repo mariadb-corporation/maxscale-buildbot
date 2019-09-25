@@ -1,6 +1,6 @@
 from buildbot.plugins import util, schedulers
 from maxscale.change_source.maxscale import check_branch_fn
-from maxscale.builders.support.common import TargetInitOptions
+from maxscale.builders.support.common import TargetInitOptions, NameInitOptions
 from . import common
 from . import properties
 from maxscale.config import constants
@@ -19,7 +19,7 @@ COMMON_PROPERTIES = [
 DEFAULT_PROPERTIES = properties.extractDefaultValues(COMMON_PROPERTIES)
 DEFAULT_PROPERTIES['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
 DEFAULT_PROPERTIES["targetInitMode"] = TargetInitOptions.GENERATE
-DEFAULT_PROPERTIES['name'] = "on_push_test"
+DEFAULT_PROPERTIES["nameInitMode"] = NameInitOptions.GENERATE
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_on_push",
