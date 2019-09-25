@@ -3,6 +3,7 @@ from . import build
 from . import build_and_test
 from . import build_and_performance_test
 from . import build_and_test_snapshot
+from . import build_and_test_on_push
 from . import run_test
 from . import run_test_snapshot
 from . import build_all

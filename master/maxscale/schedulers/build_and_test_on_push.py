@@ -1,5 +1,6 @@
 from buildbot.plugins import util, schedulers
 from maxscale.change_source.maxscale import check_branch_fn
+from maxscale.builders.support.common import TargetInitOptions
 from . import common
 from . import properties
 from maxscale.config import constants
