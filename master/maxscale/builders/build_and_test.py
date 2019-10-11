@@ -29,6 +29,7 @@ COMMON_PROPERTIES = [
 def create_factory():
     factory = BuildFactory()
     factory.addSteps(common.initTargetProperty())
+    factory.addSteps(common.initNameProperty())
     factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler",
         schedulerNames=['build'],

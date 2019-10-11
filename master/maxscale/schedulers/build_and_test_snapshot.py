@@ -1,5 +1,4 @@
 from buildbot.plugins import util, schedulers
-from maxscale.change_source.maxscale import check_branch_fn
 from . import common
 from . import properties
 from maxscale.config import constants
@@ -21,18 +20,6 @@ BUILD_AND_TEST_SNAPSHOT_PROPERTIES = [
     properties.host(),
 ] + COMMON_PROPERTIES
 
-DEFAULT_PROPERTIES = properties.extractDefaultValues(COMMON_PROPERTIES)
-DEFAULT_PROPERTIES['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
-
-CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
-    name="build_and_test_snapshot_on_push",
-    change_filter=util.ChangeFilter(project='maxscale', branch_fn=check_branch_fn),
-    treeStableTimer=60,
-    codebases=constants.MAXSCALE_CODEBASE,
-    builderNames=["build_and_test_snapshot"],
-    properties=DEFAULT_PROPERTIES
-)
-
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test_snapshot_force",
     buttonName="Build and test snapshot",
@@ -41,4 +28,4 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     properties=BUILD_AND_TEST_SNAPSHOT_PROPERTIES
 )
 
-SCHEDULERS = [CHANGE_SOURCE_SCHEDULER, MANUAL_SCHEDULER]
+SCHEDULERS = [MANUAL_SCHEDULER]
