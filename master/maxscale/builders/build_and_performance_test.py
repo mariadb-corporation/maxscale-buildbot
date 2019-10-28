@@ -39,7 +39,7 @@ def create_factory():
         set_properties={
             'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
             'box': 'ubuntu_bionic_libvirt',
-            'try_already_running': 'yes',
+            'try_already_running': 'no',
         }
     ))
 
