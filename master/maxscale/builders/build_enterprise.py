@@ -39,7 +39,7 @@ def createBuildSteps():
     buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
     buildSteps.extend(common.cloneRepository())
     buildSteps.extend(support.executePythonScript(
-        "Build MaxScale using MDBCI", remoteBuildMaxscale))
+        "Build MariaDB Enterprise using MDBCI", remoteBuildEnterprise))
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
@@ -63,9 +63,6 @@ BUILDERS = [
         nextBuild=common.assignBuildRequest,
         tags=["build_enterprise"],
         env=ENVIRONMENT,
-        collapseRequests=False,
-        defaultProperties={
-            "try_already_running": None
-        }
+        collapseRequests=False
     )
 ]

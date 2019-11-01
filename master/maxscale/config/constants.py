@@ -68,11 +68,7 @@ DB_VERSIONS = [
     '5.1',
     '5.6',
     '5.7',
-    '10.3.6',
-    '10.3.7',
-    '10.3.8',
-    '10.3.9',
-    '10.3.10'
+    '10.3.17'
 ]
 
 DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug '
@@ -87,8 +83,12 @@ DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
                                '-DBUILD_CDC=Y')
 
 
+DEFAULT_ENTERPRISE_CMAKE_FLAGS = ('DCMAKE_BUILD_TYPE=Debug ')
+
+
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
 MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
+ENTERPRISE_REPOSITORY = 'git@github.com:mariadb-corporation/MariaDBEnterprise.git'
 
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
@@ -103,6 +103,14 @@ MAXSCALE_CODEBASE = {
         "branch": "develop",
         "revision": "",
         "repository": MAXSCALE_REPOSITORY
+    },
+}
+
+ENTERPRISE_CODEBASE = {
+    "": {
+        "branch": "10.4-enterprise",
+        "revision": "",
+        "repository": ENTERPRISE_REPOSITORY
     },
 }
 

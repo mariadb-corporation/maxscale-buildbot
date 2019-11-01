@@ -50,6 +50,13 @@ def cmake_flags(default=constants.DEFAULT_CMAKE_FLAGS):
         size=50,
         default=default)
 
+def cmake_enterprise_flags(default=constants.DEFAULT_ENTERPRISE_CMAKE_FLAGS):
+    return util.StringParameter(
+        name="cmake_flags",
+        label="CMake flags",
+        size=50,
+        default=default)
+
 
 def keep_virtual_machines():
     return util.ChoiceStringParameter(
@@ -267,6 +274,18 @@ def codebaseMdbciParameter():
                                         default=constants.MDBCI_CODEBASE[""]["repository"]),
     )]
 
+def codebaseParameter():
+    return [util.CodebaseParameter(
+        "",
+        label="Main repository",
+        branch=util.StringParameter(name="branch",
+                                    default=constants.ENTERPRISE_CODEBASE[""]["branch"]),
+        revision=util.FixedParameter(name="revision",
+                                     default=constants.ENTERPRISE_CODEBASE[""]["revision"]),
+        project=util.FixedParameter(name="project", default=""),
+        repository=util.StringParameter(name="repository",
+                                        default=constants.ENTERPRISE_CODEBASE[""]["repository"]),
+    )]
 
 def emptyCodebase():
     return [util.CodebaseParameter(codebase='', hide=True)]
