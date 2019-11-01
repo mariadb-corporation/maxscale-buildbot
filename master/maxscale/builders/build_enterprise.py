@@ -29,7 +29,7 @@ def configureBuildProperties(properties):
 
 def remoteBuildEnterprise():
     """This script will be run on the worker"""
-    results = subprocess.run(["./build_enterprise/build.sh"])
+    results = subprocess.run(["/home/vagrant/build_enterprise/build.sh"])
     sys.exit(results.returncode)
 
 

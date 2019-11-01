@@ -83,7 +83,7 @@ DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
                                '-DBUILD_CDC=Y')
 
 
-DEFAULT_ENTERPRISE_CMAKE_FLAGS = ('DCMAKE_BUILD_TYPE=Debug ')
+DEFAULT_ENTERPRISE_CMAKE_FLAGS = ('-DCMAKE_BUILD_TYPE=Debug ')
 
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
