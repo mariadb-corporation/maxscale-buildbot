@@ -3,6 +3,7 @@ import os
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
+from maxscale.config import constants
 from maxscale.builders.support import common, support
 
 ENVIRONMENT = {
@@ -44,7 +45,8 @@ def remoteBuildMaxscale():
     sys.exit(results.returncode)
 
 
-def createBuildSteps():
+def createBuildFactory():
+    factory = util.BuildFactory()
     buildSteps = []
     buildSteps.extend(common.configureMdbciVmPathProperty())
     buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
@@ -55,13 +57,19 @@ def createBuildSteps():
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
     buildSteps.extend(common.syncRepod())
-    return buildSteps
-
-
-def createBuildFactory():
-    factory = util.BuildFactory()
-    buildSteps = createBuildSteps()
     factory.addSteps(buildSteps)
+    sshIdentityFile = util.Interpolate("%(prop:builddir)s/secrets/repositorySshIdentity")
+    secretsList = [(sshIdentityFile, util.Interpolate("%(secret:repositorySshIdentity)s"))]
+    factory.addSteps(common.downloadAndRunScript(
+        "transfer_directory.py",
+        [util.Interpolate("%(prop:HOME)s/repository/%(prop:target)s/mariadb-maxscale/"),
+         constants.MAXSCALE_BINARY_REPOSITORY_SERVER,
+         util.Interpolate("%(kw:repo)s/%(prop:target)s/mariadb-maxscale/",
+                          repo=constants.MAXSCALE_BINARY_REPOSITORY_LOCATION),
+         sshIdentityFile
+         ]),
+        withSecrets=secretsList
+    )
     return factory
 
 

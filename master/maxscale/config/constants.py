@@ -137,3 +137,7 @@ MAXSCALE_DOCKER_CODEBASE = {
         "repository": MAXSCALE_DOCKER_REPOSITORY
     },
 }
+
+# Definitions for MaxScale repository server
+MAXSCALE_BINARY_REPOSITORY_SERVER = "vagrant@max-tst-01.mariadb.com"
+MAXSCALE_BINARY_REPOSITORY_LOCATION = "/home/vagrant/repository"
