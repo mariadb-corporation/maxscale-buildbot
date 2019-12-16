@@ -2,9 +2,9 @@ from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from buildbot.plugins import steps, util
 from maxscale import workers
-from maxscale.builders.support import common
+from maxscale.builders.support import common, support
 
-def remoteMtr():
+def remoteMTR():
     """This script will be run on the worker"""
     results = subprocess.run(["/home/vagrant/terraform/run.sh"])
     sys.exit(results.returncode)
