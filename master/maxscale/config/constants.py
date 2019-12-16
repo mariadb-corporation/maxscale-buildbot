@@ -1,4 +1,5 @@
 BOXES = [
+    'centos_8_libvirt',
     'centos_7_libvirt',
     'centos_6_libvirt',
     'centos_5_libvirt',
