@@ -37,5 +37,5 @@ def get_test_set_by_branch(branch):
 
 POLLERS = [
     GitPoller(repourl=constants.MAXSCALE_REPOSITORY,
-              branches=check_branch_fn, pollinterval=3600, project='maxscale')
+              branches=check_branch_fn, pollinterval=600, project='MaxScale')
 ]
