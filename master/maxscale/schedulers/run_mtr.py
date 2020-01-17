@@ -4,7 +4,7 @@ from . import properties
 BUILD_PROPERTIES = [
     properties.build_target(),
     properties.image(),
-    properties.mtrParam();
+    properties.mtrParam(),
     properties.host(),
 ]
 
