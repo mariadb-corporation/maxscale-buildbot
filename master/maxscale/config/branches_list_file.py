@@ -8,11 +8,11 @@ MAXSCALE_BRANCHES_LIST = [
         "test_set": "-LE HEAVY"
     },
     {
-        "branch": r"^2\.2$",
+        "branch": r"^2\.3$",
         "test_set": "-LE HEAVY"
     },
     {
-        "branch": r"^2\.3$",
+        "branch": r"^2\.4$",
         "test_set": "-LE UNSTABLE"
     }
 ]
@@ -23,9 +23,6 @@ MAXSCALE_PERF_BRANCHES_LIST = [
     },
     {
         "branch": "MXS-.*"
-    },
-    {
-        "branch": r"^2\.2$"
     },
     {
         "branch": r"^2\.3$"
@@ -53,10 +50,6 @@ NIGHTLY_BRANCHES_LIST = [
         "test_set": "-LE UNSTABLE"
     },
     {
-        "branch": "2.2",
-        "test_set": "-LE HEAVY"
-    },
-    {
         "branch": "2.3",
         "test_set": "-LE UNSTABLE"
     },
@@ -68,12 +61,12 @@ NIGHTLY_BRANCHES_LIST = [
 
 DIFF_DISTRO_BRANCHES_LIST = [
     {
-        "branch": "2.3",
+        "branch": "2.4",
         "test_set": "-LE UNSTABLE",
         "box": "ubuntu_bionic_libvirt"
     },
     {
-        "branch": "2.3",
+        "branch": "2.4",
         "test_set": "-LE UNSTABLE",
         "box": "suse_15_libvirt"
     },
