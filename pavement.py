@@ -16,7 +16,7 @@ def check_config():
 @task
 def check_code():
     """Check python code according to static code checkers"""
-    sh("pycodestyle pavement.py master/master.cfg master/maxscale")
+    sh("pycodestyle pavement.py master/master.py master/maxscale")
 # [[[endsection]]
 
 
