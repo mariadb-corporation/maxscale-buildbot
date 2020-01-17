@@ -42,13 +42,23 @@ BOXES = [
     'fedora_21_aws',
     'fedora_22_aws',
     'fedora_23_aws',
+    'centos_8_gcp',
+    'centos_7_gcp',
+    'ubuntu_xenial_gcp',
+    'ubuntu_bionic_gcp',
+    'sles_12_gcp',
+    'sles_15_gcp',
+    'debian_buster_gcp',
+    'debian_stretch_gcp',
+    'rhel_8_gcp',
+    'rhel_7_gcp',
     'docker'
 ]
 
 BUILD_ALL_BOXES = [
     "centos_7_libvirt",
     "centos_6_libvirt",
-    "rhel_8_libvirt",
+    "centos_8_libvirt",
     "ubuntu_trusty_libvirt",
     "ubuntu_xenial_libvirt",
     "ubuntu_bionic_libvirt",
@@ -60,9 +70,9 @@ BUILD_ALL_BOXES = [
 ]
 
 DB_VERSIONS = [
+    '10.4',
     '10.3',
     '10.2',
-    '10.4',
     '10.1',
     '10.0',
     '5.5',
