@@ -397,3 +397,26 @@ def maxscaleDockerCodebase():
         repository=util.StringParameter(name="repository",
                                         default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]),
     )
+
+
+def image(default=constants.images[0]):
+    return util.ChoiceStringParameter(
+        name="image",
+        label="Image",
+        choices=constants.images,
+        default=default)
+
+
+def mtrParam(default=constants.mtrParams[0]):
+    return util.ChoiceStringParameter(
+        name="MTR_param",
+        label="MTR_param",
+        choices=constants.mtrParams,
+        default=default)
+
+def buildType(default=constants.buildTypes[0]):
+    return util.ChoiceStringParameter(
+        name="buildType",
+        label="Build Type",
+        choices=constants.buildTypes,
+        default=default)

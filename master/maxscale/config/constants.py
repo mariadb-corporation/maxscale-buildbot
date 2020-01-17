@@ -148,3 +148,29 @@ MAXSCALE_DOCKER_CODEBASE = {
         "repository": MAXSCALE_DOCKER_REPOSITORY
     },
 }
+
+images = [
+    'debian-8',
+    'debian-9',
+    'ubuntu-1604',
+    'ubuntu-1804',
+    'rhel-6',
+    'rhel-7',
+    'rhel-8',
+    'sles-12',
+    'sles-15'
+]
+ 
+mtrParams = [
+    '--mtr-normal-test',
+    '--mtr-psproto-test',
+    '--mtr-extra-test',
+    '--mtr-engines-test',
+    '--mtr-big-test',
+    '--mtr-galera-test'
+]
+
+buildTypes = [
+    'RelWithDebInfo',
+    'Debug'
+]

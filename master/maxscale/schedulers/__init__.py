@@ -16,6 +16,9 @@ from . import publish_release
 from . import create_full_repo
 from . import create_full_repo_all
 from . import build_docker_image
+from . import build_es_star
+from . import build_es_bin
+from . import run_mtr
 
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
@@ -36,4 +39,8 @@ MAXSCALE_SCHEDULERS = list(itertools.chain(
     create_full_repo.SCHEDULERS,
     create_full_repo_all.SCHEDULERS,
     build_docker_image.SCHEDULERS,
+    build_es_star.SCHEDULERS,
+    build_es_bin.SCHEDULERS,
+    run_mtr.SCHEDULERS,
+
 ))
