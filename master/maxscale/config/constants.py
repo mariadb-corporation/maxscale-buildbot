@@ -100,6 +100,7 @@ DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
 MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
+ES_REPOSITORY = 'git@github.com:mariadb-corporation/MariaDBEnterprise.git'
 
 CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
 
@@ -122,6 +123,14 @@ MDBCI_CODEBASE = {
         "branch": "integration",
         "revision": "",
         "repository": MDBCI_REPOSITORY
+    },
+}
+
+ES_CODEBASE = {
+    "": {
+        "branch": "10.2-enterprise",
+        "revision": "",
+        "repository": ES_REPOSITORY
     },
 }
 

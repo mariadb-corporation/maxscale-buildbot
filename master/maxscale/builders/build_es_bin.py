@@ -33,7 +33,7 @@ def createBuildSteps():
     buildSteps = []
     buildSteps.extend(common.configureMdbciVmPathProperty())
     buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
-    buildSteps.extend(common.cloneRepository())
+#    buildSteps.extend(common.cloneRepository())
     buildSteps.extend(support.executePythonScript(
         "Build Binary", remoteBuildES))
     buildSteps.extend(common.cleanBuildDir())

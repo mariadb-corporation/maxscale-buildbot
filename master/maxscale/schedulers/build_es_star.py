@@ -15,7 +15,7 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_es_start_force",
     buttonName="Force build",
     builderNames=["build_es_star"],
-    codebases=properties.codebaseParameter(),
+    codebases=properties.codebaseESParameter(),
     properties=BUILD_PROPERTIES
 )
 

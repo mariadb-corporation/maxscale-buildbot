@@ -267,6 +267,19 @@ def codebaseMdbciParameter():
                                         default=constants.MDBCI_CODEBASE[""]["repository"]),
     )]
 
+def codebaseESParameter():
+    return [util.CodebaseParameter(
+        "",
+        label="Main repository",
+        branch=util.StringParameter(name="branch",
+                                    default=constants.ES_CODEBASE[""]["branch"]),
+        revision=util.FixedParameter(name="revision",
+                                     default=constants.ES_CODEBASE[""]["revision"]),
+        project=util.FixedParameter(name="project", default=""),
+        repository=util.StringParameter(name="repository",
+                                        default=constants.ES_CODEBASE[""]["repository"]),
+    )]
+
 
 def emptyCodebase():
     return [util.CodebaseParameter(codebase='', hide=True)]
