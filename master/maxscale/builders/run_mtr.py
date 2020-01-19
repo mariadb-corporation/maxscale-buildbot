@@ -13,6 +13,7 @@ ENVIRONMENT = {
     "target": util.Property('target'),
     "image":  util.Property('image'),
     "mtrParam": util.Property('mtrParam'),
+    "branch": util.Property('branch'),
 }
 
 

@@ -11,6 +11,7 @@ ENVIRONMENT = {
     "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
     "MDBCI_VM_PATH": util.Property('MDBCI_VM_PATH'),
     "target": util.Property('target'),
+    "branch": util.Property('branch'),
 }
 
 

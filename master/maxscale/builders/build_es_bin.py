@@ -13,6 +13,7 @@ ENVIRONMENT = {
     "target": util.Property('target'),
     "image":  util.Property('image'),
     "buildType": util.Property('buildType'),
+    "branch": util.Property('branch'),
 }
 
 
