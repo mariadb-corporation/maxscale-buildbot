@@ -2,8 +2,11 @@
 # ex: set filetype=python:
 
 import autoreload
+
 autoreload.ModuleTracker().install()
 
+from buildbot.plugins import secrets
+import os
 from maxscale.builders import MAXSCALE_BUILDERS
 from maxscale.config import environment
 from maxscale.schedulers import MAXSCALE_SCHEDULERS
@@ -38,6 +41,13 @@ c['builders'] = MAXSCALE_BUILDERS
 # BUILDBOT SERVICES
 
 c['services'] = MAXSCALE_SERVICES
+
+# SECRET PROVIDERS
+currentDirectory = os.path.dirname(os.path.realpath(__file__))
+secretsDirectory = os.path.join(currentDirectory, "maxscale/config/secrets")
+c['secretsProviders'] = [
+    secrets.SecretInAFile(dirname=secretsDirectory),
+]
 
 # PROJECT IDENTITY
 

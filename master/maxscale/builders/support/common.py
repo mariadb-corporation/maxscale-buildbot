@@ -13,22 +13,34 @@ from maxscale import workers
 from enum import IntEnum
 
 
-def cloneRepository():
+def cloneRepository(sshPrivateKey=''):
     """Clone MaxScale repository using default configuration options"""
     return [steps.Git(
         name=util.Interpolate("Clone repository '%(prop:repository)s', branch '%(prop:branch)s'"),
         repourl=util.Property('repository'),
         branch=util.Property('branch'),
         mode='incremental',
+        sshPrivateKey=sshPrivateKey,
         haltOnFailure=True)]
 
 
 def cleanBuildDir():
     """Clean the build directory after the worker have completed the task"""
     return [steps.ShellCommand(
-        name="Clean build directory using 'git clean -fd'",
+        name="Clean build directory using 'rm -rf'",
         command=["rm", "-rf", util.Property('builddir')],
         alwaysRun=True)]
+
+
+def removeRootFiles():
+    """Remove files that are owned by the Root from the build directory"""
+    return [steps.ShellCommand(
+        name="Clean build directory using root privileges",
+        command=["docker", "run", "--rm",
+                 "-v", util.Interpolate("%(prop:builddir)s:/app"),
+                 "alpine",
+                 "find", "/app", "-mindepth", "1", "-user", "root", "-delete"]
+    )]
 
 
 def configureMdbciVmPathProperty():
