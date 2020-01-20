@@ -18,6 +18,8 @@ from . import build_docker_image
 from . import build_es_star
 from . import build_es_bin
 from . import run_mtr
+from . import build_and_test_es
+from . import build_and_test_es_all
 
 
 MAXSCALE_BUILDERS = list(itertools.chain(
@@ -40,4 +42,6 @@ MAXSCALE_BUILDERS = list(itertools.chain(
     build_es_star.BUILDERS,
     build_es_bin.BUILDERS,
     run_mtr.BUILDERS,
+    build_and_test_es.BUILDERS,
+    build_and_test_es_all.BUILDERS,
 ))

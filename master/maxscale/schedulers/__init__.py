@@ -19,6 +19,8 @@ from . import build_docker_image
 from . import build_es_star
 from . import build_es_bin
 from . import run_mtr
+from . import build_and_test_es
+from . import build_and_test_es_all
 
 
 MAXSCALE_SCHEDULERS = list(itertools.chain(
@@ -42,5 +44,6 @@ MAXSCALE_SCHEDULERS = list(itertools.chain(
     build_es_star.SCHEDULERS,
     build_es_bin.SCHEDULERS,
     run_mtr.SCHEDULERS,
-
+    build_and_test_es.SCHEDULERS,
+    build_and_test_es_all.SCHEDULERS,
 ))
