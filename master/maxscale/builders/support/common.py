@@ -39,7 +39,8 @@ def removeRootFiles():
         command=["docker", "run", "--rm",
                  "-v", util.Interpolate("%(prop:builddir)s:/app"),
                  "alpine",
-                 "find", "/app", "-mindepth", "1", "-user", "root", "-delete"]
+                 "find", "/app", "-mindepth", "1", "-user", "root", "-delete"],
+        alwaysRun=True
     )]
 
 
