@@ -414,7 +414,7 @@ def maxscaleDockerCodebase():
 
 def image(default=constants.images[0]):
     return util.ChoiceStringParameter(
-        name="image",
+        name="Image",
         label="Image",
         choices=constants.images,
         default=default)
@@ -422,14 +422,14 @@ def image(default=constants.images[0]):
 
 def mtrParam(default=constants.mtrParams[0]):
     return util.ChoiceStringParameter(
-        name="MTR_param",
-        label="MTR_param",
+        name="mtrParam",
+        label="MTR param",
         choices=constants.mtrParams,
         default=default)
 
 def buildType(default=constants.buildTypes[0]):
     return util.ChoiceStringParameter(
-        name="buildType",
+        name="BuildType",
         label="Build Type",
         choices=constants.buildTypes,
         default=default)
