@@ -609,3 +609,28 @@ class BuildAllTrigger(Trigger):
                     })
 
         return schedulers
+
+
+class TriggerWithVariable(Trigger):
+    def __init__(self, nameTemplate='', propertyName='', propertyValues=(), **kwargs):
+        self.nameTemplate = nameTemplate
+        self.propertyName = propertyName
+        self.propertyValues = propertyValues
+        super().__init__(**kwargs)
+
+    """
+    Custom trigger to invoke several tasks at one while waiting for them to finish
+    """
+    def getSchedulersAndProperties(self):
+        schedulers = []
+        for value in self.propertyValues:
+            propertiesToSet = self.set_properties.copy()
+            propertiesToSet[self.propertyName] = value
+            propertiesToSet["virtual_builder_name"] = self.nameTemplate.format(value)
+            for schedulerName in self.schedulerNames:
+                schedulers.append({
+                    "sched_name": schedulerName,
+                    "props_to_set": propertiesToSet,
+                    "unimportant": schedulerName in self.unimportantSchedulerNames
+                })
+        return schedulers

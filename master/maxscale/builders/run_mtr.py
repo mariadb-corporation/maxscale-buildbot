@@ -16,7 +16,7 @@ def createBuildSteps():
     buildSteps = []
     buildSteps.append(steps.ShellCommand(
         name=util.Interpolate(
-            "Run MTR target '%(prop:target)s', image '%(prop:Image)s', MTR param '%(prop:mtrParam)s', "
+            "Run MTR target '%(prop:target)s', image '%(prop:Image)s', MTR param '%(prop:mtrParam)s'"
         ),
         command=["/home/vagrant/es_scritps/run_mtr.sh"]
     ))

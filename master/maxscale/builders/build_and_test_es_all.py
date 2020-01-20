@@ -7,28 +7,41 @@ from maxscale.config import constants
 
 def createBuildFactory():
     """
-    Creates build factory containing steps
-    which triggers build_es_bin scheduler and run_mtr with all parameters
+    Creates the source image and then starts builds for all the platforms
     """
     factory = util.BuildFactory()
-    for image in constants.images:
-        factory.addStep(
-            steps.Trigger(
-                name=util.Interpolate(
-                    "Build and test target '%(prop:target)s', build type '%(prop:BuildType)s', image '{}'".format(image)
-                ),
-                schedulerNames=["build_and_test_es"],
-                waitForFinish=True,
-                set_properties={
-                    "branch": util.Property("branch"),
-                    "BuildType": util.Property("BuildType"),
-                    "host": util.Property("host"),
-                    "Image": image,
-                    "target": util.Property("target"),
-                    "virtual_builder_name": "build_and_test_es {}".format(image),
-                }
-            )
+    factory.addStep(
+        steps.Trigger(
+            name=util.Interpolate(
+                "Creating source code package target '%(prop:target)s', branch '%(prop:branch)s'"
+            ),
+            schedulerNames=["build_es_star"],
+            waitForFinish=True,
+            set_properties={
+                "branch": util.Property("branch"),
+                "host": util.Property("host"),
+                "repository": util.Property("repository"),
+                "target": util.Property("target"),
+            },
+            haltOnFailure=True
         )
+    )
+    factory.addStep(
+        common.TriggerWithVariable(
+            name="Building on all platforms",
+            schedulerNames=["build_and_test_es"],
+            nameTemplate="Build and test image '{}'",
+            propertyName="Image",
+            propertyValues=constants.images,
+            waitForFinish=True,
+            set_properties={
+                "branch": util.Property("branch"),
+                "BuildType": util.Property("BuildType"),
+                "host": util.Property("host"),
+                "target": util.Property("target"),
+            }
+        )
+    )
     return factory
 
 

@@ -13,7 +13,7 @@ def createBuildFactory():
     factory = util.BuildFactory()
     factory.addStep(
         steps.Trigger(
-            name=util.Interpolate("Building %(prop:image)s image"),
+            name=util.Interpolate("Building image '%(prop:Image)s'"),
             schedulerNames=["build_es_bin"],
             waitForFinish=True,
             set_properties={
@@ -26,21 +26,20 @@ def createBuildFactory():
             haltOnFailure=True
         )
     )
-    for mtr_parameter in constants.mtrParams:
-        factory.addStep(
-            steps.Trigger(
-                name="Running MTR with '{}'".format(mtr_parameter),
-                schedulerNames=["run_mtr"],
-                waitForFinish=True,
-                set_properties={
-                    "branch": util.Property("branch"),
-                    "host": util.Property("host"),
-                    "Image": util.Property("Image"),
-                    "mtrParam": mtr_parameter,
-                    "target": util.Property("target"),
-                    "virtual_builder_name": util.Interpolate("run_mtr %(prop:Image)s {}".format(mtr_parameter))
-                })
-        )
+    factory.addStep(common.TriggerWithVariable(
+        name="Run MTR tests with different parameters",
+        schedulerNames=["run_mtr"],
+        waitForFinish=True,
+        propertyName="mtrParam",
+        propertyValues=constants.mtrParams,
+        nameTemplate="Running MTR with '{}'",
+        set_properties={
+            "branch": util.Property("branch"),
+            "host": util.Property("host"),
+            "Image": util.Property("Image"),
+            "target": util.Property("target"),
+        })
+    )
     return factory
 
 
