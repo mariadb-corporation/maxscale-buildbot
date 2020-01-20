@@ -1,46 +1,27 @@
-import os
-
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
-from maxscale.builders.support import common, support
+from maxscale.builders.support import common
+
 
 ENVIRONMENT = {
-    "JOB_NAME": util.Property("buildername"),
-    "BUILD_ID": util.Interpolate('%(prop:buildnumber)s'),
-    "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
-    "MDBCI_VM_PATH": util.Property('MDBCI_VM_PATH'),
-    "target": util.Property('target'),
-    "image":  util.Property('image'),
-    "mtrParam": util.Property('mtrParam'),
     "branch": util.Property('branch'),
+    "Image":  util.Property('Image'),
+    "mtrParam": util.Property('mtrParam'),
+    "target": util.Property('target'),
 }
-
-
-@util.renderer
-def configureBuildProperties(properties):
-    return {
-        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s")
-    }
-
-
-def remoteRunMtr():
-    """This script will be run on the worker"""
-    results = subprocess.run(["/home/vagrant/es_scritps/run_mtr.sh"])
-    sys.exit(results.returncode)
 
 
 def createBuildSteps():
     buildSteps = []
-    buildSteps.extend(common.configureMdbciVmPathProperty())
-    buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
-#    buildSteps.extend(common.cloneRepository())
-    buildSteps.extend(support.executePythonScript(
-        "Run MTR", remoteRunMtr))
+    buildSteps.append(steps.ShellCommand(
+        name=util.Interpolate(
+            "Run MTR target '%(prop:target)s', image '%(prop:Image)s', MTR param '%(prop:mtrParam)s', "
+        ),
+        command=["/home/vagrant/es_scritps/run_mtr.sh"]
+    ))
+    buildSteps.extend(common.removeRootFiles())
     buildSteps.extend(common.cleanBuildDir())
-#    buildSteps.extend(common.destroyVirtualMachine())
-#    buildSteps.extend(common.removeLock())
-#    buildSteps.extend(common.syncRepod())
     return buildSteps
 
 

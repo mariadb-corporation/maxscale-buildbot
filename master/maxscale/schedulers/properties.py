@@ -427,6 +427,7 @@ def mtrParam(default=constants.mtrParams[0]):
         choices=constants.mtrParams,
         default=default)
 
+
 def buildType(default=constants.buildTypes[0]):
     return util.ChoiceStringParameter(
         name="BuildType",
