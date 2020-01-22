@@ -19,6 +19,7 @@ def createBuildSteps():
         name=util.Interpolate(
             "Build binary target '%(prop:target)s', image '%(prop:Image)s', build type '%(prop:BuildType)s'"
         ),
+        workdir=util.Interpolate("%(prop:builddir)s"),
     ))
     buildSteps.extend(common.removeRootFiles())
     buildSteps.extend(common.cleanBuildDir())

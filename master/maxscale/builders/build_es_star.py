@@ -17,6 +17,7 @@ def createBuildSteps():
          name=util.Interpolate(
              "Build source tarball branch '%(prop:branch)s', target '%(prop:target)s'"
          ),
+        workdir=util.Interpolate("%(prop:builddir)s"),
     ))
     buildSteps.extend(common.removeRootFiles())
     buildSteps.extend(common.cleanBuildDir())

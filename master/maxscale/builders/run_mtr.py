@@ -20,6 +20,7 @@ def createBuildSteps():
          name=util.Interpolate(
              "Run MTR target '%(prop:target)s', image '%(prop:Image)s', MTR param '%(prop:mtrParam)s'"
          ),
+         workdir=util.Interpolate("%(prop:builddir)s"),
     ))
     buildSteps.extend(common.removeRootFiles())
     buildSteps.extend(common.cleanBuildDir())

@@ -564,7 +564,7 @@ def downloadAndRunScript(scriptName, args=(), **kwargs):
         mode=0o755
     )
     executeStep = steps.ShellCommand(
-        name="Execute script: {}".format(scriptName),
+#        name="Execute script: {}".format(scriptName),
         command=[remoteScriptName, *args],
         timeout=1800,
         **kwargs
