@@ -17,13 +17,12 @@ def createBuildFactory():
     """
     factory = util.BuildFactory()
     factory.addStep(
-         buildSteps.extend(common.downloadAndRunMTRScript(
+        buildSteps.extend(common.downloadAndRunMTRScript(
               "mtr/start_vm.sh",
-              name=util.Interpolate(
-              "Start VM"
-              ),
-        haltOnFailure=True,
-        workdir=util.Interpolate("%(prop:builddir)s"),
+              name=util.Interpolate("Start VM"),
+              haltOnFailure=True,
+              workdir=util.Interpolate("%(prop:builddir)s"),
+        )
     ))
     factory.addStep(
         steps.Trigger(
@@ -58,13 +57,12 @@ def createBuildFactory():
     )
     factory.addStep(
          buildSteps.extend(common.downloadAndRunMTRScript(
-             "mtr/start_vm.sh",
-              name=util.Interpolate(
-              "Start VM"
-              ),
-        workdir=util.Interpolate("%(prop:builddir)s"),
-        haltOnFailure=True,
-        alwaysRun=True
+             "mtr/kill_vm.sh",
+              name=util.Interpolate("Kill VM"),
+              workdir=util.Interpolate("%(prop:builddir)s"),
+              haltOnFailure=True,
+              alwaysRun=True
+          )
     ))
     return factory
 
