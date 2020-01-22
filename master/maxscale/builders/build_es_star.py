@@ -12,11 +12,11 @@ ENVIRONMENT = {
 def createBuildSteps():
     buildSteps = []
     buildSteps.extend(common.cloneRepository(util.Secret("mdbeSshIdentity")))
-    buildSteps.append(steps.ShellCommand(
-        name=util.Interpolate(
-            "Build source tarball branch '%(prop:branch)s', target '%(prop:target)s'"
-        ),
-        command=["/home/vagrant/es_scritps/build_source_tar.sh"]
+    buildSteps.extend(common.downloadAndRunScript(
+        "mtr/build_source_tar.sh",
+         name=util.Interpolate(
+             "Build source tarball branch '%(prop:branch)s', target '%(prop:target)s'"
+         ),
     ))
     buildSteps.extend(common.removeRootFiles())
     buildSteps.extend(common.cleanBuildDir())

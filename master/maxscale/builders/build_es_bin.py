@@ -8,16 +8,17 @@ ENVIRONMENT = {
     "target": util.Property('target'),
     "Image":  util.Property('Image'),
     "BuildType": util.Property('BuildType'),
+    "buildID": util.Property('buildID'),
 }
 
 
 def createBuildSteps():
     buildSteps = []
-    buildSteps.append(steps.ShellCommand(
+    buildSteps.extend(common.downloadAndRunScript(
+        "mtr/build_es.sh",
         name=util.Interpolate(
             "Build binary target '%(prop:target)s', image '%(prop:Image)s', build type '%(prop:BuildType)s'"
         ),
-        command=["/home/vagrant/es_scritps/build_es.sh"]
     ))
     buildSteps.extend(common.removeRootFiles())
     buildSteps.extend(common.cleanBuildDir())

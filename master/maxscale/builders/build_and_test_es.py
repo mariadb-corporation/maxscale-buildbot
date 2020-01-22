@@ -4,6 +4,11 @@ from maxscale import workers
 from maxscale.builders.support import common
 from maxscale.config import constants
 
+ENVIRONMENT = {
+    "target": util.Property('target'),
+    "Image":  util.Property('Image'),
+    "buildnumber": util.Interpolate('%(prop:buildnumber)s'),
+}
 
 def createBuildFactory():
     """
@@ -11,6 +16,14 @@ def createBuildFactory():
     which triggers build_es_bin scheduler and run_mtr with all parameters
     """
     factory = util.BuildFactory()
+    factory.addStep(
+        steps.ShellCommand(
+            name=util.Interpolate("Start VM"),
+            command=["/home/vagrant/es_scripts/start_vm.sh"],
+            haltOnFailure=True
+        )
+    )
+
     factory.addStep(
         steps.Trigger(
             name=util.Interpolate("Building image '%(prop:Image)s'"),
@@ -22,6 +35,7 @@ def createBuildFactory():
                 "host": util.Property("host"),
                 "Image": util.Property("Image"),
                 "target": util.Property("target"),
+                "buildID": util.Interpolate('%(prop:buildnumber)s'),
             },
             haltOnFailure=True
         )
@@ -38,7 +52,16 @@ def createBuildFactory():
             "host": util.Property("host"),
             "Image": util.Property("Image"),
             "target": util.Property("target"),
+            "buildID": util.Interpolate('%(prop:buildnumber)s'),
         })
+    )
+    factory.addStep(
+        steps.ShellCommand(
+            name=util.Interpolate("Destroy VM"),
+            command=["/home/vagrant/es_scripts/kill_vm.sh"],
+            haltOnFailure=True,
+            alwaysRun=True
+        )
     )
     return factory
 
@@ -50,6 +73,7 @@ BUILDERS = [
         factory=createBuildFactory(),
         nextWorker=common.assignWorker,
         nextBuild=common.assignBuildRequest,
+        env=ENVIRONMENT,
         tags=["build"],
         collapseRequests=False
     )

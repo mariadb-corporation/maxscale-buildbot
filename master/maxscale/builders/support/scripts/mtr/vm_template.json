@@ -1,0 +1,12 @@
+{
+  "build" :
+  {
+        "hostname" : "default",
+        "memory_size" : "4096",
+        "box" : "centos_7_gcp",
+        "product" : {
+              "name" : "docker"
+        }
+  }
+}
+
