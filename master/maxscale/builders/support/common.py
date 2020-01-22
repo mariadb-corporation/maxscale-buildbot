@@ -558,7 +558,7 @@ def downloadAndRunScript(scriptName, args=(), **kwargs):
     """
     remoteScriptName = util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName))
     downloadStep = steps.FileDownload(
-        name="Transferring {} to worker".format(scriptName),
+#        name="Transferring {} to worker".format(scriptName),
         mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
         workerdest=remoteScriptName,
         mode=0o755
