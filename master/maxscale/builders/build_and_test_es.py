@@ -17,14 +17,13 @@ def createBuildSteps():
     which triggers build_es_bin scheduler and run_mtr with all parameters
     """
     buildSteps = []
-
     buildSteps.extend(common.downloadAndRunMTRScript(
          "mtr/start_vm.sh",
           name=util.Interpolate("Start VM"),
           haltOnFailure=True,
           workdir=util.Interpolate("%(prop:builddir)s"),
     ))
-    buildSteps.extend(
+    buildSteps.append(
         steps.Trigger(
             name=util.Interpolate("Building image '%(prop:Image)s'"),
             schedulerNames=["build_es_bin"],
@@ -55,7 +54,7 @@ def createBuildSteps():
             "buildID": util.Interpolate('%(prop:buildnumber)s'),
         }
     ))
-    buildSteps.extend(common.downloadAndRunMTRScript(
+    buildSteps.append(common.downloadAndRunMTRScript(
         "mtr/kill_vm.sh",
          name=util.Interpolate("Kill VM"),
          workdir=util.Interpolate("%(prop:builddir)s"),
@@ -64,7 +63,8 @@ def createBuildSteps():
     ))
     return buildSteps
 
-def createBuildfactory():
+
+def createBuildFactory():
     factory = util.BuildFactory()
     buildSteps = createBuildSteps()
     factory.addSteps(buildSteps)
