@@ -578,7 +578,7 @@ def downloadAndRunMTRScript(scriptName, args=(), **kwargs):
     """
     remoteScriptName = util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName))
     downloadStep1 = steps.FileDownload(
-        mastersrc="~/config/mdbci/docker-reg",
+        mastersrc="~/.config/mdbci/docker-reg",
         workerdest=util.Interpolate("%(prop:builddir)s/scripts/mtr/docker-reg"),
         mode=0o755
     )
