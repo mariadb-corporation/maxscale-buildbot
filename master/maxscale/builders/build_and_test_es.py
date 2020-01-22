@@ -10,21 +10,21 @@ ENVIRONMENT = {
     "buildnumber": util.Interpolate('%(prop:buildnumber)s'),
 }
 
-def createBuildFactory():
+
+def createBuildSteps():
     """
-    Creates build factory containing steps
+    Creates build steps
     which triggers build_es_bin scheduler and run_mtr with all parameters
     """
-    factory = util.BuildFactory()
-    factory.addStep(
-        buildSteps.extend(common.downloadAndRunMTRScript(
-              "mtr/start_vm.sh",
-              name=util.Interpolate("Start VM"),
-              haltOnFailure=True,
-              workdir=util.Interpolate("%(prop:builddir)s"),
-        )
+    buildSteps = []
+
+    buildSteps.extend(common.downloadAndRunMTRScript(
+         "mtr/start_vm.sh",
+          name=util.Interpolate("Start VM"),
+          haltOnFailure=True,
+          workdir=util.Interpolate("%(prop:builddir)s"),
     ))
-    factory.addStep(
+    buildSteps.extend(
         steps.Trigger(
             name=util.Interpolate("Building image '%(prop:Image)s'"),
             schedulerNames=["build_es_bin"],
@@ -40,7 +40,7 @@ def createBuildFactory():
             haltOnFailure=True
         )
     )
-    factory.addStep(common.TriggerWithVariable(
+    buildSteps.extend(common.TriggerWithVariable(
         name="Run MTR tests with different parameters",
         schedulerNames=["run_mtr"],
         waitForFinish=True,
@@ -53,17 +53,21 @@ def createBuildFactory():
             "Image": util.Property("Image"),
             "target": util.Property("target"),
             "buildID": util.Interpolate('%(prop:buildnumber)s'),
-        })
-    )
-    factory.addStep(
-         buildSteps.extend(common.downloadAndRunMTRScript(
-             "mtr/kill_vm.sh",
-              name=util.Interpolate("Kill VM"),
-              workdir=util.Interpolate("%(prop:builddir)s"),
-              haltOnFailure=True,
-              alwaysRun=True
-          )
+        }
     ))
+    buildSteps.extend(common.downloadAndRunMTRScript(
+        "mtr/kill_vm.sh",
+         name=util.Interpolate("Kill VM"),
+         workdir=util.Interpolate("%(prop:builddir)s"),
+         haltOnFailure=True,
+         alwaysRun=True
+    ))
+    return buildSteps
+
+def createBuildfactory():
+    factory = util.BuildFactory()
+    buildSteps = createBuildSteps()
+    factory.addSteps(buildSteps)
     return factory
 
 
