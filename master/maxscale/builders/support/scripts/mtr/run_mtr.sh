@@ -25,7 +25,7 @@ export mtr=`echo ${mtrParam} | sed "s/-//g"`
 
 ssh $sshopt "mkdir $mtr"
 
-scp ${scpopt} ${BINTAR} $$sshuser@$IP:~/$mtr
+scp ${scpopt} ${BINTAR} $sshuser@$IP:~/$mtr/
 ssh ${sshopt} "cd $mtr; mkdir MariaDBEnterprise; tar xf *.tar.gz --strip-components=1 -C MariaDBEnterprise"
 
 scp -r ${scpopt} ${packages_dir}/${target}/scripts $sshuser@$IP:~/$mtr/MariaDBEnterprise/
