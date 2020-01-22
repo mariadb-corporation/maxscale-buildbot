@@ -39,7 +39,7 @@ def createBuildSteps():
             haltOnFailure=True
         )
     )
-    buildSteps.extend(common.TriggerWithVariable(
+    buildSteps.append(common.TriggerWithVariable(
         name="Run MTR tests with different parameters",
         schedulerNames=["run_mtr"],
         waitForFinish=True,
@@ -54,7 +54,7 @@ def createBuildSteps():
             "buildID": util.Interpolate('%(prop:buildnumber)s'),
         }
     ))
-    buildSteps.append(common.downloadAndRunMTRScript(
+    buildSteps.extend(common.downloadAndRunMTRScript(
         "mtr/kill_vm.sh",
          name=util.Interpolate("Kill VM"),
          workdir=util.Interpolate("%(prop:builddir)s"),
