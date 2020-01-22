@@ -578,17 +578,20 @@ def downloadAndRunMTRScript(scriptName, args=(), **kwargs):
     """
     remoteScriptName = util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName))
     downloadStep1 = steps.FileDownload(
-        mastersrc="maxscale/builders/support/scripts/mtr/load_vars.sh"),
+        mastersrc="~/config/mdbci/docker-reg",
+        workerdest=util.Interpolate("%(prop:builddir)s/scripts/mtr/docker-reg"),
+        mode=0o755
+    )
+    downloadStep2 = steps.FileDownload(
+        mastersrc="maxscale/builders/support/scripts/mtr/load_vars.sh",
         workerdest=util.Interpolate("%(prop:builddir)s/scripts/mtr/load_vars.sh"),
         mode=0o755
     )
-
-    downloadStep2 = steps.FileDownload(
-        mastersrc="maxscale/builders/support/scripts/mtr/vm_template.json"),
+    downloadStep3 = steps.FileDownload(
+        mastersrc="maxscale/builders/support/scripts/mtr/vm_template.json",
         workerdest=util.Interpolate("%(prop:builddir)s/scripts/mtr/vm_template.json"),
         mode=0o755
     )
-
     downloadStep = steps.FileDownload(
         mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
         workerdest=remoteScriptName,
@@ -599,7 +602,7 @@ def downloadAndRunMTRScript(scriptName, args=(), **kwargs):
         timeout=1800,
         **kwargs
     )
-    return [downloadStep1, downloadStep2, downloadStep, executeStep]
+    return [downloadStep1, downloadStep2, downloadStep3, downloadStep, executeStep]
 
 
 @util.renderer

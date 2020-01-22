@@ -17,13 +17,14 @@ def createBuildFactory():
     """
     factory = util.BuildFactory()
     factory.addStep(
-        steps.ShellCommand(
-            name=util.Interpolate("Start VM"),
-            command=["/home/vagrant/es_scripts/start_vm.sh"],
-            haltOnFailure=True
-        )
-    )
-
+         buildSteps.extend(common.downloadAndRunMTRScript(
+              "mtr/start_vm.sh",
+              name=util.Interpolate(
+              "Start VM"
+              ),
+        haltOnFailure=True,
+        workdir=util.Interpolate("%(prop:builddir)s"),
+    ))
     factory.addStep(
         steps.Trigger(
             name=util.Interpolate("Building image '%(prop:Image)s'"),
@@ -56,13 +57,15 @@ def createBuildFactory():
         })
     )
     factory.addStep(
-        steps.ShellCommand(
-            name=util.Interpolate("Destroy VM"),
-            command=["/home/vagrant/es_scripts/kill_vm.sh"],
-            haltOnFailure=True,
-            alwaysRun=True
-        )
-    )
+         buildSteps.extend(common.downloadAndRunMTRScript(
+             "mtr/start_vm.sh",
+              name=util.Interpolate(
+              "Start VM"
+              ),
+        workdir=util.Interpolate("%(prop:builddir)s"),
+        haltOnFailure=True,
+        alwaysRun=True
+    ))
     return factory
 
 
