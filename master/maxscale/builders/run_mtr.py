@@ -15,7 +15,7 @@ ENVIRONMENT = {
 
 def createBuildSteps():
     buildSteps = []
-    buildSteps.extend(common.downloadAndRunScript(
+    buildSteps.extend(common.downloadAndRunMTRScript(
         "mtr/run_mtr.sh",
          name=util.Interpolate(
              "Run MTR target '%(prop:target)s', image '%(prop:Image)s', MTR param '%(prop:mtrParam)s'"

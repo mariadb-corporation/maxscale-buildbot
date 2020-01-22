@@ -12,7 +12,7 @@ ENVIRONMENT = {
 def createBuildSteps():
     buildSteps = []
     buildSteps.extend(common.cloneRepository(util.Secret("mdbeSshIdentity")))
-    buildSteps.extend(common.downloadAndRunScript(
+    buildSteps.extend(common.downloadAndRunMTRScript(
         "mtr/build_source_tar.sh",
          name=util.Interpolate(
              "Build source tarball branch '%(prop:branch)s', target '%(prop:target)s'"
