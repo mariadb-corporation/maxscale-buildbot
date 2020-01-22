@@ -21,7 +21,7 @@ export sshkey=`mdbci show keyfile $machine_name/build --silent 2> /dev/null | se
 export scpopt="-i $sshkey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=120 "
 export sshopt="$scpopt $sshuser@$IP"
 
-export mtr=`echo ${mtrParam} | sed "s/-//g"`
+export mtr=`echo ${mtrParam} | sed "s/--//g"`
 
 ssh $sshopt "mkdir $mtr"
 
@@ -34,6 +34,6 @@ ssh ${sshopt} "chmod +x $mtr/MariaDBEnterprise/scripts/*.sh; chmod 777 $mtr/Mari
 ssh $sshopt "sudo SCRIPT_ARGS='${mtrParam} --junit-report' DOCKER_NAME=$mtr ./MariaDBEnterprise/scripts/run-docker-build.sh --git-branch ${branch} \
 	--docker-image ${Image} --code-tree \${PWD}/${mtr}/MariaDBEnterprise --run-script runtest-es.sh"
 
-mkdir -p ${packages_dir}/${target}/${Image}/XML/${mtrParam}
-scp $sshopt:~/MariaDBEnterprise/*.xml MariaDBEnterprise/${packages_dir}/${target}/${Image}/XML/${mtrParam}/
+mkdir -p ${packages_dir}/${target}/${Image}/XML/${mtr}
+scp $sshopt:~/${mtr}/MariaDBEnterprise/*.xml ${packages_dir}/${target}/${Image}/XML/${mtr}/
 
