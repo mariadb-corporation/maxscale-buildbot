@@ -99,6 +99,7 @@ DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
 
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
+MAXSCALE_PRODUCT = 'MaxScale'
 MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
 ES_REPOSITORY = 'git@github.com:mariadb-corporation/MariaDBEnterprise.git'
 
