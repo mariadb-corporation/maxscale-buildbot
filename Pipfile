@@ -12,9 +12,10 @@ pycodestyle = "*"
 python_version = "3"
 
 [packages]
-paramiko = "*"
-mysqlclient = "*"
 buildbot-worker = "==2.6.0"
+mysqlclient = "*"
+paramiko = "*"
+requests = "*"
 
 [packages.buildbot]
 extras = [ "bundle",]
