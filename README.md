@@ -1,16 +1,17 @@
-# Maxscale BuildBot
+# MaxScale BuildBot
 
 BuildBot configuration for Maxscale
 
-## Using virtualenv for installation
+## Using pipenv for installation
 
 In order not to pollute the base system with the BuildBot dependencies it is adviced to use the python virtual environment.
 
-1. Install python3 virtual environment: `sudo apt install python3-virtualenv`.
-2. Create virtual environment: `python3 -m virtualenv -p /usr/bin/python3 v-env`.
-3. Enable virtual environment for current bash process: `source v-env/bin/activate`.
+1. Install python3 dependencies: `sudo apt install python3 python3-pip`.
+2. Install pipenv to manage virtual environment: `sudo pip3 install pipenv`
+3. Go to the `maxscale-buildbot` directory and install dependencies `pipenv install`
+4. Enable virtual environment `pipenv shell`.
 
-When done you can deactivate Python virtual environment running `deactivate` command.
+When done you can leave Python virtual environment by leaving the shell.
 
 If you have installed BuildBot into the virtual environment, then you should either activate environment before running `buildbot` and `buildbot-worker` commands, or use absolute paths to them in the virtual environment directory.
 
@@ -27,26 +28,28 @@ grant all privileges on maxscale_buildbot.* to buildbot@localhost identified by 
 
 In order to mitigate the issue of short build step names, the database schema must be updated:
 ```mysql
-ALTER TABLE steps MODIFY name varchar(150);
+ALTER TABLE steps MODIFY name varchar(300);
 ```
 
 ### Application configuration
 
 1. Clone repository or get a repository slice.
-2. Install packages that are reqired to build Python dependencies: `sudo apt install -y build-essential python3-dev`
-3. Install all Python dependencies that are needed by the buildmaster: `pip3 install -r requirements.txt`.
-4. Configure database acess in `master/maxscale/config/database_config.py` file. The template for this file can be found in `master/maxscale/config/datababes_config.py` file.
-5. Configure mail client in `master/maxscale/config/mailer_config.py` file. The template for this file can be found in `master/maxscale/config/mailer_config_example.py` file.
-6. Configure github client in `master/maxscale/config/github_client_config.py` file. The template for this file can be found in `master/maxscale/config/github_client_config_example.py` file.
-7. Configure authorization rights for users in `master/maxscale/config/auth_config.py` file. The template for this file can be found in `master/maxscale/config/auth_config_example.py` file.
-8. Configure the list of workers that are vaiable to access buildbot master in `master/maxscale/config/workers.py` file. The template for this file can be found in `master/maxscale/config/workers_example.py` file.
-9. Create or update buildmaster configuration: `buildbot upgrade-master master`
-10. Start the buildmaster service: `buildbot start master`.
+2. Install python3 dependencies: `sudo apt install python3 python3-pip`.
+3. Install pipenv to manage virtual environment: `sudo pip3 install pipenv`
+4. Go to the `maxscale-buildbot` directory and install dependencies `pipenv install`
+5. Configure database access in `master/maxscale/config/database_config.py` file. The template for this file can be found in `master/maxscale/config/datababes_config.py` file.
+6. Configure mail client in `master/maxscale/config/mailer_config.py` file. The template for this file can be found in `master/maxscale/config/mailer_config_example.py` file.
+7. Configure github client in `master/maxscale/config/github_client_config.py` file. The template for this file can be found in `master/maxscale/config/github_client_config_example.py` file.
+8. Configure authorization rights for users in `master/maxscale/config/auth_config.py` file. The template for this file can be found in `master/maxscale/config/auth_config_example.py` file.
+9. Configure the list of workers that are allowed to access BuildBot master in `master/maxscale/config/workers.py` file. The template for this file can be found in `master/maxscale/config/workers_example.py` file.
+10. Configure the access name of the server in `master/maxscale/conifg/server_config.py` file. The template for this file can be found in `master/maxscale/config/server_config_example.py` file.
+11. Create or update BuildBot master configuration: `buildbot upgrade-master master`
+12. Start the BuildBot master service: `buildbot start master`.
 
-## Updating Buildmaster configuration
+## Updating BuildBot master configuration
 
 1. Update the repository configuration.
-2. Reload buildbot configuration: `buildbot reconfig master`.
+2. Reload BuildBot configuration: `buildbot reconfig master`.
 
 ## Worker installation notes
 
@@ -88,8 +91,8 @@ The common development tasks are automated using the [Paver](https://github.com/
 
 * `paver check_code` - check Python source code with static code linters.
 * `paver check_config` - check BuildBot master configuration.
-* `paver buildbot -c start` - run start command for buildbot in the development mode. You can pass all commands to the buildbot via this command and `-c` flag.
-* `paver restart_buildbot` - restart the buildbot in the development mode and restart `worker-dev` associated with the environment. You should create the latter one by youself.
+* `paver buildbot -c start` - run start command for BuildBot in the development mode. You can pass all commands to the BuildBot via this command and `-c` flag.
+* `paver restart_buildbot` - restart the BuildBot in the development mode and restart `worker-dev` associated with the environment. You should create the latter one by youself.
 
 ## Code standard
 
@@ -97,18 +100,21 @@ The [BuildBot](http://buildbot.net/) project is based on the [Twisted](https://t
 
 ## Upgrading the dependencies
 
-The list of Python packages that are required to install the BuildBot master is stored in [`requirements.txt`](https://github.com/mariadb-corporation/maxscale-buildbot/blob/master/requirements.txt) file. In this file the tested and proved to work versions are specified.
+The list of Python packages that are required to install the BuildBot master is stored in Pipfile.lock file. In this file the tested and proved to work versions are specified.
 
-In orded to migrate to the newer versions you should either specify them directly in the file or use the [pur](https://pypi.org/project/pur/) utility. The latter one upgrades all dependencise to the latest version available. Be adviced, that it might not be the right approach. In order to use `pur`, launch it the following way:
+In order to migrate to the newer versions you should use Pipenv update command.
 
 ```bash
-$ pur -r requirements.txt
+pipenv update
 ```
 
-When the `requirements.txt` file has been updated, the dependencies should be installed in the Python virtual environment.
+When the `Pipfile.lock` file has been updated, the dependencies should be installed.
 
-1. Activate the virtual environment: `source v-env/bin/activate`.
-2. Upgrade dependencies: `pip install -U -r requirements.txt`.
-3. Restart the BuildBot master in order to activate installed dependecsies: `buildbot restart master`.
+```shell script
+pipenv install
+```
+
+1. Activate the virtual environment: `pipenv shell`.
+2. Restart the BuildBot master in order to activate installed dependencies: `buildbot restart master`.
 
 The same should be done to the worker requirements file, `requirements-worker.txt`.

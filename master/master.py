@@ -12,6 +12,7 @@ from maxscale.auth import MAXSCALE_AUTH
 from maxscale.change_source import MAXSCALE_POLLERS
 from maxscale import workers
 from maxscale.config.database_config import DATABASE_CONFIG
+from maxscale.config.server_config import SERVER_URI
 
 # This is the dictionary that the buildmaster pays attention to. We also use
 # a shorter alias to save typing.
@@ -43,9 +44,10 @@ c['services'] = MAXSCALE_SERVICES
 
 c['title'] = "MaxScale CI"
 c['titleURL'] = "https://github.com/mariadb-corporation/maxscale-buildbot"
-c['buildbotURL'] = "https://maxscale-ci.mariadb.com/"
 if environment.is_development():
     c['buildbotURL'] = "http://localhost:8010/"
+else:
+    c['buildbotURL'] = SERVER_URI
 
 # Web intefrace configuration
 c['www'] = dict(

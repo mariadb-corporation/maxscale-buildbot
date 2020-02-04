@@ -1,2 +1,2 @@
 buildbot-worker==2.6.0
-mysql-connector==2.1.7
+mysql-connector==2.2.9

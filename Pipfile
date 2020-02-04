@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+
+paver = "*"
+pycodestyle = "*"
+
+[requires]
+python_version = "3"
+
+[packages]
+paramiko = "*"
+mysqlclient = "*"
+buildbot-worker = "==2.6.0"
+
+[packages.buildbot]
+extras = [ "bundle",]
+version = "==2.6.0"
