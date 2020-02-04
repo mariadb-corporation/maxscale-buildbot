@@ -46,6 +46,14 @@ ALTER TABLE steps MODIFY name varchar(300);
 11. Create or update BuildBot master configuration: `buildbot upgrade-master master`
 12. Start the BuildBot master service: `buildbot start master`.
 
+### GitHub authentication
+
+You must create the OAuth application in GitHub using the [form](https://github.com/settings/applications/new)
+
+The URL of the application must be `BUILDBOT_URL/auth/login`.
+
+The received client identity and secret must be put into `github_client_config.py` file.
+
 ## Updating BuildBot master configuration
 
 1. Update the repository configuration.
