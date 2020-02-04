@@ -4,11 +4,12 @@ v-env/
 *.pid
 workspace/
 state.sqlite
-master/maxscale/config/mailer_config.py
-master/maxscale/config/github_client_config.py
 master/maxscale/config/auth_config.py
 master/maxscale/config/database_config.py
+master/maxscale/config/github_client_config.py
+master/maxscale/config/mailer_config.py
 master/maxscale/config/workers.py
+master/maxscale/config/server_config.py
 __pycache__/
 *.pyc
 gitpoller-work
