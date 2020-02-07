@@ -1,6 +1,6 @@
 # README
 
-## How use plugin?
+## How to use plugin?
 
 1. Place plugin directory to the `master/www/` directory
 2. Configure plugin in the `master/master.py` file:
