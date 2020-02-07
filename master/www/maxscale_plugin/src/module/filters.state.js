@@ -9,6 +9,10 @@ class FiltersState {
             order: 5
         });
 
+        if (config.plugins.maxscale_plugin.filters == null) {
+            return;
+        }
+
         config.plugins.maxscale_plugin.filters.forEach((filter, index) => {
             const state = {
                 controller: "FiltersController",
