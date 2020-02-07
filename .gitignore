@@ -15,3 +15,13 @@ gitpoller-work
 master.cfg.sample
 worker-dev
 worker/
+node_modules/
+build/
+*.lock
+buildbot_maxscale_plugin/
+!/buildbot_maxscale_plugin/__init__.py
+buildbot_maxscale_plugin.egg-info/
+.DS_Store
+.vscode/
+coverage/
+dist/

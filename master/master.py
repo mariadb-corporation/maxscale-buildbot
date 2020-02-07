@@ -50,7 +50,17 @@ if environment.is_development():
 # Web intefrace configuration
 c['www'] = dict(
     port="tcp:8010:interface=127.0.0.1",
-    plugins=dict(waterfall_view={}, console_view={}, grid_view={}),
+    plugins=dict(
+        waterfall_view={},
+        console_view={},
+        grid_view={},
+        maxscale_plugin={
+            "filters": [
+                {"name": "Only build", "tags": ["+build", "-test"]},
+                {"name": "Only test", "tags": ["-build", "+test"]}
+            ]
+        }
+    )
 )
 # Do not enable authentication or authorization during the development
 if not environment.is_development():
