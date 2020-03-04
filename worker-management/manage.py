@@ -165,7 +165,8 @@ def parseArguments():
     parser.add_argument("--host", help="Host to manage.")
     parser.add_argument("--user", help="User to use during the SSH connection to host.", default=getpass.getuser())
     parser.add_argument("--domain", help="Default domain for hosts", default="mariadb.com")
-    parser.add_argument("--master", help="Domain name of the master to configure on workers", default="maxscale-ci.mariadb.com")
+    parser.add_argument("--master", help="Domain name of the master to configure on workers",
+                        default="maxscale-jenkins.mariadb.com")
     parser.add_argument("--debug", help="Show debug output", dest="debug", action="store_true")
     parser.set_defaults(debug=False)
     return parser.parse_args()

@@ -1,4 +1,4 @@
-buildbot[bundle]==2.3.1
+buildbot[bundle]==2.6.0
 pyOpenSSL==19.0.0
 service-identity==18.1.0
 requests==2.21.0
