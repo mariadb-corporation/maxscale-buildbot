@@ -56,16 +56,16 @@ BOXES = [
 ]
 
 BUILD_ALL_BOXES = [
-    "centos_7_libvirt",
-    "centos_6_libvirt",
-    "centos_8_libvirt",
-    "ubuntu_xenial_libvirt",
-    "ubuntu_bionic_libvirt",
-    "debian_jessie_libvirt",
-    "debian_stretch_libvirt",
-    "debian_buster_libvirt",
-    "sles_12_aws",
-    "suse_15_libvirt"
+    "centos_7_gcp",
+    "centos_6_gcp",
+    "centos_8_gcp",
+    "ubuntu_xenial_gcp",
+    "ubuntu_bionic_gcp",
+    "debian_jessie_aws",
+    "debian_stretch_gcp",
+    "debian_buster_gcp",
+    "sles_12_gcp",
+    "sles_15_gcp"
 ]
 
 DB_VERSIONS = [
