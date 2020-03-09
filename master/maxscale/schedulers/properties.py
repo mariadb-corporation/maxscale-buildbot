@@ -279,7 +279,7 @@ def versionNumber():
     )
 
 
-def host(default="max-tst-01"):
+def host(default="bb-host"):
     """Host of the used group of workers"""
     return util.ChoiceStringParameter(
         name="host",

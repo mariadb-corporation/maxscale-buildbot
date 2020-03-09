@@ -46,7 +46,7 @@ for branch_item in NIGHTLY_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "nightly_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['host'] = "max-gcloud"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
     nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
@@ -71,7 +71,7 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "valgrind_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['host'] = "max-gcloud"
     nightlyProperties['use_valgrind'] = "yes"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
@@ -98,7 +98,7 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
     nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['host'] = "max-tst-02"
+    nightlyProperties['host'] = "max-gcloud"
     nightlyProperties['use_valgrind'] = "no"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['box'] = branch_item["box"]
