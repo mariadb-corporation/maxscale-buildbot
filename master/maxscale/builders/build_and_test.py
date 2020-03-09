@@ -41,6 +41,11 @@ def create_factory():
         }
     ))
 
+    if util.Property("host") == "bb-host":
+        testHost = "max-gcloud"
+    else:
+        testHost = util.Property("host")
+
     factory.addStep(steps.Trigger(
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
@@ -51,7 +56,8 @@ def create_factory():
             "test_set": common.renderTestSet,
             "use_valgrind": util.Property("use_valgrind"),
             "use_callgrind": util.Property("use_callgrind"),
-            "backend_ssl": util.Property("backend_ssl")
+            "backend_ssl": util.Property("backend_ssl"),
+            "host": testHost,
         }
     ))
 
