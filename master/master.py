@@ -55,7 +55,7 @@ c['www'] = dict(
     plugins=dict(waterfall_view={}, console_view={}, grid_view={}),
 )
 # Do not enable authentication or authorization during the development
-if not environment.is_development():
+if False and not environment.is_development():
     c['www'].update(dict(
         auth=MAXSCALE_AUTH['auth'],
         authz=MAXSCALE_AUTH['authz']))
