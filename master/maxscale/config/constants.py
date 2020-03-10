@@ -65,7 +65,7 @@ BUILD_ALL_BOXES = [
     "debian_stretch_gcp",
     "debian_buster_gcp",
     "sles_12_gcp",
-    "sles_15_gcp"
+    "suse_15_gcp"
 ]
 
 DB_VERSIONS = [
