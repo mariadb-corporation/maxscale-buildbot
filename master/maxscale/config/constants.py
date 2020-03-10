@@ -30,6 +30,7 @@ BOXES = [
     'debian_stretch_aws',
     'suse_13_libvirt',
     'suse_15_libvirt',
+    'suse_15_gcp',
     'sles_11_aws',
     'sles_12_aws',
     'sles_12_libvirt',
