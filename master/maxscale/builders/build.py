@@ -55,6 +55,11 @@ def createBuildSteps():
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
     buildSteps.extend(common.syncRepod())
+    buildSteps.extend(steps.ShellCommand(
+        name="Rsync builds results to repo server",
+        command=[util.Interpolate('rsync -avz --progress -e ssh ~/repository/%(prop:target)s/%(prop:box)s vagrant@max-tst-01.mariadb.com:/home/vagrant/repository/%(prop:target)s/')],
+        timeout=1800,
+    )
     return buildSteps
 
 
