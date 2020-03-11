@@ -39,7 +39,6 @@ def createBuildSteps():
         timeout=3600,
         workdir=util.Interpolate("%(prop:builddir)s/build")
     ))
-    buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
     cmd = 'ssh vagrant@max-tst-01.mariadb.com mkdir -p ./repository/%(prop:target)s/mariadb-maxscale'
@@ -68,6 +67,7 @@ def createBuildSteps():
         doStepIf = (util.Property('run_upgrade_test') == 'yes'),
         workdir=util.Interpolate("%(prop:builddir)s/build")
     ))
+    buildSteps.extend(common.cleanBuildDir())
     return buildSteps
 
 
