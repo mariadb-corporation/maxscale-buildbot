@@ -41,9 +41,15 @@ def createBuildSteps():
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
+    cmd = 'ssh vagrant@max-tst-01.mariadb.com mkdir -p ./repository/%(prop:target)s/mariadb-maxscale'
+    buildSteps.append(steps.ShellCommand(
+        name="Make dir for build results on the repo server",
+        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        timeout=1800,
+    ))
     cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ vagrant@max-tst-01.mariadb.com:./repository/%(prop:target)s/mariadb-maxscale/'
     buildSteps.append(steps.ShellCommand(
-        name="Rsync builds results to repo server",
+        name="Rsync builds results to the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
         timeout=1800,
     ))
@@ -55,7 +61,7 @@ def createBuildSteps():
     ))
     buildSteps.extend(common.syncRepod())
     buildSteps.append(steps.ShellCommand(
-        name="Build MaxScale using MDBCI",
+        name="Upgrade test",
         command=['BUILD/mdbci/upgrade_test.sh'],
         timeout=1800,
         doStepIf = (util.Property('run_upgrade_test') == 'yes')
