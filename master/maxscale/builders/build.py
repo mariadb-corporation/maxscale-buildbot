@@ -37,6 +37,7 @@ def createBuildSteps():
         name="Build MaxScale using MDBCI",
         command=['BUILD/mdbci/build.sh'],
         timeout=3600,
+        workdir=util.Interpolate("%(prop:builddir)s")
     ))
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
@@ -64,7 +65,8 @@ def createBuildSteps():
         name="Upgrade test",
         command=['BUILD/mdbci/upgrade_test.sh'],
         timeout=1800,
-        doStepIf = (util.Property('run_upgrade_test') == 'yes')
+        doStepIf = (util.Property('run_upgrade_test') == 'yes'),
+        workdir=util.Interpolate("%(prop:builddir)s")
     ))
     return buildSteps
 
