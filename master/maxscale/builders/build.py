@@ -28,37 +28,37 @@ def configureBuildProperties(properties):
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s")
     }
 
-
-def remoteBuildMaxscale():
-    """This script will be run on the worker"""
-    if not os.path.exists("BUILD/mdbci"):
-        os.mkdir("default-maxscale-branch")
-        os.chdir("default-maxscale-branch")
-        subprocess.run(["git", "clone", repository])
-        os.chdir("..")
-    if not os.path.isdir("BUILD"):
-        shutil.copytree("default-maxscale-branch/MaxScale/BUILD", ".")
-    if not os.path.isdir("BUILD/mdbci"):
-        shutil.copytree("default-maxscale-branch/MaxScale/BUILD/mdbci", "BUILD/")
-    results = subprocess.run(["BUILD/mdbci/build.sh"])
-    sys.exit(results.returncode)
-
-
 def createBuildSteps():
     buildSteps = []
     buildSteps.extend(common.configureMdbciVmPathProperty())
     buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
     buildSteps.extend(common.cloneRepository())
-    buildSteps.extend(support.executePythonScript(
-        "Build MaxScale using MDBCI", remoteBuildMaxscale))
+    buildSteps.append(steps.ShellCommand(
+        name="Build MaxScale using MDBCI",
+        command=['BUILD/mdbci/build.sh'],
+        timeout=3600,
+    ))
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
-    buildSteps.extend(common.syncRepod())
+    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ vagrant@max-tst-01.mariadb.com:./repository/%(prop:target)s/mariadb-maxscale/'
     buildSteps.append(steps.ShellCommand(
         name="Rsync builds results to repo server",
-        command=[util.Interpolate('rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ vagrant@max-tst-01.mariadb.com:/home/vagrant/repository/%(prop:target)s/mariadb-maxscale/')],
+        command=['/bin/bash', '-c', util.Interpolate(cmd)],
         timeout=1800,
+    ))
+    cmd = '~/mdbci/mdbci generate-product-repositories --product maxscale_ci --product-version %(prop:target)s'
+    buildSteps.append(steps.ShellCommand(
+        name="Generate new repo descriptions",
+        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        timeout=1800,
+    ))
+    buildSteps.extend(common.syncRepod())
+    buildSteps.append(steps.ShellCommand(
+        name="Build MaxScale using MDBCI",
+        command=['BUILD/mdbci/upgrade_test.sh'],
+        timeout=1800,
+        doStepIf = (util.Property('run_upgrade_test') == 'yes')
     ))
     return buildSteps
 
