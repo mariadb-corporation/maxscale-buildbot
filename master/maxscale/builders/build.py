@@ -52,6 +52,7 @@ def createBuildSteps():
         name="Rsync builds results to the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
         timeout=1800,
+        flunkOnFailure=False,
     ))
     cmd = '~/mdbci/mdbci generate-product-repositories --product maxscale_ci --product-version %(prop:target)s'
     buildSteps.append(steps.ShellCommand(
