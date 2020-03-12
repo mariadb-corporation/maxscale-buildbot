@@ -155,3 +155,9 @@ HOST_USERS = {
     "max-gcloud-01" : "timofey_turenko_mariadb_com",
     "bb-host" : "timofey_turenko_mariadb_com",
 }
+
+HOST_FULL = {
+    "max-tst-01" : "max-tst-01.mariadb.com",
+    "max-gcloud-01" : "max-gcloud-01",
+    "bb-host" : "mariadbenterprise-buildbot",
+}

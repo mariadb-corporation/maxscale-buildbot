@@ -379,7 +379,7 @@ class RsyncShellSequence(ShellSequence):
         """
         return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d/ -e "
                                       "'ssh -o UserKnownHostsFile=/dev/null StrictHostKeyChecking=no' "
-                                      "{}@{}.mariadb.com:~/.config/mdbci/repo.d".format(HOST_USERS.get(host), host),
+                                      "{}@{}.mariadb.com:~/.config/mdbci/repo.d".format(constants.HOST_USERS.get(host), constants.HOST_FULL.get(host)),
                               logfile="rsync to {}.mariadb.com".format(host)) for host in hosts]
 
     def getRemoteWorkersHosts(self):
