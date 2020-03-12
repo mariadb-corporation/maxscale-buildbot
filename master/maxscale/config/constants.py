@@ -161,3 +161,7 @@ HOST_FULL = {
     "max-gcloud-01" : "max-gcloud-01",
     "bb-host" : "mariadbenterprise-buildbot",
 }
+
+UPLOAD_SERVER = "vagrant@max-tst-01.mariadb.com"
+
+UPLOAD_PATH = "./repository"

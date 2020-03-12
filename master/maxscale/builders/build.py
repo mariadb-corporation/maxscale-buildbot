@@ -4,6 +4,7 @@ from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
 from maxscale.builders.support import common, support
+from maxscale.config import constants
 
 ENVIRONMENT = {
     "JOB_NAME": util.Property("buildername"),
@@ -41,13 +42,13 @@ def createBuildSteps():
     ))
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
-    cmd = 'ssh vagrant@max-tst-01.mariadb.com mkdir -p ./repository/%(prop:target)s/mariadb-maxscale'
+    cmd = 'ssh ' + constants.UPLOAD_SERVER + ' mkdir -p ' + constants.UPLOAD_PATH + '/%(prop:target)s/mariadb-maxscale'
     buildSteps.append(steps.ShellCommand(
         name="Make dir for build results on the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
         timeout=1800,
     ))
-    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ vagrant@max-tst-01.mariadb.com:./repository/%(prop:target)s/mariadb-maxscale/'
+    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ ' + constants.UPLOAD_SERVER + ':' + constants.UPLOAD_PATH + ' /%(prop:target)s/mariadb-maxscale/'
     buildSteps.append(steps.ShellCommand(
         name="Rsync builds results to the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
