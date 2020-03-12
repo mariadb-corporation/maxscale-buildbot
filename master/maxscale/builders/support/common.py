@@ -11,6 +11,7 @@ from maxscale.builders.support import support
 from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale import workers
 from enum import IntEnum
+from maxscale.config import constants
 
 
 def cloneRepository():
@@ -378,7 +379,7 @@ class RsyncShellSequence(ShellSequence):
         """
         return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d/ -e "
                                       "'ssh -o UserKnownHostsFile=/dev/null StrictHostKeyChecking=no' "
-                                      "vagrant@{}.mariadb.com:~/.config/mdbci/repo.d".format(host),
+                                      "{}@{}.mariadb.com:~/.config/mdbci/repo.d".format(HOST_USERS.get(host), host),
                               logfile="rsync to {}.mariadb.com".format(host)) for host in hosts]
 
     def getRemoteWorkersHosts(self):

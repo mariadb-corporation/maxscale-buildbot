@@ -149,3 +149,9 @@ MAXSCALE_DOCKER_CODEBASE = {
         "repository": MAXSCALE_DOCKER_REPOSITORY
     },
 }
+
+HOST_USERS = {
+    "max-tst-01" : "vagrant",
+    "max-gcloud-01" : "timofey_turenko_mariadb_com",
+    "bb-host" : "timofey_turenko_mariadb_com",
+}
