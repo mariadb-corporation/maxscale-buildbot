@@ -35,7 +35,7 @@ def createBuildSteps():
     buildSteps.extend(common.cloneRepository())
     buildSteps.append(steps.ShellCommand(
         name="Build MaxScale using MDBCI",
-        command=['BUILD/mdbci/build.sh'],
+        command=['/bin/bash', '-c', 'BUILD/mdbci/build.sh || BUILD/mdbci/build.sh'],
         timeout=3600,
         workdir=util.Interpolate("%(prop:builddir)s/build")
     ))

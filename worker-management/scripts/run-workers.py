@@ -22,7 +22,7 @@ def parse_arguments():
 def start_workers(hostname, amount):
     for worker_number in range(1, amount + 1):
         name =  "{}-{:02d}".format(hostname, worker_number)
-        subprocess.run(['pipenv run buildbot-worker', 'start', name], check=True)
+        subprocess.run(['buildbot-worker', 'start', name], check=True)
     return 0
 
 
