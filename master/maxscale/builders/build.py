@@ -48,7 +48,7 @@ def createBuildSteps():
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
         timeout=1800,
     ))
-    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ ' + constants.UPLOAD_SERVER + ':' + constants.UPLOAD_PATH + ' /%(prop:target)s/mariadb-maxscale/'
+    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ ' + constants.UPLOAD_SERVER + ':' + constants.UPLOAD_PATH + '/%(prop:target)s/mariadb-maxscale/'
     buildSteps.append(steps.ShellCommand(
         name="Rsync builds results to the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
