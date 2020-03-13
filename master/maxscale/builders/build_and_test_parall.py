@@ -8,7 +8,6 @@ from maxscale.builders.support import common
 from maxscale.config import constants
 
 COMMON_PROPERTIES = [
-    "name",
     "repository",
     "branch",
     "target",
@@ -46,53 +45,22 @@ def create_factory():
     else:
         testHost = util.Property("host")
 
-    factory.addStep(steps.Trigger(
-        name="Call the 'run_test' scheduler",
-        schedulerNames=['run_test'],
-        waitForFinish=False,
-        copy_properties=COMMON_PROPERTIES,
-        set_properties={
-            'test_branch': util.Property('branch'),
-            "test_set": '-L set01',
-            "use_valgrind": util.Property("use_valgrind"),
-            "use_callgrind": util.Property("use_callgrind"),
-            "backend_ssl": util.Property("backend_ssl"),
-            "host": testHost,
-            "name": util.Interpolate('%(prop:name)s-01'),
-        }
-    ))
-    factory.addStep(steps.Trigger(
-        name="Call the 'run_test' scheduler",
-        schedulerNames=['run_test'],
-        waitForFinish=False,
-        copy_properties=COMMON_PROPERTIES,
-        set_properties={
-            'test_branch': util.Property('branch'),
-            "test_set": '-L set02',
-            "use_valgrind": util.Property("use_valgrind"),
-            "use_callgrind": util.Property("use_callgrind"),
-            "backend_ssl": util.Property("backend_ssl"),
-            "host": testHost,
-            "name": util.Interpolate('%(prop:name)s-02'),
-        }
-    ))
-
-    factory.addStep(steps.Trigger(
-        name="Call the 'run_test' scheduler",
-        schedulerNames=['run_test'],
-        waitForFinish=False,
-        copy_properties=COMMON_PROPERTIES,
-        set_properties={
-            'test_branch': util.Property('branch'),
-            "test_set": '-L set03',
-            "use_valgrind": util.Property("use_valgrind"),
-            "use_callgrind": util.Property("use_callgrind"),
-            "backend_ssl": util.Property("backend_ssl"),
-            "host": testHost,
-            "name": util.Interpolate('%(prop:name)s-01'),
-        }
-    ))
-
+    for i in range(1, 3):
+        factory.addStep(steps.Trigger(
+            name="Call the 'run_test' scheduler",
+            schedulerNames=['run_test'],
+            waitForFinish=False,
+            copy_properties=COMMON_PROPERTIES,
+            set_properties={
+                'test_branch': util.Property('branch'),
+                "test_set": '-L set{:02d}'.format(i),
+                "use_valgrind": util.Property("use_valgrind"),
+                "use_callgrind": util.Property("use_callgrind"),
+                "backend_ssl": util.Property("backend_ssl"),
+                "host": testHost,
+                "name": util.Interpolate('%(prop:name)s-{:02d}'.format(i)),
+            }
+        ))
 
     return factory
 
