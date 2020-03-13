@@ -19,6 +19,18 @@ def workerNames(host=""):
     return workers
 
 
+def workersOnHosts(*hosts):
+    """
+    Create a list of worker names that run on the specified hosts
+    hosts (list): names of the host names to use
+    """
+    workers = []
+    for credentials in WORKER_CREDENTIALS:
+        if credentials["host"] in hosts:
+            workers.append(credentials["name"])
+    return workers
+
+
 def workerToHostMap():
     """Creates dictionary with worker name mapped to host"""
     workerToHost = {}
