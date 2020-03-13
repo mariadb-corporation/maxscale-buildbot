@@ -58,10 +58,10 @@ def create_factory():
             "use_callgrind": util.Property("use_callgrind"),
             "backend_ssl": util.Property("backend_ssl"),
             "host": testHost,
-            "name":  util.Property("backend_ssl") + '-01',
+            "name": util.Interpolate('%(prop:name)s-01'),
         }
     ))
-   factory.addStep(steps.Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
         waitForFinish=False,
@@ -73,11 +73,11 @@ def create_factory():
             "use_callgrind": util.Property("use_callgrind"),
             "backend_ssl": util.Property("backend_ssl"),
             "host": testHost,
-            "name":  util.Property("backend_ssl") + '-02',
+            "name": util.Interpolate('%(prop:name)s-02'),
         }
     ))
 
-   factory.addStep(steps.Trigger(
+    factory.addStep(steps.Trigger(
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
         waitForFinish=False,
@@ -89,7 +89,7 @@ def create_factory():
             "use_callgrind": util.Property("use_callgrind"),
             "backend_ssl": util.Property("backend_ssl"),
             "host": testHost,
-            "name":  util.Property("backend_ssl") + '-03',
+            "name": util.Interpolate('%(prop:name)s-01'),
         }
     ))
 
