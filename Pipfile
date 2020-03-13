@@ -16,6 +16,7 @@ buildbot-worker = "==2.6.0"
 mysqlclient = "*"
 paramiko = "*"
 requests = "*"
+pyOpenSSL = "*"
 
 [packages.buildbot]
 extras = [ "bundle",]
