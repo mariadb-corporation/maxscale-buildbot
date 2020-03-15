@@ -71,10 +71,11 @@ def create_factory():
         "test_branch": util.Property('branch'),
         "use_callgrind": util.Property("use_callgrind"),
         "use_valgrind": util.Property("use_valgrind"),
+        "buildHosts": ["max-gcloud-01", "max-gcloud-02"],
     })
     factory.addStep(ParallelRunTestTrigger(
         name="Call the 'run_test' for each test set",
-        testSetAmount=3,
+        testSetAmount=4,
         schedulerNames=['run_test'],
         waitForFinish=True,
         set_properties=runTestProperties,
