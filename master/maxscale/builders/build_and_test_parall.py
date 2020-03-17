@@ -23,6 +23,29 @@ COMMON_PROPERTIES = {
     "version": util.Property("version"),
 }
 
+MAXSCALE_TEST_SETS = [ 
+  {
+    "name": "master-slave1",
+    "test_set": "-L REPL_BACKEND -I '1,,2' -LE 'GALERA_BACKEND|BREAKS_REPL|UNSTABLE|BIG_REPL_BACKEND|CLUSTRIX_BACKEND'"
+  },
+  {
+    "name": "master-slave2",
+    "test_set": "-L REPL_BACKEND -I '2,,2' -LE 'GALERA_BACKEND|BREAKS_REPL|UNSTABLE|BIG_REPL_BACKEND|CLUSTRIX_BACKEND'"
+  },
+  {
+    "name": "galera",
+    "test_set": "-L GALERA_BACKEND -LE 'REPL_BACKEND|BREAKS_REPL|UNSTABLE|BIG_REPL_BACKEND|CLUSTRIX_BACKEND'"
+  },
+  {
+    "name": "breaks_backend",
+    "test_set": "-L 'BREAKS_REPL|BIG_REPL_BACKEND'"
+  },
+#  {
+#    "name": "clustrix_backend",
+#    "test_set": "-L 'CLUSTRIX_BACKEND'"
+#  },
+]
+
 
 class ParallelRunTestTrigger(steps.Trigger):
     """
@@ -35,11 +58,11 @@ class ParallelRunTestTrigger(steps.Trigger):
 
     def getSchedulersAndProperties(self):
         schedulers = []
-        for testSet in range(1, self.testSetAmount + 1):
+        for testSet in MAXSCALE_TEST_SETS:
             propertiesToSet = self.set_properties.copy()
             propertiesToSet.update({
-                "test_set": '-L set{:02d}'.format(testSet),
-                "name": ('{}-{:02d}'.format(self.getProperty("name"), testSet)),
+                "test_set": testSet["test_set"],
+                "name": ('{}-{}'.format(self.getProperty("name"), testSet["name"],
             })
             for schedulerName in self.schedulerNames:
                 schedulers.append({
