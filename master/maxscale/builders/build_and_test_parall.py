@@ -62,7 +62,7 @@ class ParallelRunTestTrigger(steps.Trigger):
             propertiesToSet = self.set_properties.copy()
             propertiesToSet.update({
                 "test_set": testSet["test_set"],
-                "name": ('{}-{}'.format(self.getProperty("name"), testSet["name"],
+                "name": '{}-{}'.format(self.getProperty("name"), testSet["name"]),
             })
             for schedulerName in self.schedulerNames:
                 schedulers.append({
