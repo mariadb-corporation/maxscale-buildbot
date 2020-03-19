@@ -57,7 +57,7 @@ def createRunTestSteps():
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.extend(common.cloneRepository())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    testSteps.extend(common.remoteRunScriptAndLog())
+    testSteps.extend(common.remoteRunScriptAndLog(name="Run MaxScale tests"))
     testSteps.extend(common.parseCtestLog())
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
@@ -84,7 +84,9 @@ BUILDERS = [
         factory=createTestFactory(),
         tags=["test"],
         env=ENVIRONMENT,
-        properties={"script_name": "run_test.sh"},
+        properties={
+            "scriptName": "run_test.sh"
+        },
         defaultProperties={
             "try_already_running": None
         })
