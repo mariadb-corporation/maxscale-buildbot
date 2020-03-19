@@ -21,6 +21,7 @@ def executeScript(name, script, args=(), haltOnFailure=True, flunkOnFailure=True
         workerdest=shellScriptPath,
         name="Download script to the worker: {}".format(name),
         mode=0o755,
+        hideStepIf=True,
         **kwargs)
 
     runScript = steps.ShellCommand(
@@ -35,6 +36,7 @@ def executeScript(name, script, args=(), haltOnFailure=True, flunkOnFailure=True
     removeScript = steps.ShellCommand(
         name="Remove script from worker: {}".format(name),
         command=["rm", "-f", shellScriptPath],
+        hideStepIf=True,
         **kwargs)
 
     return [downloadScript, runScript, removeScript]
