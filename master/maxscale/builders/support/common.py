@@ -511,7 +511,7 @@ def remoteRunScriptAndLog(**kwargs):
         steps.ShellCommand(command=[
             util.Interpolate("%(prop:builddir)s/scripts/{script}".format(script=service_script)),
             "--script_name", util.Property("scriptName"),
-            "--log_file", util.Property("buildLogLife"),
+            "--log_file", util.Property("buildLogFile"),
             "--result_file", util.Property("resultFile")],
             timeout=1800,
             **kwargs)
