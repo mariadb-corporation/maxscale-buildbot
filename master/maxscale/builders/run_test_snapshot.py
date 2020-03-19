@@ -40,7 +40,8 @@ def createRunTestSnapshotSteps():
     testSnapshotSteps.extend(common.configureMdbciVmPathProperty())
     testSnapshotSteps.extend(common.cloneRepository())
     testSnapshotSteps.append(steps.SetProperties(properties=run_test.configureCommonProperties))
-    testSnapshotSteps.extend(common.remoteRunScriptAndLog())
+    testSnapshotSteps.extend(common.remoteRunScriptAndLog("run_test_snapshot.sh",
+                                                          name="Run MaxScale tests using snapshots"))
     testSnapshotSteps.extend(common.parseCtestLog())
     testSnapshotSteps.extend(common.findCoredump())
     testSnapshotSteps.extend(common.writeBuildsResults())
@@ -68,7 +69,7 @@ BUILDERS = [
         tags=['test'],
         env=RUN_TEST_SNAPSHOT_ENVIRONMENT,
         properties={
-            "script_name": "run_test_snapshot.sh"
+            "scriptName": "run_test_snapshot.sh"
         },
         defaultProperties={
             "try_already_running": None

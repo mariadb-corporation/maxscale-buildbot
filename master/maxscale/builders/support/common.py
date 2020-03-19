@@ -495,35 +495,24 @@ def showTestResult(**kwargs):
         **kwargs)]
 
 
-def remoteRunScriptAndLog():
+def remoteRunScriptAndLog(**kwargs):
     """
     Runs shell script which name is given in a property 'script_name' of a builder on a worker
-    and save results to the log file
+    and save results to the log file. You must also provide the 'logFile' and 'resultFile'
+    properties in order for this tasks to work
     """
-    def remote():
-        if not os.path.exists("maxscale-system-test/mdbci"):
-            os.mkdir("default-maxscale-branch")
-            subprocess.run(["git", "clone", repository, "default-maxscale-branch/MaxScale"])
-            shutil.copytree("default-maxscale-branch/MaxScale/maxscale-system-test/mdbci", "maxscale-system-test")
-
-        logFile = open(buildLogFile, "w")
-        process = subprocess.Popen(["maxscale-system-test/mdbci/{}".format(script_name)],
-                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        for byteLine in process.stdout:
-            line = byteLine.decode("utf-8", "replace")
-            sys.stdout.write(line)
-            sys.stdout.flush()
-            logFile.write(line)
-        process.wait()
-        logFile.close()
-
-        testLogFile = open(resultFile, "w")
-        testLogFile.write(str(process.returncode))
-        testLogFile.close()
-        sys.exit(process.returncode)
-
-    return support.executePythonScript(
-        "Run MaxScale tests using MDBCI", remote)
+    service_script = "run_script_and_log.py"
+    actions = downloadScript(service_script, hideStepIf=True)
+    actions.append(
+        steps.ShellCommand(command=[
+            util.Interpolate("%(prop:builddir)s/scripts/{script}".format(script=service_script)),
+            "--script_name", util.Property("scriptName"),
+            "--log_file", util.Property("buildLogLife"),
+            "--result_file", util.Property("resultFile")],
+            timeout=1800,
+            **kwargs)
+    )
+    return actions
 
 
 def parseCtestLog():
