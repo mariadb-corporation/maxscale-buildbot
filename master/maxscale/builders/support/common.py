@@ -38,7 +38,9 @@ def configureMdbciVmPathProperty():
     configureMdbciProperty = steps.SetProperty(
         name="Set MDBCI_VM_PATH property to $HOME/vms",
         property="MDBCI_VM_PATH",
-        value=util.Interpolate("%(prop:HOME)s/vms"))
+        value=util.Interpolate("%(prop:HOME)s/vms"),
+        hideStepIf=True,
+    )
 
     buildSteps.append(configureMdbciProperty)
     return buildSteps
@@ -48,6 +50,7 @@ def getWorkerHomeDirectory():
     """Capture worker home directory into the HOME property"""
     return [steps.SetPropertiesFromEnv(
         name="Get HOME variable from the worker into build property",
+        hideStepIf=True,
         variables=["HOME"])]
 
 
@@ -406,13 +409,14 @@ class RsyncShellSequence(ShellSequence):
         return self.runShellSequence(self.commands)
 
 
-def downloadScript(scriptName, **kwargs):
+def downloadScript(scriptName, hideStepIf=True, **kwargs):
     """Downloads script with the given name from scripts directory to the current worker"""
     return [steps.FileDownload(
         name="Transferring {} to worker".format(scriptName),
         mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
         workerdest=util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName)),
         mode=0o755,
+        hideStepIf=hideStepIf,
         **kwargs
     )]
 
@@ -502,7 +506,7 @@ def remoteRunScriptAndLog(**kwargs):
     properties in order for this tasks to work
     """
     service_script = "run_script_and_log.py"
-    actions = downloadScript(service_script, hideStepIf=True)
+    actions = downloadScript(service_script)
     actions.append(
         steps.ShellCommand(command=[
             util.Interpolate("%(prop:builddir)s/scripts/{script}".format(script=service_script)),
