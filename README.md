@@ -1,6 +1,6 @@
 # MaxScale BuildBot
 
-BuildBot configuration for Maxscale
+BuildBot configuration for Maxscale.
 
 ## Using pipenv for installation
 
@@ -11,7 +11,7 @@ In order not to pollute the base system with the BuildBot dependencies it is adv
 3. Go to the `maxscale-buildbot` directory and install dependencies `pipenv install`
 4. Enable virtual environment `pipenv shell`.
 
-When done you can leave Python virtual environment by leaving the shell.
+When done, you can leave Python virtual environment by leaving the shell.
 
 If you have installed BuildBot into the virtual environment, then you should either activate environment before running `buildbot` and `buildbot-worker` commands, or use absolute paths to them in the virtual environment directory.
 
@@ -19,7 +19,7 @@ If you have installed BuildBot into the virtual environment, then you should eit
 
 ### Database configuration
 
-For production purposes the BuildBot uses the MariaDB database. Use the following template to create the database:
+For production purposes, the BuildBot uses the MariaDB database. Use the following template to create the database:
 
 ```mysql
 create database maxscale_buildbot character set utf8 collate utf8_bin;
@@ -89,7 +89,7 @@ The received client identity and secret must be put into `github_client_config.p
 
 ## Development environment configuration
 
-In order to efficiently work with the BuildBot codebase you should install development tools:
+In order to efficiently work with the BuildBot codebase, you should install development tools:
 
 ```
 $ pip install -U -r requirements-development.txt
@@ -110,7 +110,7 @@ The [BuildBot](http://buildbot.net/) project is based on the [Twisted](https://t
 
 ## Upgrading the dependencies
 
-The list of Python packages that are required to install the BuildBot master is stored in Pipfile.lock file. In this file the tested and proved to work versions are specified.
+The list of Python packages that are required to install the BuildBot master is stored in Pipfile.lock file. In this file, the tested and proved to work versions are specified.
 
 In order to migrate to the newer versions you should use Pipenv update command.
 
