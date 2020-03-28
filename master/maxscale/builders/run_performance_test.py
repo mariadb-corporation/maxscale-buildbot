@@ -32,36 +32,6 @@ def configureCommonProperties(properties):
     }
 
 
-def testConnecton():
-    """
-    Tests if nodes specified in performance-test_network_config are available
-    :return:
-    """
-
-    def remoteCode():
-        import re
-        with open('{}/{}'.format(os.environ['HOME'], networkConfigPath), encoding="UTF-8") as configFile:
-            networkConfig = {}
-            configRegexp = re.compile(r'^(\S+)_(network|whoami|keyfile)=(\S+)$')
-            for line in configFile:
-                if configRegexp.match(line):
-                    match = configRegexp.search(line)
-                    if match.group(1) not in networkConfig:
-                        networkConfig[match.group(1)] = {}
-                    networkConfig[match.group(1)].update({match.group(2): match.group(3)})
-
-            for node, config in networkConfig.items():
-                host = '{}@{}'.format(config['whoami'], config['network'])
-                result = subprocess.call('ssh -i {} -o ConnectTimeout=20 {} exit'
-                                         .format(config['keyfile'], host), shell=True)
-                if result:
-                    sys.exit(subprocess.call('sudo $HOME/restart_vpn.sh', shell=True))
-
-        sys.exit(0)
-
-    return support.executePythonScript('Testing connection to the remote machine', remoteCode)
-
-
 def runPerformanceTest():
 
     def remoteCode():
@@ -120,7 +90,6 @@ def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    testSteps.extend(testConnecton())
     testSteps.extend(runPerformanceTest())
     testSteps.append(parsePerformanceTestResults(alwaysRun=True))
     testSteps.append(writePerformanceTestResults(alwaysRun=True))
