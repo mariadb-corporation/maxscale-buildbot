@@ -381,7 +381,7 @@ class RsyncShellSequence(ShellSequence):
         :return: List with rsync shell command for each host
         """
         return [util.ShellArg(command="rsync -r ~/.config/mdbci/repo.d/ -e "
-                                      "'ssh -o UserKnownHostsFile=/dev/null StrictHostKeyChecking=no' "
+                                      "'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' "
                                       "{}@{}:~/.config/mdbci/repo.d".format(constants.HOST_USERS.get(host), constants.HOST_FULL.get(host)),
                               logfile="rsync to {}".format(host)) for host in hosts]
 
