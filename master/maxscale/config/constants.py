@@ -143,12 +143,14 @@ MAXSCALE_DOCKER_CODEBASE = {
 HOST_USERS = {
     "max-tst-01" : "vagrant",
     "max-gcloud-01" : "timofey_turenko_mariadb_com",
+    "max-gcloud-02" : "timofey_turenko_mariadb_com",
     "bb-host" : "timofey_turenko_mariadb_com",
 }
 
 HOST_FULL = {
     "max-tst-01" : "max-tst-01.mariadb.com",
     "max-gcloud-01" : "max-gcloud-01",
+    "max-gcloud-02" : "max-gcloud-02",
     "bb-host" : "mariadbenterprise-buildbot",
 }
 
