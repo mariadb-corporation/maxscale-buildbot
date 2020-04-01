@@ -25,7 +25,7 @@ CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     change_filter=util.ChangeFilter(project=constants.MAXSCALE_PRODUCT, branch_fn=check_branch_fn),
     treeStableTimer=60,
     codebases=constants.MAXSCALE_CODEBASE,
-    builderNames=["build_and_test"],
+    builderNames=["build_and_test_parall"],
     properties=DEFAULT_PROPERTIES
 )
 
