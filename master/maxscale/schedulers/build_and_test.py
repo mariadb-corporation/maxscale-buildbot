@@ -107,7 +107,7 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
 
     nightlyScheduler = schedulers.Nightly(
         name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"], box=branch_item["box"]),
-        builderNames=["build_and_test"],
+        builderNames=["build_and_test_parall"],
         hour=launchTime % 24, minute=0,
         dayOfWeek=6,
         codebases={"": {

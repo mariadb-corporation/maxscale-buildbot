@@ -63,11 +63,11 @@ DIFF_DISTRO_BRANCHES_LIST = [
     {
         "branch": "2.4",
         "test_set": "-LE UNSTABLE",
-        "box": "ubuntu_bionic_libvirt"
+        "box": "ubuntu_bionic_gcp"
     },
     {
         "branch": "2.4",
         "test_set": "-LE UNSTABLE",
-        "box": "suse_15_libvirt"
+        "box": "suse_15_gpc"
     },
 ]
