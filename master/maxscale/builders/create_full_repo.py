@@ -65,7 +65,6 @@ BUILDERS = [
         workernames=workers.workerNames(),
         factory=createBuildFactory(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         tags=["create_full_repo"],
         env=ENVIRONMENT,
         collapseRequests=False,

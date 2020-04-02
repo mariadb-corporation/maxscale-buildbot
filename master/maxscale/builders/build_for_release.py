@@ -136,7 +136,6 @@ BUILDERS = [
         name="build_for_release",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         factory=createBuildFactory(),
         tags=["build"],
         env=ENVIRONMENT

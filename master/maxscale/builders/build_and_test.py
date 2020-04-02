@@ -69,7 +69,6 @@ BUILDERS = [
         name="build_and_test",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         factory=create_factory(),
         tags=['build', 'test'],
         env=dict(os.environ))

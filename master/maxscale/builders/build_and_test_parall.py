@@ -111,7 +111,6 @@ BUILDERS = [
         name="build_and_test_parall",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         factory=create_factory(),
         tags=['build', 'test'],
         env=dict(os.environ))
