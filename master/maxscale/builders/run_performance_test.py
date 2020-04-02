@@ -109,7 +109,6 @@ BUILDERS = [
         name="run_performance_test",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         factory=createTestFactory(),
         tags=["performance_test"],
         env=ENVIRONMENT,

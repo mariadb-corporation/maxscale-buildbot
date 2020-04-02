@@ -37,7 +37,6 @@ BUILDERS = [
         workernames=workers.workerNames(),
         factory=createBuildfactory(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         tags=["BUILD"],
         collapseRequests=False
     )

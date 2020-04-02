@@ -56,7 +56,6 @@ BUILDERS = [
         workernames=workers.workerNames(),
         factory=createBuildFactory(),
         nextWorker=common.assignWorker,
-        nextBuild=common.assignBuildRequest,
         # TODO: Define the builder tags or pass empty array
         tags=["tag_1", "tag_2"],
         env=ENVIRONMENT,

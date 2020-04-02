@@ -57,7 +57,6 @@ BUILDERS = [
         name="build_and_test_snapshot",
         workernames=workers.workerNames(),
         nextWorker=common.assignBestHost(['max-tst-02', 'max-tst-03']),
-        nextBuild=common.assignBuildRequest,
         factory=createFactory(),
         tags=['build', 'test'],
         env=dict(os.environ))
