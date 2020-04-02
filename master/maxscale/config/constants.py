@@ -60,8 +60,8 @@ BUILD_ALL_BOXES = [
 ]
 
 DB_VERSIONS = [
-    '10.4',
     '10.3',
+    '10.4',
     '10.2',
     '10.1',
     '10.0',
@@ -78,14 +78,14 @@ DB_VERSIONS = [
 
 DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug '
                        '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
-                       '-DWITH_ASAN=N')
+                       '-DWITH_ASAN=N -DBUILD_GUI=N')
 
 DEFAULT_DAILY_TEST_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DCMAKE_BUILD_TYPE=Debug '
                        '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
-                       '-DWITH_ASAN=N')
+                       '-DWITH_ASAN=N -DBUILD_GUI=N')
 
 DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
-                               '-DBUILD_CDC=Y')
+                               '-DBUILD_CDC=Y -DBUILD_GUI=N')
 
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
