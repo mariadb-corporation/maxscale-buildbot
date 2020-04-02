@@ -277,7 +277,7 @@ def assignWorker(builder, workerForBuilerList, buildRequest):
     """
     Returns available worker for a builder
     filtered by the scheduler which triggered build and by the giver task-host mapping
-    See 'nextWorker' at http://docs.buildbot.net/current/manual/cfg-builders.html#builder-configuration
+    See 'nextWorker' at http://docs.buildbot.net/current/manual/configuration/builders.html
     """
     workerNames = workers.workersOnHosts(buildRequest.properties.getProperty("host", default=""),
                                          *buildRequest.properties.getProperty("buildHosts", default=[]))
