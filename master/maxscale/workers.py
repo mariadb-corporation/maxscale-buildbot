@@ -24,9 +24,14 @@ def workersOnHosts(*hosts):
     Create a list of worker names that run on the specified hosts
     hosts (list): names of the host names to use
     """
+    acceptAll = True
+    for host in hosts:
+        if host:  # There is a valid host object, limiting to it
+            acceptAll = False
+
     workers = []
     for credentials in WORKER_CREDENTIALS:
-        if credentials["host"] in hosts:
+        if credentials["host"] in hosts or acceptAll:
             workers.append(credentials["name"])
     return workers
 
