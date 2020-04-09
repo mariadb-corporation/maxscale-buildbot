@@ -1,4 +1,3 @@
 from . import common
-from . import build_and_test
 
-SERVICES = [common.create_mail_notifier(build_and_test.MAIL_TEMPLATE, ['build_and_test_snapshot'])]
+SERVICES = [common.create_mail_notifier(common.COMPLEX_TEST_RESULTS_TEMPLATE, ['build_and_test_snapshot'])]
