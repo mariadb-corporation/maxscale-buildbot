@@ -40,10 +40,10 @@ MAXSCALE_TEST_SETS = [
     "name": "breaks_backend",
     "test_set": "-L 'BREAKS_REPL|BIG_REPL_BACKEND'"
   },
-#  {
-#    "name": "clustrix_backend",
-#    "test_set": "-L 'CLUSTRIX_BACKEND'"
-#  },
+  {
+    "name": "clustrix_backend",
+    "test_set": "-L 'CLUSTRIX_BACKEND'"
+  },
 ]
 
 
