@@ -1,6 +1,5 @@
-from buildbot.plugins import schedulers, util
+from buildbot.plugins import schedulers
 from . import properties
-from maxscale.change_source.maxscale import get_test_set_by_branch
 from maxscale.config import constants
 from maxscale.config.branches_list_file import VALGRIND_BRANCHES_LIST
 from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
@@ -37,16 +36,19 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 
 SCHEDULERS = [MANUAL_SCHEDULER]
 
+DEFAULT_NIGHTLY_PROPERTIES = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+del DEFAULT_NIGHTLY_PROPERTIES['host']  # We will set hosts manually for each scheduled build
+
 # Add schedulers for every active branch to be built every night
 # The list of branches is defined by constants.NIGHTLY_SCHEDS
 # (see maxscale/config/constants.py)
 BUILD_INTERVAL = 2
 launchTime = 20
 for branch_item in NIGHTLY_BRANCHES_LIST:
-    nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+    nightlyProperties = DEFAULT_NIGHTLY_PROPERTIES.copy()
     nightlyProperties["name"] = "nightly_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"],
+    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"]
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
     nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
@@ -68,10 +70,10 @@ for branch_item in NIGHTLY_BRANCHES_LIST:
 BUILD_INTERVAL = 8
 launchTime = 8
 for branch_item in VALGRIND_BRANCHES_LIST:
-    nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+    nightlyProperties = DEFAULT_NIGHTLY_PROPERTIES.copy()
     nightlyProperties["name"] = "valgrind_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"],
+    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"]
     nightlyProperties['use_valgrind'] = "yes"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
@@ -95,10 +97,10 @@ for branch_item in VALGRIND_BRANCHES_LIST:
 BUILD_INTERVAL = 8
 launchTime = 8
 for branch_item in DIFF_DISTRO_BRANCHES_LIST:
-    nightlyProperties = properties.extractDefaultValues(BUILD_AND_TEST_PROPERTIES)
+    nightlyProperties = DEFAULT_NIGHTLY_PROPERTIES.copy()
     nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"],
+    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"]
     nightlyProperties['use_valgrind'] = "no"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['box'] = branch_item["box"]
