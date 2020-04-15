@@ -1,12 +1,5 @@
-from buildbot.plugins import schedulers, util
+from buildbot.plugins import schedulers
 from . import properties
-from maxscale.change_source.maxscale import get_test_set_by_branch
-from maxscale.config import constants
-from maxscale.config.branches_list_file import VALGRIND_BRANCHES_LIST
-from maxscale.config.branches_list_file import NIGHTLY_BRANCHES_LIST
-from maxscale.config.branches_list_file import DIFF_DISTRO_BRANCHES_LIST
-from maxscale.builders.support.common import TargetInitOptions
-
 
 BUILD_AND_TEST_PROPERTIES = [
     properties.build_name(),
@@ -36,5 +29,3 @@ MANUAL_SCHEDULER = schedulers.ForceScheduler(
 )
 
 SCHEDULERS = [MANUAL_SCHEDULER]
-
-
