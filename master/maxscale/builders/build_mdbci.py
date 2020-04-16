@@ -1,60 +1,37 @@
-import os
-
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
-from maxscale.builders.support import common, support
-from buildbot.steps.shell import ShellCommand
-
-ENVIRONMENT = {
-    "JOB_NAME": util.Property("buildername"),
-    "BUILD_ID": util.Interpolate('%(prop:buildnumber)s'),
-    "BUILD_NUMBER": util.Interpolate('%(prop:buildnumber)s'),
-}
+from maxscale.builders.support import common
 
 
-@util.renderer
-def configureBuildProperties(properties):
-    return {
-        "mdbciConfig": util.Interpolate("%(prop:buildername)s-%(prop:buildnumber)s")
-    }
-
-
-def remoteBuildMdbci():
+def buildMdbci():
     """This script will be run on the worker"""
-    os.chdir("../build/package")
-    results = subprocess.run("./build.sh " + str(buildnumber), shell=True)
-    sys.exit(results.returncode)
+    return steps.ShellCommand(
+        name="Build MDBCI",
+        command=["./package/build.sh", util.Property("buildnumber")]
+    )
 
 
 def publishMdbci():
-    return [steps.ShellCommand(
+    return steps.ShellCommand(
         name="Copy MDBCI AppImage to CI repository",
         command=util.Interpolate(
-            "cp %(prop:builddir)s/build/package/build/out/* \
-             $HOME/%(prop:repo_path)s; \
-             mdbci_file=`ls %(prop:builddir)s/build/package/build/out/* \
-             | xargs -n1 basename`; unlink $HOME/%(prop:repo_path)s/mdbci; \
-             ln -s $HOME/%(prop:repo_path)s/${mdbci_file} \
-             $HOME/%(prop:repo_path)s/mdbci"),
-        alwaysRun=False)]
-
-
-def createBuildSteps():
-    buildSteps = []
-    buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
-    buildSteps.extend(common.cloneRepository())
-    buildSteps.extend(support.executePythonScript(
-        "Build MDBCI", remoteBuildMdbci))
-    buildSteps.extend(publishMdbci())
-    buildSteps.extend(common.cleanBuildDir())
-    return buildSteps
+            """
+            mdbci_file=`ls %(prop:builddir)s/build/package/build/result/* | xargs -n1 basename`;
+            cp %(prop:builddir)s/build/package/build/result/${mdbci_file} $HOME/%(prop:repo_path)s/;
+            chmod 755 $HOME/%(prop:repo_path)s/${mdbci_file};
+            unlink $HOME/%(prop:repo_path)s/mdbci;
+            ln -s $HOME/%(prop:repo_path)s/${mdbci_file} $HOME/%(prop:repo_path)s/mdbci
+            """),
+        alwaysRun=False)
 
 
 def createBuildFactory():
     factory = util.BuildFactory()
-    buildSteps = createBuildSteps()
-    factory.addSteps(buildSteps)
+    factory.addSteps(common.cloneRepository())
+    factory.addStep(buildMdbci())
+    factory.addStep(publishMdbci())
+    factory.addSteps(common.cleanBuildDir())
     return factory
 
 
@@ -65,7 +42,6 @@ BUILDERS = [
         factory=createBuildFactory(),
         nextWorker=common.assignWorker,
         tags=["build_mdbci"],
-        env=ENVIRONMENT,
         collapseRequests=False,
     )
 ]
