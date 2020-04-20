@@ -279,7 +279,7 @@ def versionNumber():
     )
 
 
-def host(default="bb-host"):
+def host(default="max-gcloud-01"):
     """Host of the used group of workers"""
     return util.ChoiceStringParameter(
         name="host",
