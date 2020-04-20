@@ -263,8 +263,9 @@ def assignWorker(_builder, workerForBuilderList, buildRequest):
     workerNames = workers.workersOnHosts(buildRequest.properties.getProperty("host", default=""),
                                          *buildRequest.properties.getProperty("buildHosts", default=[]))
     for workerForBuilder in workerForBuilderList:
-        if workerForBuilder.isAvailable() and workerForBuilder.worker in workerNames:
-            buildRequest.properties.setProperty("host", workers.workerToHostMap()[workerForBuilder.worker.workername],
+        workerName = workerForBuilder.worker.workername
+        if workerForBuilder.isAvailable() and workerName in workerNames:
+            buildRequest.properties.setProperty("host", workers.workerToHostMap()[workerName],
                                                 "Assign worker")
             return workerForBuilder
 
