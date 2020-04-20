@@ -62,6 +62,13 @@ def createRunTestSteps():
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
+    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s ' + constants.UPLOAD_SERVER + ':LOGS/%(prop:target)s/'
+    testSteps.append(steps.ShellCommand(
+        name="Rsync test logs to the logs server",
+        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        timeout=1800,
+        flunkOnFailure=False,
+    ))
     testSteps.extend(common.destroyVirtualMachine())
     testSteps.extend(common.removeLock())
     testSteps.extend(common.cleanBuildDir())
