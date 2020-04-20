@@ -254,7 +254,7 @@ def initNameProperty():
     ]
 
 
-def assignWorker(builder, workerForBuilerList, buildRequest):
+def assignWorker(_builder, workerForBuilderList, buildRequest):
     """
     Returns available worker for a builder
     filtered by the scheduler which triggered build and by the giver task-host mapping
@@ -262,9 +262,8 @@ def assignWorker(builder, workerForBuilerList, buildRequest):
     """
     workerNames = workers.workersOnHosts(buildRequest.properties.getProperty("host", default=""),
                                          *buildRequest.properties.getProperty("buildHosts", default=[]))
-    availableWorkers = filter(lambda wfb: wfb.worker.workername in workerNames, workerForBuilerList)
-    for workerForBuilder in availableWorkers:
-        if workerForBuilder.isAvailable():
+    for workerForBuilder in workerForBuilderList:
+        if workerForBuilder.isAvailable() and workerForBuilder.worker in workerNames:
             buildRequest.properties.setProperty("host", workers.workerToHostMap()[workerForBuilder.worker.workername],
                                                 "Assign worker")
             return workerForBuilder
