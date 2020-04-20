@@ -5,7 +5,6 @@ from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
 from maxscale.builders.support import common
-from maxscale.config import constants
 
 COMMON_PROPERTIES = [
     "name",
@@ -26,7 +25,7 @@ COMMON_PROPERTIES = [
 ]
 
 
-def create_factory():
+def createFactory():
     factory = BuildFactory()
     factory.addSteps(common.initTargetProperty())
     factory.addSteps(common.initNameProperty())
@@ -41,11 +40,6 @@ def create_factory():
         }
     ))
 
-    if util.Property("host") == "bb-host":
-        testHost = "max-gcloud"
-    else:
-        testHost = util.Property("host")
-
     factory.addStep(steps.Trigger(
         name="Call the 'run_test' scheduler",
         schedulerNames=['run_test'],
@@ -57,7 +51,7 @@ def create_factory():
             "use_valgrind": util.Property("use_valgrind"),
             "use_callgrind": util.Property("use_callgrind"),
             "backend_ssl": util.Property("backend_ssl"),
-            "host": testHost,
+            "host": util.Property("host"),
         }
     ))
 
@@ -69,7 +63,7 @@ BUILDERS = [
         name="build_and_test",
         workernames=workers.workerNames(),
         nextWorker=common.assignWorker,
-        factory=create_factory(),
+        factory=createFactory(),
         tags=['build', 'test'],
         env=dict(os.environ))
 ]
