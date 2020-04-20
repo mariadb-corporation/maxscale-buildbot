@@ -2,6 +2,7 @@ from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
 from maxscale.builders.support import common, support
 from maxscale import workers
+from maxscale.config import constants
 
 
 ENVIRONMENT = {
