@@ -63,7 +63,7 @@ def createRunTestSteps():
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
-    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s ' + constants.UPLOAD_SERVER + ':LOGS/%(prop:target)s/'
+    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s ' + constants.UPLOAD_SERVER + ':LOGS/run_test-%(prop:buildnumber)s/'
     testSteps.append(steps.ShellCommand(
         name="Rsync test logs to the logs server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
