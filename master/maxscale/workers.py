@@ -42,3 +42,11 @@ def workerToHostMap():
     for credentials in WORKER_CREDENTIALS:
         workerToHost[credentials["name"]] = credentials["host"]
     return workerToHost
+
+
+def workerHosts():
+    """Creates a list of hosts that are available in configuration"""
+    hosts = []
+    for credentials in WORKER_CREDENTIALS:
+        hosts.append(credentials["host"])
+    return list(set(hosts))

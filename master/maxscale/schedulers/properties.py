@@ -1,7 +1,6 @@
-import os
 from buildbot.plugins import util
 from maxscale.config import constants
-from maxscale.config import workers
+from maxscale import workers
 
 
 def build_box(default=constants.BOXES[0]):
@@ -284,7 +283,7 @@ def host(default="max-gcloud-01"):
     return util.ChoiceStringParameter(
         name="host",
         label="Host",
-        choices=list(set(map(lambda worker: worker["host"], workers.WORKER_CREDENTIALS))),
+        choices=workers.workerHosts(),
         default=default
     )
 
