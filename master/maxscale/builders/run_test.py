@@ -63,7 +63,21 @@ def createRunTestSteps():
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
-    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s ' + constants.UPLOAD_SERVER + ':LOGS/run_test-%(prop:buildnumber)s/'
+    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s/ ' + constants.UPLOAD_SERVER + ':LOGS/run_test-%(prop:buildnumber)s/'
+    testSteps.append(steps.ShellCommand(
+        name="Rsync test logs to the logs server",
+        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        timeout=1800,
+        flunkOnFailure=False,
+    ))
+    cmd = 'rm -rf ~/LOGS/run_test-%(prop:buildnumber)s'
+    testSteps.append(steps.ShellCommand(
+        name="removes logs from worker host",
+        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        timeout=1800,
+        flunkOnFailure=False,
+    ))
+    cmd = 'ssh ' + constants.UPLOAD_SERVER +' chmod 777 -R LOGS/run_test-%(prop:buildnumber)s/'
     testSteps.append(steps.ShellCommand(
         name="Rsync test logs to the logs server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
