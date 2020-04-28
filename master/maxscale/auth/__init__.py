@@ -1,3 +1,3 @@
-from . import github_auth
+from . import google_auth
 
-MAXSCALE_AUTH = github_auth.SETTINGS
+MAXSCALE_AUTH = google_auth.SETTINGS
