@@ -39,7 +39,9 @@ ALTER TABLE steps MODIFY name varchar(300);
 4. Go to the `maxscale-buildbot` directory and install dependencies `pipenv install`
 5. Configure database access in `master/maxscale/config/database_config.py` file. The template for this file can be found in `master/maxscale/config/datababes_config.py` file.
 6. Configure mail client in `master/maxscale/config/mailer_config.py` file. The template for this file can be found in `master/maxscale/config/mailer_config_example.py` file.
-7. Configure github client in `master/maxscale/config/github_client_config.py` file. The template for this file can be found in `master/maxscale/config/github_client_config_example.py` file.
+7. Configure authorization options.
+  - When using Google configure credentials in `master/maxscale/config/google_auth_config.py` file. The template for this file can be found in `master/maxscale/config/google_auth_config_example.py` file.
+  - When using GitHub configure github client credentials in `master/maxscale/config/github_client_config.py` file. The template for this file can be found in `master/maxscale/config/github_client_config_example.py` file.
 8. Configure authorization rights for users in `master/maxscale/config/auth_config.py` file. The template for this file can be found in `master/maxscale/config/auth_config_example.py` file.
 9. Configure the list of workers that are allowed to access BuildBot master in `master/maxscale/config/workers.py` file. The template for this file can be found in `master/maxscale/config/workers_example.py` file.
 10. Configure the access name of the server in `master/maxscale/conifg/server_config.py` file. The template for this file can be found in `master/maxscale/config/server_config_example.py` file.

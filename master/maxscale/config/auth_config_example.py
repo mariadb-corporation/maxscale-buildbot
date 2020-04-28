@@ -1,4 +1,4 @@
 AUTH_CONFIG = {
-    # Github usernames
+    # Google account names
     'admins': ['username', 'username2']
 }
