@@ -1,6 +1,5 @@
 from buildbot.plugins import util
 from maxscale.config.google_auth_config import GOOGLE_AUTH_CONFIG
-from maxscale.config.auth_config import AUTH_CONFIG
 
 
 SETTINGS = {
@@ -12,7 +11,7 @@ SETTINGS = {
             util.AnyControlEndpointMatcher(role="admins", defaultDeny=False)
         ],
         roleMatchers=[
-            util.RolesFromUsername(roles=["admins"], usernames=AUTH_CONFIG['admins'])
+            util.RolesFromDomain(admins=["mariadb.com"])
         ]
     )
 }
