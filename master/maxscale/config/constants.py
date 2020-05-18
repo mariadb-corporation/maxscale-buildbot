@@ -18,6 +18,7 @@ BOXES = [
 
     'ubuntu_xenial_gcp',
     'ubuntu_bionic_gcp',
+    'ubuntu_focal_gcp',
     'ubuntu_xenial_libvirt',
     'ubuntu_bionic_libvirt',
     'ubuntu_xenial_aws',
@@ -52,6 +53,7 @@ BUILD_ALL_BOXES = [
     "centos_8_gcp",
     "ubuntu_xenial_gcp",
     "ubuntu_bionic_gcp",
+    'ubuntu_focal_gcp',
     "debian_jessie_aws",
     "debian_stretch_gcp",
     "debian_buster_gcp",
