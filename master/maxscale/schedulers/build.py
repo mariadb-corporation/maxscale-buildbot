@@ -8,9 +8,9 @@ BUILD_PROPERTIES = [
     properties.ci_url(),
     properties.cmake_flags(),
     properties.host(),
+    properties.upload_server(),
     properties.keep_virtual_machines(),
     properties.old_target(),
-    properties.repository_path(),
     properties.run_upgrade_test(),
     properties.try_already_running(),
 ]

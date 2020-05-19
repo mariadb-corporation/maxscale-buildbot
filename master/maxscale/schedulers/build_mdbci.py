@@ -3,7 +3,6 @@ from maxscale.config import constants
 from . import properties
 
 BUILD_PROPERTIES = [
-    properties.repository_path(),
     properties.host(),
 ]
 

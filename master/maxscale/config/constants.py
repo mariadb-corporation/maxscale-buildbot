@@ -94,7 +94,7 @@ MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
 MAXSCALE_PRODUCT = 'MaxScale'
 MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
 
-CI_SERVER_URL = 'http://max-tst-01.mariadb.com/ci-repository/'
+CI_SERVER_URL = 'https://mdbe-ci-repo.mariadb.net/Maxscale/'
 
 # Define branches for nightly build_all builds
 NIGHTLY_SCHEDS = ['2.4', '2.3', 'develop']
@@ -158,4 +158,11 @@ HOST_FULL = {
 
 UPLOAD_SERVER = "vagrant@max-tst-01.mariadb.com"
 
-UPLOAD_PATH = "./repository"
+UPLOAD_SERVERS = {
+    "max-tst-01" : "timofey_turenko_mariadb_com@35.228.94.27"
+    "max-gcloud-01" : "timofey_turenko_mariadb_com@mdbe-ci-repo",
+    "max-gcloud-02" : "timofey_turenko_mariadb_com@mdbe-ci-repo",
+    "bb-host" : "timofey_turenko_mariadb_com@mdbe-ci-repo",
+}
+
+UPLOAD_PATH = "/srv/repository/Maxscale"

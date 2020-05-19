@@ -26,7 +26,8 @@ ENVIRONMENT = {
 @util.renderer
 def configureBuildProperties(properties):
     return {
-        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s")
+        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s"),
+        "upload_server" : constants.UPLOAD_SERVERS[properties.getProperty("host")],
     }
 
 def createBuildSteps():
@@ -42,13 +43,13 @@ def createBuildSteps():
     ))
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
-    cmd = 'ssh ' + constants.UPLOAD_SERVER + ' mkdir -p ' + constants.UPLOAD_PATH + '/%(prop:target)s/mariadb-maxscale'
+    cmd = 'ssh %(prop:upload_server)s mkdir -p ' + constants.UPLOAD_PATH + '/%(prop:target)s'
     buildSteps.append(steps.ShellCommand(
         name="Make dir for build results on the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
         timeout=1800,
     ))
-    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ ' + constants.UPLOAD_SERVER + ':' + constants.UPLOAD_PATH + '/%(prop:target)s/mariadb-maxscale/'
+    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/ %(prop:upload_server)s:' + constants.UPLOAD_PATH + '/%(prop:target)s/'
     buildSteps.append(steps.ShellCommand(
         name="Rsync builds results to the repo server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],

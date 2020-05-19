@@ -22,6 +22,7 @@ RUN_TEST_PROPERTIES = [
     properties.test_template(),
     properties.configuration_to_clone(),
     properties.host(),
+    properties.upload_server(),
 ]
 
 TRIGGERABLE_SCHEDULER = schedulers.Triggerable(

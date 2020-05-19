@@ -8,7 +8,6 @@ BUILD_PROPERTIES = [
     properties.ci_url(),
     properties.host(),
     properties.keep_virtual_machines(),
-    properties.repository_path(),
     properties.major_ver()
 ]
 
