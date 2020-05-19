@@ -4,6 +4,7 @@ from . import properties
 
 BUILD_PROPERTIES = [
     properties.host(),
+    properties.upload_server(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
