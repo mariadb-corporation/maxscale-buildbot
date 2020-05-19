@@ -38,7 +38,8 @@ def configureCommonProperties(properties):
         "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
         "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
-        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s")
+        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s"),
+        "upload_server" : constants.UPLOAD_SERVERS[properties.getProperty("host")],
     }
 
 
@@ -63,7 +64,7 @@ def createRunTestSteps():
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
-    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s/ ' + constants.UPLOAD_SERVER + ':LOGS/run_test-%(prop:buildnumber)s/'
+    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s/ %(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/'
     testSteps.append(steps.ShellCommand(
         name="Rsync test logs to the logs server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],
@@ -77,7 +78,7 @@ def createRunTestSteps():
         timeout=1800,
         flunkOnFailure=False,
     ))
-    cmd = 'ssh ' + constants.UPLOAD_SERVER +' chmod 777 -R LOGS/run_test-%(prop:buildnumber)s/'
+    cmd = 'ssh %(prop:upload_server)s chmod 777 -R /srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/'
     testSteps.append(steps.ShellCommand(
         name="Rsync test logs to the logs server",
         command=['/bin/bash', '-c', util.Interpolate(cmd)],

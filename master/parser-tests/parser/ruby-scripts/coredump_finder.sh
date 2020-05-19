@@ -9,8 +9,8 @@ then
 	exit 1
 fi
 
-BASE_DIR="$HOME/"
-LOGS_PATH="${BASE_DIR}LOGS"
+BASE_DIR="/srv/"
+LOGS_PATH="${BASE_DIR}bb-logs/Maxscale"
 
 buildId=${1}
 showFileList=${2}
@@ -26,7 +26,7 @@ fi
 
 if [[ "$showFileList" == "url" ]]
 then
-	find $buildPath | grep core | sed -e "s|${BASE_DIR}|http://max-tst-01.mariadb.com/|"
+	find $buildPath | grep core | sed -e "s|${BASE_DIR}|https://mdbe-ci-repo.net/|"
 	exit 0
 fi
 cd $buildPath

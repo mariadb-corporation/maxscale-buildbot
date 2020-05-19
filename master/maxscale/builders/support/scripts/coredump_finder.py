@@ -12,9 +12,9 @@ options.add_argument("output_format", help="Output format (url|files)", choices=
 
 def main(args=None):
     args = options.parse_args(args=args)
-    HOME = os.environ["HOME"]
-    LOG_SERVER = 'http://max-tst-01.mariadb.com'
-    logsPath = "{}/LOGS".format(HOME)
+    HOME = "/srv"
+    LOG_SERVER = 'https://mdbe-ci-repo.mariadb.net'
+    logsPath = "{}/bb-logs/Maxscale".format(HOME)
     buildPath = "{}/{}".format(logsPath, args.build_id)
 
     if not os.path.isdir(buildPath):
@@ -26,7 +26,7 @@ def main(args=None):
             return "{}/{}".format(dirpath.rstrip('/'), filename).replace(HOME, LOG_SERVER)
     else:
         def coredumpPath(dirpath, filename):
-            return "{}/*".format(dirpath.rstrip('/')).replace('{}/LOGS'.format(HOME), '*')
+            return "{}/*".format(dirpath.rstrip('/')).replace('{}/bb-logs/Maxscale'.format(HOME), '*')
 
     for dirpath, dirnames, filenames in os.walk(buildPath):
         for name in filenames:

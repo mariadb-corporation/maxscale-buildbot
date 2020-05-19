@@ -38,7 +38,7 @@ TEST_TEMPLATE = BUILD_SUMMARY_HEADER + '''\
     </blockquote>
     {% if build['results'] == 0 %}
         <a href="{{
-                'http://max-tst-01.mariadb.com/LOGS/{}-{}/LOGS/'.format(
+                'https://mdbe-ci-repo.mariadb.net/bb-logs/Maxscale/{}-{}/LOGS/'.format(
                     build['properties']['buildername'][0],
                     build['properties']['buildnumber'][0]
                 )
@@ -90,7 +90,7 @@ COMPLEX_TEST_RESULTS_TEMPLATE = COMPLEX_STEPS_BUILD_TEMPLATE + '''\
                 </blockquote>
                 {% if build['results'] == 0 %}
                     <a href="{{
-                        'http://max-tst-01.mariadb.com/LOGS/{}-{}/LOGS/'.format(
+                        'https://mdbe-ci-repo.mariadb.net/bb-logs/Maxscale/{}-{}/LOGS/'.format(
                             test['properties']['buildername'][0],
                             test['properties']['buildnumber'][0]
                         )
