@@ -32,7 +32,7 @@ def configureBuildProperties(properties):
 
 def createBuildFactory():
     factory = util.BuildFactory()
-    factory.addStep(steps.SetProperties(properties=configureCommonProperties))
+    factory.addStep(steps.SetProperties(properties=configureBuildProperties))
     factory.addSteps(common.cloneRepository())
     factory.addStep(buildMdbci())
     factory.addStep(publishMdbci())
