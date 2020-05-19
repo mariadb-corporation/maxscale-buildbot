@@ -160,9 +160,9 @@ UPLOAD_SERVER = "vagrant@max-tst-01.mariadb.com"
 
 UPLOAD_SERVERS = {
     "max-tst-01" : "timofey_turenko_mariadb_com@35.228.94.27",
-    "max-gcloud-01" : "timofey_turenko_mariadb_com@mariadbenterprise-buildbot",
-    "max-gcloud-02" : "timofey_turenko_mariadb_com@mariadbenterprise-buildbot",
-    "bb-host" : "timofey_turenko_mariadb_com@mariadbenterprise-buildbot",
+    "max-gcloud-01" : "timofey_turenko_mariadb_com@10.166.0.24",
+    "max-gcloud-02" : "timofey_turenko_mariadb_com@10.166.0.24",
+    "bb-host" : "timofey_turenko_mariadb_com@10.166.0.24",
 }
 
 UPLOAD_PATH = "/srv/repository/Maxscale"
