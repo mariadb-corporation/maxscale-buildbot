@@ -66,14 +66,6 @@ def build_experimental_features():
         default="yes")
 
 
-def repository_path():
-    return util.StringParameter(
-        name="repo_path",
-        label="Repository path",
-        size=50,
-        default="repository")
-
-
 def try_already_running():
     return util.ChoiceStringParameter(
         name="try_already_running",
@@ -382,6 +374,13 @@ def maxscaleDockerRepositoryBranch():
         name="maxscale_docker_repository_branch",
         label="Branch of MaxScale Docker generation repo",
         default=constants.MAXSCALE_DOCKER_CODEBASE[""]["branch"]
+    )
+
+def upload_server():
+    return util.StringParameter(
+        name="upload_server",
+        label="Server for binaries and logs",
+        default=constants.UPLOAD_SERVERS["bb-host"]
     )
 
 def maxscaleDockerCodebase():

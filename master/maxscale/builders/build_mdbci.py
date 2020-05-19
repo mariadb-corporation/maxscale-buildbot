@@ -18,16 +18,21 @@ def publishMdbci():
         command=util.Interpolate(
             """
             mdbci_file=`ls %(prop:builddir)s/build/package/build/result/* | xargs -n1 basename`;
-            cp %(prop:builddir)s/build/package/build/result/${mdbci_file} $HOME/%(prop:repo_path)s/;
-            chmod 755 $HOME/%(prop:repo_path)s/${mdbci_file};
-            unlink $HOME/%(prop:repo_path)s/mdbci;
-            ln -s $HOME/%(prop:repo_path)s/${mdbci_file} $HOME/%(prop:repo_path)s/mdbci
+            scp %(prop:builddir)s/build/package/build/result/${mdbci_file} %(prop:upload_server)s:/srv/repository/MDBCI/;
+            ssh %(prop:upload_server)s chmod 755 /srv/repository/MDBCI/${mdbci_file};
+            ssh %(prop:upload_server)s unlink /srv/repository/MDBCI/mdbci;
+            ssh %(prop:upload_server)s ln -s /srv/repository/MDBCI/${mdbci_file} /srv/repository/MDBCI/mdbci
             """),
         alwaysRun=False)
 
+def configureBuildProperties(properties):
+    return {
+        "upload_server" : constants.UPLOAD_SERVERS[properties.getProperty("host")],
+    }
 
 def createBuildFactory():
     factory = util.BuildFactory()
+    factory.addStep(steps.SetProperties(properties=configureCommonProperties))
     factory.addSteps(common.cloneRepository())
     factory.addStep(buildMdbci())
     factory.addStep(publishMdbci())
