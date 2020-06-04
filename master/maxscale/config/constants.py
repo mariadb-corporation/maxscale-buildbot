@@ -54,7 +54,6 @@ BUILD_ALL_BOXES = [
     "ubuntu_xenial_gcp",
     "ubuntu_bionic_gcp",
     'ubuntu_focal_gcp',
-    "debian_jessie_aws",
     "debian_stretch_gcp",
     "debian_buster_gcp",
     "sles_12_gcp",
