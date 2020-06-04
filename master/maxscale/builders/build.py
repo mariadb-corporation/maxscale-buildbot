@@ -43,23 +43,24 @@ def createBuildSteps():
     ))
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
-    cmd = 'ssh %(prop:upload_server)s mkdir -p ' + constants.UPLOAD_PATH + '/%(prop:target)s'
     buildSteps.append(steps.ShellCommand(
         name="Make dir for build results on the repo server",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        command=["ssh", util.Property("upload_server"), "mkdir", "-p",
+                 util.Interpolate(constants.UPLOAD_PATH + '/%(prop:target)s')],
         timeout=1800,
     ))
-    cmd = 'rsync -avz --progress -e ssh ~/repository/%(prop:target)s/mariadb-maxscale/ %(prop:upload_server)s:' + constants.UPLOAD_PATH + '/%(prop:target)s/'
     buildSteps.append(steps.ShellCommand(
         name="Rsync builds results to the repo server",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        command=["rsync", "-avz", "--progress", "-e", "ssh",
+                 util.Interpolate("%(prop:HOME)s/repository/%(prop:target)s/mariadb-maxscale/"),
+                 util.Interpolate("%(prop:upload_server)s:" + constants.UPLOAD_PATH + "/%(prop:target)s/")],
         timeout=1800,
         flunkOnFailure=False,
     ))
-    cmd = '~/mdbci/mdbci generate-product-repositories --product maxscale_ci --product-version %(prop:target)s'
     buildSteps.append(steps.ShellCommand(
         name="Generate new repo descriptions",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories", "--product",
+                 "maxscale_ci", "--product-version", util.Property("target")],
         timeout=1800,
     ))
     buildSteps.extend(common.syncRepod())
