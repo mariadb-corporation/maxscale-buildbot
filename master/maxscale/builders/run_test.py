@@ -4,7 +4,6 @@ from maxscale.builders.support import common, support
 from maxscale import workers
 from maxscale.config import constants
 
-
 ENVIRONMENT = {
     "WORKSPACE": util.Interpolate('%(prop:builddir)s/build'),
     "JOB_NAME": util.Property("buildername"),
@@ -39,7 +38,7 @@ def configureCommonProperties(properties):
         "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s"),
-        "upload_server" : constants.UPLOAD_SERVERS[properties.getProperty("host")],
+        "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
     }
 
 
@@ -65,24 +64,25 @@ def createRunTestSteps():
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
-    cmd = 'rsync -avz --progress -e ssh ~/LOGS/run_test-%(prop:buildnumber)s/ %(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/'
     testSteps.append(steps.ShellCommand(
         name="Rsync test logs to the logs server",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        command=["rzync", "-avz", "--progress", "-e", "ssh",
+                 util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s/"),
+                 util.Interpolate(
+                     "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/")],
         timeout=1800,
         flunkOnFailure=False,
     ))
-    cmd = 'rm -rf ~/LOGS/run_test-%(prop:buildnumber)s'
     testSteps.append(steps.ShellCommand(
         name="removes logs from worker host",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        command=["rm", "-rf", util.Interpolate("%(prop:HOME)/LOGS/run_test-%(prop:buildnumber)s")],
         timeout=1800,
         flunkOnFailure=False,
     ))
-    cmd = 'ssh %(prop:upload_server)s chmod 777 -R /srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/'
     testSteps.append(steps.ShellCommand(
         name="Rsync test logs to the logs server",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
+        command=["ssh", util.Property("upload_server"), "chmod", "777", "-R",
+                 util.Interpolate("/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/")],
         timeout=1800,
         flunkOnFailure=False,
     ))
