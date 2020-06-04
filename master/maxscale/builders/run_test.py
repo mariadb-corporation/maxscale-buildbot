@@ -75,7 +75,7 @@ def createRunTestSteps():
     ))
     testSteps.append(steps.ShellCommand(
         name="removes logs from worker host",
-        command=["rm", "-rf", util.Interpolate("%(prop:HOME)/LOGS/run_test-%(prop:buildnumber)s")],
+        command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s")],
         timeout=1800,
         flunkOnFailure=False,
     ))
