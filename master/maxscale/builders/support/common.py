@@ -46,6 +46,23 @@ def configureMdbciVmPathProperty():
     return buildSteps
 
 
+def runMdbciCommand(name, *command):
+    """Run the MDBCI with the specified command"""
+    return steps.ShellCommand(
+        name=name,
+        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), *command],
+        timeout=1800
+    )
+
+
+def generateMdbciRepositoryForTarget():
+    """Generate repository configuration for the target specified by the property target"""
+    return runMdbciCommand(
+        util.Interpolate("Generate new repo descriptions for %(prop:target)s"),
+        "generate-product-repositories", "--product", "maxscale_ci", "--product-version", util.Property("target")
+    )
+
+
 def getWorkerHomeDirectory():
     """Capture worker home directory into the HOME property"""
     return [steps.SetPropertiesFromEnv(

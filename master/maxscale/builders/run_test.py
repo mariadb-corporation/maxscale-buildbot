@@ -59,12 +59,7 @@ def createRunTestSteps():
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.extend(common.cloneRepository())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    cmd = '~/mdbci/mdbci generate-product-repositories --product maxscale_ci --product-version %(prop:target)s'
-    testSteps.append(steps.ShellCommand(
-        name="Generate new repo descriptions",
-        command=['/bin/bash', '-c', util.Interpolate(cmd)],
-        timeout=1800,
-    ))
+    testSteps.append(common.generateMdbciRepositoryForTarget())
     testSteps.extend(common.remoteRunScriptAndLog(name="Run MaxScale tests"))
     testSteps.extend(common.parseCtestLog())
     testSteps.extend(common.findCoredump())
