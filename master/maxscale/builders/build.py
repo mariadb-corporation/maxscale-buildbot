@@ -1,9 +1,7 @@
-import os
-
 from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
-from maxscale.builders.support import common, support
+from maxscale.builders.support import common
 from maxscale.config import constants
 
 ENVIRONMENT = {
@@ -26,9 +24,11 @@ ENVIRONMENT = {
 @util.renderer
 def configureBuildProperties(properties):
     return {
-        "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s"),
-        "upload_server" : constants.UPLOAD_SERVERS[properties.getProperty("host")],
+        "mdbciConfig": util.Interpolate(
+            "%(prop:MDBCI_VM_PATH)s/%(prop:box)s-%(prop:buildername)s-%(prop:buildnumber)s"),
+        "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
     }
+
 
 def createBuildSteps():
     buildSteps = []
@@ -67,7 +67,7 @@ def createBuildSteps():
         name="Upgrade test",
         command=['BUILD/mdbci/upgrade_test.sh'],
         timeout=1800,
-        doStepIf = (util.Property('run_upgrade_test') == 'yes'),
+        doStepIf=(util.Property('run_upgrade_test') == 'yes'),
         workdir=util.Interpolate("%(prop:builddir)s/build")
     ))
     buildSteps.extend(common.cleanBuildDir())
