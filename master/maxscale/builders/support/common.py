@@ -602,7 +602,7 @@ def runSshCommand(name='', host="", command=(), timeout=1800, **kwargs):
     :param kwargs: different arguments to pass to ShellCommand
     :return: ShellCommand configured to run remote ssh command
     """
-    sshCommand = ["ssh", "-o", "StrictHostKeyChecking=no", host]
+    sshCommand = ["ssh", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null", host]
     sshCommand.extend(command)
     return steps.ShellCommand(
         name=name,
@@ -623,7 +623,8 @@ def rsyncViaSsh(name="", local="", remote="", timeout=1800, **kwargs):
     :param kwargs: misc arguments to ShellCommand
     :return: ShellCommand configured to run rsync remote ssh
     """
-    rsyncCommand = ["rsync", "-avz", "--progress", "-e", "ssh -o StrictHostKeyChecking=no", local, remote]
+    rsyncCommand = ["rsync", "-avz", "--progress", "-e",
+                    "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null", local, remote]
     return steps.ShellCommand(
         name=name,
         command=rsyncCommand,
