@@ -69,16 +69,21 @@ def createRunTestSteps():
         local=util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s/"),
         remote=util.Interpolate(
             "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/"),
-    ))
-    testSteps.append(steps.ShellCommand(
-        name="removes logs from worker host",
-        command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s")],
+        alwaysRun=True,
+        flunkOnFailure=False,
     ))
     testSteps.append(common.runSshCommand(
         name="Fix permissions on remote server",
         host=util.Property("upload_server"),
         command=["chmod", "777", "-R",
                  util.Interpolate("/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/")],
+        alwaysRun=True,
+        flunkOnFailure=False,
+    ))
+    testSteps.append(steps.ShellCommand(
+        name="Remove logs from worker host",
+        command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s")],
+        alwaysRun=True,
     ))
     testSteps.extend(common.destroyVirtualMachine())
     testSteps.extend(common.removeLock())
