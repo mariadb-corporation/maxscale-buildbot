@@ -619,7 +619,6 @@ def rsyncViaSsh(name="", local="", remote="", timeout=1800, **kwargs):
     :param local: path to the local folder
     :param remote: path to the remote folder that
     :param timeout: timeout for the service
-    :param flunkOnFailure: whether to flunk on failure or not
     :param kwargs: misc arguments to ShellCommand
     :return: ShellCommand configured to run rsync remote ssh
     """
