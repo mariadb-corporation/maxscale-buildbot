@@ -2,6 +2,7 @@ from buildbot.config import BuilderConfig
 from buildbot.plugins import util, steps
 from maxscale import workers
 from maxscale.builders.support import common
+from maxscale.config import constants
 
 
 def buildMdbci():
@@ -25,14 +26,16 @@ def publishMdbci():
             """),
         alwaysRun=False)
 
+
 def configureBuildProperties(properties):
     return {
-        "upload_server" : constants.UPLOAD_SERVERS[properties.getProperty("host")],
+        "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
     }
+
 
 def createBuildFactory():
     factory = util.BuildFactory()
-#    factory.addStep(steps.SetProperties(properties=configureBuildProperties))
+    factory.addStep(steps.SetProperties(properties=configureBuildProperties))
     factory.addSteps(common.cloneRepository())
     factory.addStep(buildMdbci())
     factory.addStep(publishMdbci())
