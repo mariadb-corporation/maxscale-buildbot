@@ -83,12 +83,11 @@ DEFAULT_CMAKE_FLAGS = ('-DBUILD_TESTS=Y -DCMAKE_BUILD_TYPE=Debug '
                        '-DWITH_ASAN=N -DBUILD_GUI=N')
 
 DEFAULT_DAILY_TEST_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DCMAKE_BUILD_TYPE=Debug '
-                       '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
-                       '-DWITH_ASAN=N -DBUILD_GUI=N')
+                                  '-DBUILD_MMMON=Y -DBUILD_AVRO=Y -DBUILD_CDC=Y '
+                                  '-DWITH_ASAN=N -DBUILD_GUI=N')
 
 DEFAULT_RELEASE_CMAKE_FLAGS = ('-DBUILD_TESTS=N -DBUILD_MMMON=Y '
                                '-DBUILD_CDC=Y -DBUILD_GUI=N')
-
 
 MAXSCALE_REPOSITORY = 'https://github.com/mariadb-corporation/MaxScale.git'
 MAXSCALE_PRODUCT = 'MaxScale'
@@ -99,7 +98,8 @@ CI_SERVER_URL = 'https://mdbe-ci-repo.mariadb.net/Maxscale/'
 # Define branches for nightly build_all builds
 NIGHTLY_SCHEDS = ['2.4', '2.3', 'develop']
 
-NIGHTLY_MAIL_LIST = ['markus.makela@mariadb.com', 'johan.wikman@mariadb.com', 'esa.korhonen@mariadb.com', 'niclas.antti@mariadb.com']
+NIGHTLY_MAIL_LIST = ['markus.makela@mariadb.com', 'johan.wikman@mariadb.com', 'esa.korhonen@mariadb.com',
+                     'niclas.antti@mariadb.com']
 
 # Define dictionary with maxscale repositories
 MAXSCALE_CODEBASE = {
@@ -143,26 +143,26 @@ MAXSCALE_DOCKER_CODEBASE = {
 }
 
 HOST_USERS = {
-    "max-tst-01" : "vagrant",
-    "max-gcloud-01" : "timofey_turenko_mariadb_com",
-    "max-gcloud-02" : "timofey_turenko_mariadb_com",
-    "bb-host" : "timofey_turenko_mariadb_com",
+    "max-tst-01": "vagrant",
+    "max-gcloud-01": "timofey_turenko_mariadb_com",
+    "max-gcloud-02": "timofey_turenko_mariadb_com",
+    "bb-host": "timofey_turenko_mariadb_com",
 }
 
 HOST_FULL = {
-    "max-tst-01" : "max-tst-01.mariadb.com",
-    "max-gcloud-01" : "max-gcloud-01",
-    "max-gcloud-02" : "max-gcloud-02",
-    "bb-host" : "mariadbenterprise-buildbot",
+    "max-tst-01": "max-tst-01.mariadb.com",
+    "max-gcloud-01": "max-gcloud-01",
+    "max-gcloud-02": "max-gcloud-02",
+    "bb-host": "mariadbenterprise-buildbot",
 }
 
 UPLOAD_SERVER = "vagrant@max-tst-01.mariadb.com"
 
 UPLOAD_SERVERS = {
-    "max-tst-01" : "timofey_turenko_mariadb_com@35.228.225.110",
-    "max-gcloud-01" : "timofey_turenko_mariadb_com@10.166.0.24",
-    "max-gcloud-02" : "timofey_turenko_mariadb_com@10.166.0.24",
-    "bb-host" : "timofey_turenko_mariadb_com@10.166.0.24",
+    "max-tst-01": "timofey_turenko_mariadb_com@35.228.225.110",
+    "max-gcloud-01": "timofey_turenko_mariadb_com@10.166.0.24",
+    "max-gcloud-02": "timofey_turenko_mariadb_com@10.166.0.24",
+    "bb-host": "timofey_turenko_mariadb_com@10.166.0.24",
 }
 
 UPLOAD_PATH = "/srv/repository/Maxscale"
