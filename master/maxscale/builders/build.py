@@ -43,19 +43,15 @@ def createBuildSteps():
     ))
     buildSteps.extend(common.destroyVirtualMachine())
     buildSteps.extend(common.removeLock())
-    buildSteps.append(steps.ShellCommand(
+    buildSteps.append(common.runSshCommand(
         name="Make dir for build results on the repo server",
-        command=["ssh", util.Property("upload_server"), "mkdir", "-p",
-                 util.Interpolate(constants.UPLOAD_PATH + '/%(prop:target)s')],
-        timeout=1800,
+        host=util.Property("upload_server"),
+        command=["mkdir", "-p", util.Interpolate(constants.UPLOAD_PATH + '/%(prop:target)s')],
     ))
-    buildSteps.append(steps.ShellCommand(
+    buildSteps.append(common.rsyncViaSsh(
         name="Rsync builds results to the repo server",
-        command=["rsync", "-avz", "--progress", "-e", "ssh",
-                 util.Interpolate("%(prop:HOME)s/repository/%(prop:target)s/mariadb-maxscale/"),
-                 util.Interpolate("%(prop:upload_server)s:" + constants.UPLOAD_PATH + "/%(prop:target)s/")],
-        timeout=1800,
-        flunkOnFailure=False,
+        local=util.Interpolate("%(prop:HOME)s/repository/%(prop:target)s/mariadb-maxscale/"),
+        remote=util.Interpolate("%(prop:upload_server)s:" + constants.UPLOAD_PATH + "/%(prop:target)s/")
     ))
     buildSteps.append(common.generateMdbciRepositoryForTarget())
     buildSteps.extend(common.syncRepod())
