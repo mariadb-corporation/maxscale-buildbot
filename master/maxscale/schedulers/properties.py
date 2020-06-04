@@ -362,12 +362,14 @@ def dockerRegistryURL():
         default=constants.DOCKER_REGISTRY
     )
 
+
 def maxscaleDockerRepository():
     return util.StringParameter(
         name="maxscale_docker_repository",
         label="MaxScale Docker generation repository",
         default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]
     )
+
 
 def maxscaleDockerRepositoryBranch():
     return util.StringParameter(
@@ -376,12 +378,14 @@ def maxscaleDockerRepositoryBranch():
         default=constants.MAXSCALE_DOCKER_CODEBASE[""]["branch"]
     )
 
+
 def upload_server():
     return util.StringParameter(
         name="upload_server",
         label="Server for binaries and logs",
         default=constants.UPLOAD_SERVERS["bb-host"]
     )
+
 
 def maxscaleDockerCodebase():
     return util.CodebaseParameter(
