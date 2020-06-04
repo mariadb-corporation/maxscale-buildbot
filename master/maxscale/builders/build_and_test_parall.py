@@ -85,7 +85,6 @@ def create_factory():
         name="Call the 'build' scheduler",
         schedulerNames=['build'],
         waitForFinish=True,
-        haltOnFailure=False,
         set_properties=buildProperties,
     ))
     runTestProperties = COMMON_PROPERTIES.copy()
