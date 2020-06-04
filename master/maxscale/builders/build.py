@@ -57,12 +57,7 @@ def createBuildSteps():
         timeout=1800,
         flunkOnFailure=False,
     ))
-    buildSteps.append(steps.ShellCommand(
-        name="Generate new repo descriptions",
-        command=[util.Interpolate("%(prop:HOME)s/mdbci/mdbci"), "generate-product-repositories", "--product",
-                 "maxscale_ci", "--product-version", util.Property("target")],
-        timeout=1800,
-    ))
+    buildSteps.append(common.generateMdbciRepositoryForTarget())
     buildSteps.extend(common.syncRepod())
     buildSteps.append(steps.ShellCommand(
         name="Upgrade test",
