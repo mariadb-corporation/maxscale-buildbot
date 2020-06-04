@@ -1,10 +1,8 @@
 from buildbot.plugins import schedulers
-from maxscale.config import constants
 from . import properties
 
 BUILD_PROPERTIES = [
     properties.host(),
-    properties.upload_server(),
 ]
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
