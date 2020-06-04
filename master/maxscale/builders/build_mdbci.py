@@ -27,6 +27,7 @@ def publishMdbci():
         alwaysRun=False)
 
 
+@util.renderer
 def configureBuildProperties(properties):
     return {
         "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
