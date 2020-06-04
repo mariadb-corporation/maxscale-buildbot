@@ -590,3 +590,43 @@ class BuildAllTrigger(Trigger):
                     })
 
         return schedulers
+
+
+def runSshCommand(name='', host="", command=(), timeout=1800, **kwargs):
+    """
+    Run command on the remote server
+    :param name: name of the command to show to end user
+    :param host: the host definition
+    :param command: a set of separate command parts
+    :param timeout:
+    :param kwargs: different arguments to pass to ShellCommand
+    :return: ShellCommand configured to run remote ssh command
+    """
+    sshCommand = ["ssh", "-o", "StrictHostKeyChecking=no", host]
+    sshCommand.extend(command)
+    return steps.ShellCommand(
+        name=name,
+        command=sshCommand,
+        timeout=timeout,
+        **kwargs
+    )
+
+
+def rsyncViaSsh(name="", local="", remote="", timeout=1800, **kwargs):
+    """
+    Run rsync to put directory to the remote server
+    :param name: Command name
+    :param local: path to the local folder
+    :param remote: path to the remote folder that
+    :param timeout: timeout for the service
+    :param flunkOnFailure: whether to flunk on failure or not
+    :param kwargs: misc arguments to ShellCommand
+    :return: ShellCommand configured to run rsync remote ssh
+    """
+    rsyncCommand = ["rsync", "-avz", "--progress", "-e", "ssh -o StrictHostKeyChecking=no", local, remote]
+    return steps.ShellCommand(
+        name=name,
+        command=rsyncCommand,
+        timeout=timeout,
+        **kwargs
+    )

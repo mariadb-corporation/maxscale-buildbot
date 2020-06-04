@@ -64,27 +64,21 @@ def createRunTestSteps():
     testSteps.extend(common.findCoredump())
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
-    testSteps.append(steps.ShellCommand(
+    testSteps.append(common.rsyncViaSsh(
         name="Rsync test logs to the logs server",
-        command=["rzync", "-avz", "--progress", "-e", "ssh",
-                 util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s/"),
-                 util.Interpolate(
-                     "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/")],
-        timeout=1800,
-        flunkOnFailure=False,
+        local=util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s/"),
+        remote=util.Interpolate(
+            "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/"),
     ))
     testSteps.append(steps.ShellCommand(
         name="removes logs from worker host",
         command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s")],
-        timeout=1800,
-        flunkOnFailure=False,
     ))
-    testSteps.append(steps.ShellCommand(
-        name="Rsync test logs to the logs server",
-        command=["ssh", util.Property("upload_server"), "chmod", "777", "-R",
+    testSteps.append(common.runSshCommand(
+        name="Fix permissions on remote server",
+        host=util.Property("upload_server"),
+        command=["chmod", "777", "-R",
                  util.Interpolate("/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/")],
-        timeout=1800,
-        flunkOnFailure=False,
     ))
     testSteps.extend(common.destroyVirtualMachine())
     testSteps.extend(common.removeLock())
