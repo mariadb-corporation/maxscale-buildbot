@@ -443,26 +443,6 @@ def remoteParseCtestLogAndStoreIt():
         remote, alwaysRun=True)
 
 
-def remoteStoreCoredumps():
-    """Find the coredumps and store them in the LOGS directory"""
-    def remote():
-        result = subprocess.check_output(
-            ["{}/scripts/coredump_finder.py".format(builddir),
-             "{}-{}".format(buildername, buildnumber), "url"])
-        coredumpLogFile = open(os.path.join(builddir, "coredumps_{}".format(buildnumber)), "w")
-        coredumpLogFile.write("COREDUMPS \\\n")
-        if result == "":
-            coredumpLogFile.write("Coredumps were not found for build {}".format(buildnumber))
-        else:
-            for dump in result.decode("utf_8").split("\n"):
-                coredumpLogFile.write("{} \\\n".format(dump))
-        buildId = "{}-{}".format(buildername, buildnumber)
-        shutil.copy(buildLogFile, os.path.join(HOME, "LOGS", buildId))
-
-    return support.executePythonScript(
-        "Find and store coredumps", remote, alwaysRun=True)
-
-
 def writeBuildResultsToDatabase(**kwargs):
     """Call the script to save results to the database"""
     return [steps.SetPropertyFromCommand(
@@ -527,11 +507,6 @@ def writeBuildsResults():
     return downloadScript("write_build_results.py", alwaysRun=True) + writeBuildResultsToDatabase(alwaysRun=True)
 
 
-def findCoredump():
-    """Downloads and runs coredump finder"""
-    return downloadScript("coredump_finder.py", alwaysRun=True) + remoteStoreCoredumps()
-
-
 def downloadAndRunScript(scriptName, args=(), **kwargs):
     """
     Downloads the script to remote location and executes it
@@ -545,7 +520,6 @@ def downloadAndRunScript(scriptName, args=(), **kwargs):
         mode=0o755
     )
     executeStep = steps.ShellCommand(
-        name="Execute script: {}".format(scriptName),
         command=[remoteScriptName, *args],
         timeout=1800,
         **kwargs

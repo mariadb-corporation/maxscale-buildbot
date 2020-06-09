@@ -3,36 +3,48 @@
 import argparse
 import os
 import sys
-import subprocess
-
-options = argparse.ArgumentParser(description="Core dump finder")
-options.add_argument("build_id", help="Id of the build (<build_name>_<build_number>)")
-options.add_argument("output_format", help="Output format (url|files)", choices=["url", "files"])
 
 
-def main(args=None):
-    args = options.parse_args(args=args)
-    HOME = "/srv"
-    LOG_SERVER = 'https://mdbe-ci-repo.mariadb.net'
-    logsPath = "{}/bb-logs/Maxscale".format(HOME)
-    buildPath = "{}/{}".format(logsPath, args.build_id)
+def main():
+    args = parseArguments()
+    coreDumps = findCoreDumps(args.directory, args.remote_prefix)
+    storeCoreDumps(coreDumps, args.output_file)
 
-    if not os.path.isdir(buildPath):
-        print("Directory {} does not exist, exiting.".format(buildPath))
+
+def parseArguments():
+    parser = argparse.ArgumentParser(description="Core dump finder")
+    parser.add_argument("directory", help="location where to find the core dumps", required=True)
+    parser.add_argument("remote-prefix", help="prefix of the remote server for the core dumps", required=True)
+    parser.add_argument("output-file", help="location of the output file to put data", required=True)
+    args = parser.parse_args()
+
+    if not os.path.isdir(args.directory):
+        print("Directory {} does not exist, exiting.".format(args.directory))
         sys.exit(1)
 
-    if args.output_format == "url":
-        def coredumpPath(dirpath, filename):
-            return "{}/{}".format(dirpath.rstrip('/'), filename).replace(HOME, LOG_SERVER)
-    else:
-        def coredumpPath(dirpath, filename):
-            return "{}/*".format(dirpath.rstrip('/')).replace('{}/bb-logs/Maxscale'.format(HOME), '*')
+    return args
 
-    for dirpath, dirnames, filenames in os.walk(buildPath):
-        for name in filenames:
-            if "core" in name:
-                print(coredumpPath(dirpath, name))
+
+def findCoreDumps(directory, prefix):
+    paths = []
+    for dirPath, dirNames, fileNames in os.walk(directory):
+        for fileName in fileNames:
+            if "core" in fileName:
+                paths.append(os.path.join(dirPath, fileName).replace(directory, prefix))
+    return paths
+
+
+def storeCoreDumps(coreDumps, fileName):
+    with open(fileName, "w") as file:
+        file.write("COREDUMPS \\\n")
+
+        if len(coreDumps) == 0:
+            file.write("Coredumps were not found")
+        else:
+            for dump in coreDumps:
+                file.write("{} \\\n".format(dump))
 
 
 if os.path.samefile(__file__, sys.argv[0]):
     main()
+

@@ -39,6 +39,8 @@ def configureCommonProperties(properties):
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s"),
         "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
+        "buildId": util.Interpolate("%(prop:buildername)s-%(prop:buildnumber)s"),
+        "logDirectory": util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s/"),
     }
 
 
@@ -61,14 +63,26 @@ def createRunTestSteps():
     testSteps.append(common.generateMdbciRepositoryForTarget())
     testSteps.extend(common.remoteRunScriptAndLog(name="Run MaxScale tests"))
     testSteps.extend(common.parseCtestLog())
-    testSteps.extend(common.findCoredump())
+    testSteps.extend(common.downloadAndRunScript(
+        name="Find core dumps and record information into the file",
+        scriptName="coredump_finder.py",
+        args=[
+            "--directory", util.Property("logDirectory"),
+            "--remote-prefix", util.Interpolate("%(kw:server)s%(prop:buildId)s/",
+                                                server=constants.CI_SERVER_LOGS_URL),
+            "--output-file", util.Interpolate("%(prop:logDirectory)s/coredumps_%(prop:buildId)s"),
+        ],
+        haltOnFailure=False,
+        flunkOnFailure=False,
+        alwaysRun=True
+    ))
     testSteps.extend(common.writeBuildsResults())
     testSteps.extend(common.showTestResult(alwaysRun=True))
     testSteps.append(common.rsyncViaSsh(
         name="Rsync test logs to the logs server",
-        local=util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s/"),
+        local=util.Property("logDirectory"),
         remote=util.Interpolate(
-            "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/"),
+            "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/%(prop:buildId)s/"),
         alwaysRun=True,
         flunkOnFailure=False,
     ))
@@ -76,13 +90,13 @@ def createRunTestSteps():
         name="Fix permissions on remote server",
         host=util.Property("upload_server"),
         command=["chmod", "777", "-R",
-                 util.Interpolate("/srv/repository/bb-logs/Maxscale/run_test-%(prop:buildnumber)s/")],
+                 util.Interpolate("/srv/repository/bb-logs/Maxscale/%(prop:buildId)s/")],
         alwaysRun=True,
         flunkOnFailure=False,
     ))
     testSteps.append(steps.ShellCommand(
         name="Remove logs from worker host",
-        command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/run_test-%(prop:buildnumber)s")],
+        command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s")],
         alwaysRun=True,
     ))
     testSteps.extend(common.destroyVirtualMachine())
