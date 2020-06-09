@@ -3,9 +3,7 @@ from . import build
 from . import build_and_test
 from . import build_and_test_parall
 from . import build_and_performance_test
-#from . import build_and_test_snapshot
 from . import run_test
-#from . import run_test_snapshot
 from . import build_all
 from . import build_for_release
 from . import destroy
@@ -24,10 +22,8 @@ MAXSCALE_BUILDERS = list(itertools.chain(
     build_and_test_parall.BUILDERS,
     build_and_performance_test.BUILDERS,
     run_test.BUILDERS,
-#    run_test_snapshot.BUILDERS,
     build_all.BUILDERS,
     build_for_release.BUILDERS,
-#    build_and_test_snapshot.BUILDERS,
     destroy.BUILDERS,
     generate_and_sync_repod.BUILDERS,
     run_performance_test.BUILDERS,
