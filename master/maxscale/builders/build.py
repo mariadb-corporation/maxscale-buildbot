@@ -42,7 +42,6 @@ def createBuildSteps():
         workdir=util.Interpolate("%(prop:builddir)s/build")
     ))
     buildSteps.extend(common.destroyVirtualMachine())
-    buildSteps.extend(common.removeLock())
     buildSteps.append(common.runSshCommand(
         name="Make dir for build results on the repo server",
         host=util.Property("upload_server"),
