@@ -93,6 +93,7 @@ MAXSCALE_PRODUCT = 'MaxScale'
 MDBCI_REPOSITORY = 'https://github.com/mariadb-corporation/mdbci.git'
 
 CI_SERVER_URL = 'https://mdbe-ci-repo.mariadb.net/Maxscale/'
+CI_SERVER_LOGS_URL = 'https://mdbe-ci-repo.mariadb.net/bb-logs/Maxscale/'
 
 # Define branches for nightly build_all builds
 NIGHTLY_SCHEDS = ['2.4', '2.3', 'develop']
