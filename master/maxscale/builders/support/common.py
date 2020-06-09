@@ -75,7 +75,6 @@ def cleanBuildIntermediates():
     """Add steps to clean build intermediats created by the scripts and tools"""
     cleanSteps = []
     cleanSteps.extend(destroyVirtualMachine())
-    cleanSteps.extend(removeLock())
     return cleanSteps
 
 
@@ -96,58 +95,6 @@ def destroyVirtualMachine():
     return support.executePythonScript(
         "Destroy leftover virtual machines", remoteCode,
         haltOnFailure=False, alwaysRun=True, doStepIf=shouldRun)
-
-
-def removeSnapshotLock():
-    """
-    Compares $build_full_name and $HOME/mdbci/${name}_snapshot_lock content
-    and calls remove lock if they are equal
-    """
-    def remoteCode():
-        lockFile = "{}/{}_snapshot_lock".format(MDBCI_VM_PATH, name)
-        if not os.path.exists(lockFile):
-            print("Lock file {} does not exist, doing nothing".format(lockFile))
-            sys.exit(0)
-
-        buildFullName = "{}-{}".format(buildername, buildnumber)
-        lockerSource = open(lockFile).read().strip()
-        if lockerSource != buildFullName:
-            print("Lock file was created not by the current task, {} != {}, doing nothing".
-                  format(buildFullName, lockerSource))
-            sys.exit(0)
-        os.remove(lockFile)
-        sys.exit(0)
-
-    return support.executePythonScript(
-        "Remove leftover snapshot locks", remoteCode,
-        haltOnFailure=False, alwaysRun=True)
-
-
-def removeLock():
-    """Remove vagrant lock if it was left by the build script"""
-    def remoteCode():
-        lockFile = "{}/vagrant_lock".format(HOME)
-        if os.path.exists(lockFile):
-            buildFullName = "{}-{}".format(buildername, buildnumber)
-            lockerSource = open(lockFile).read().strip()
-            if lockerSource == buildFullName:
-                os.remove(lockFile)
-            else:
-                print("Lock file was created not by the current task, {} != {}, doing nothing".
-                      format(buildFullName, lockerSource))
-        else:
-            print("Lock file {} does not exist, doing nothing".format(lockFile))
-
-        if try_already_running == "yes":
-            snapshotLockFile = "{}/{}_snapshot_lock".format(MDBCI_VM_PATH, box)
-            if os.path.exists(snapshotLockFile):
-                print("Releasing lock for already running VM")
-                os.remove(snapshotLockFile)
-        sys.exit(0)
-
-    return support.executePythonScript(
-        "Remove leftover vagrant locks", remoteCode,
-        haltOnFailure=False, alwaysRun=True)
 
 
 def save_env_to_property(rc, stdout, stderr):

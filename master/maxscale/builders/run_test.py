@@ -100,7 +100,6 @@ def createRunTestSteps():
         alwaysRun=True,
     ))
     testSteps.extend(common.destroyVirtualMachine())
-    testSteps.extend(common.removeLock())
     testSteps.extend(common.cleanBuildDir())
     return testSteps
 
