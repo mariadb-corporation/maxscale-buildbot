@@ -61,7 +61,12 @@ def createRunTestSteps():
     testSteps.extend(common.cloneRepository())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
     testSteps.append(common.generateMdbciRepositoryForTarget())
-    testSteps.extend(common.remoteRunScriptAndLog(name="Run MaxScale tests"))
+    testSteps.extend(common.remoteRunScriptAndLog(
+        name="Run MaxScale tests",
+        scriptName="run_test.sh",
+        logFile=util.Property("buildLogFile"),
+        resultFile=util.Property("resultFile"),
+    ))
     testSteps.extend(common.parseCtestLog())
     testSteps.extend(common.downloadAndRunScript(
         name="Find core dumps and record information into the file",
@@ -119,9 +124,6 @@ BUILDERS = [
         factory=createTestFactory(),
         tags=["test"],
         env=ENVIRONMENT,
-        properties={
-            "scriptName": "run_test.sh"
-        },
         defaultProperties={
             "try_already_running": None
         })
