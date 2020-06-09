@@ -424,20 +424,19 @@ def showTestResult(**kwargs):
         **kwargs)]
 
 
-def remoteRunScriptAndLog(**kwargs):
+def remoteRunScriptAndLog(scriptName, logFile, resultFile, **kwargs):
     """
-    Runs shell script which name is given in a property 'script_name' of a builder on a worker
-    and save results to the log file. You must also provide the 'logFile' and 'resultFile'
-    properties in order for this tasks to work
+    Runs shell script which name is given in a property script_name
+    and save results to the log file
     """
     service_script = "run_script_and_log.py"
     actions = downloadScript(service_script)
     actions.append(
         steps.ShellCommand(command=[
             util.Interpolate("%(prop:builddir)s/scripts/{script}".format(script=service_script)),
-            "--script_name", util.Property("scriptName"),
-            "--log_file", util.Property("buildLogFile"),
-            "--result_file", util.Property("resultFile")],
+            "--script_name", scriptName,
+            "--log_file", logFile,
+            "--result_file", resultFile],
             timeout=1800,
             **kwargs)
     )
