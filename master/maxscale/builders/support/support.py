@@ -1,4 +1,3 @@
-import os
 import inspect
 import re
 from buildbot.plugins import steps, util

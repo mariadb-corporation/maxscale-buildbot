@@ -44,17 +44,6 @@ def configureCommonProperties(properties):
     }
 
 
-def uploadTestRunsToReportPortal(**kwargs):
-    """Save test results to the report portal"""
-    return steps.ShellCommand(
-        name="Send test results to the Report Portal",
-        command=[util.Interpolate("%(prop:HOME)s/mdbci/scripts/build_parser/report_portal/bin/upload_testrun.rb"),
-                 util.Property("jsonResultsFile"),
-                 util.Interpolate("%(prop:HOME)s/report-portal-config.yml")],
-        env={"LAST_WRITE_BUILD_RESULTS_ID": util.Property("LAST_WRITE_BUILD_RESULTS_ID")},
-        **kwargs)
-
-
 def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
