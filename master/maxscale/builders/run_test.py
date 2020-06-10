@@ -33,15 +33,18 @@ ENVIRONMENT = {
 
 @util.renderer
 def configureCommonProperties(properties):
+    buildId = "{}-{}".format(properties.getProperty("buildername"), properties.getProperty("buildnumber"))
+    logDirectory = "{}/LOGS/{}".format(properties.getProperty("HOME"), buildId)
+    coreDumpsLog = "{}/coredumps_{}".format(logDirectory, buildId)
     return {
         "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
         "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s"),
         "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
-        "buildId": util.Interpolate("%(prop:buildername)s-%(prop:buildnumber)s"),
-        "logDirectory": util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s/"),
-        "coreDumpsLog": util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s/coredumps_%(prop:buildId)s"),
+        "buildId": buildId,
+        "logDirectory": logDirectory,
+        "coreDumpsLog": coreDumpsLog,
     }
 
 
