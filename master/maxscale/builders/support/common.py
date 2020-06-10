@@ -142,6 +142,9 @@ class StdoutShellCommand(ShellCommand):
     Runs single shell command on a remote worker
     and outputs stdout into a separate logfile
     """
+    def __init__(self, *args, **kwargs):
+        super(ShellCommand, self).__init__(*args, collectStdout=True, **kwargs)
+
     def commandComplete(self, cmd):
         self.addCompleteLog('stdout', cmd.stdout)
 
@@ -406,22 +409,6 @@ def extractDatabaseBuildid(rc, stdout, stderr):
         if line.startswith(keyPhrase):
             return {keyPhrase: line[len(keyPhrase) + 2:]}
     return {}
-
-
-def showTestResult(**kwargs):
-    """
-    Stores results of a test run into the buildbot's database
-    for retrieving later during email composition
-    :param kwargs:
-    :return:
-    """
-    return [StdoutShellCommand(
-        name="test_result",
-        collectStdout=True,
-        command=util.Interpolate(r"cat %(prop:builddir)s/results_%(prop:buildnumber)s "
-                                 r"%(prop:builddir)s/coredumps_%(prop:buildnumber)s "
-                                 r"| sed -E 's/\\n\\//g'"),
-        **kwargs)]
 
 
 def remoteRunScriptAndLog(scriptName, logFile, resultFile, **kwargs):

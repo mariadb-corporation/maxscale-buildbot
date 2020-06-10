@@ -41,6 +41,7 @@ def configureCommonProperties(properties):
         "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
         "buildId": util.Interpolate("%(prop:buildername)s-%(prop:buildnumber)s"),
         "logDirectory": util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s/"),
+        "coreDumpsLog": util.Interpolate("%(prop:logDirectory)s/coredumps_%(prop:buildId)s"),
     }
 
 
@@ -64,14 +65,21 @@ def createRunTestSteps():
             "--directory", util.Property("logDirectory"),
             "--remote-prefix", util.Interpolate("%(kw:server)s%(prop:buildId)s/",
                                                 server=constants.CI_SERVER_LOGS_URL),
-            "--output-file", util.Interpolate("%(prop:logDirectory)s/coredumps_%(prop:buildId)s"),
+            "--output-file", util.Property("coreDumpsLog"),
         ],
         haltOnFailure=False,
         flunkOnFailure=False,
         alwaysRun=True
     ))
     testSteps.extend(common.writeBuildsResults())
-    testSteps.extend(common.showTestResult(alwaysRun=True))
+    testSteps.append(
+        common.StdoutShellCommand(
+            name="test_result",
+            command=util.Interpolate(r"cat %(prop:builddir)s/results_%(prop:buildnumber)s "
+                                     r"%(prop:coreDumpsLog)s "
+                                     r"| sed -E 's/\\n\\//g'"),
+            alwaysRun=True)
+    )
     testSteps.append(common.rsyncViaSsh(
         name="Rsync test logs to the logs server",
         local=util.Property("logDirectory"),
