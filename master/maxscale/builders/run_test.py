@@ -34,7 +34,7 @@ ENVIRONMENT = {
 @util.renderer
 def configureCommonProperties(properties):
     buildId = "{}-{}".format(properties.getProperty("buildername"), properties.getProperty("buildnumber"))
-    logDirectory = "{}/LOGS/{}".format(properties.getProperty("HOME"), buildId)
+    logDirectory = "{}/LOGS/{}/".format(properties.getProperty("HOME"), buildId)
     coreDumpsLog = "{}/coredumps_{}".format(logDirectory, buildId)
     return {
         "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
