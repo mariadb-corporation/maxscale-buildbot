@@ -142,9 +142,6 @@ class StdoutShellCommand(ShellCommand):
     Runs single shell command on a remote worker
     and outputs stdout into a separate logfile
     """
-    def __init__(self, *args, **kwargs):
-        super(ShellCommand, self).__init__(*args, collectStdout=True, **kwargs)
-
     def commandComplete(self, cmd):
         self.addCompleteLog('stdout', cmd.stdout)
 
