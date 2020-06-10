@@ -13,9 +13,10 @@ def main():
 
 def parseArguments():
     parser = argparse.ArgumentParser(description="Core dump finder")
-    parser.add_argument("directory", help="location where to find the core dumps", required=True)
-    parser.add_argument("remote-prefix", help="prefix of the remote server for the core dumps", required=True)
-    parser.add_argument("output-file", help="location of the output file to put data", required=True)
+    parser.add_argument("--directory", help="location where to find the core dumps", required=True)
+    parser.add_argument("--remote-prefix", help="prefix of the remote server for the core dumps",
+                        required=True)
+    parser.add_argument("--output-file", help="location of the output file to put data", required=True)
     args = parser.parse_args()
 
     if not os.path.isdir(args.directory):
@@ -27,10 +28,14 @@ def parseArguments():
 
 def findCoreDumps(directory, prefix):
     paths = []
+    if prefix.endswith("/"):
+        fixedPrefix = prefix
+    else:
+        fixedPrefix = "{}/".format(prefix)
     for dirPath, dirNames, fileNames in os.walk(directory):
         for fileName in fileNames:
             if "core" in fileName:
-                paths.append(os.path.join(dirPath, fileName).replace(directory, prefix))
+                paths.append(os.path.join(dirPath.replace(directory, fixedPrefix), fileName))
     return paths
 
 
