@@ -41,7 +41,7 @@ def configureCommonProperties(properties):
         "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
         "buildId": util.Interpolate("%(prop:buildername)s-%(prop:buildnumber)s"),
         "logDirectory": util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s/"),
-        "coreDumpsLog": util.Interpolate("%(prop:logDirectory)s/coredumps_%(prop:buildId)s"),
+        "coreDumpsLog": util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s/coredumps_%(prop:buildId)s"),
     }
 
 
