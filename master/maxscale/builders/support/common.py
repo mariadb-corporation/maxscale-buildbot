@@ -447,6 +447,7 @@ def downloadAndRunScript(scriptName, args=(), **kwargs):
         name="Transferring {} to worker".format(scriptName),
         mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
         workerdest=remoteScriptName,
+        hideStepIf=True,
         mode=0o755
     )
     executeStep = steps.ShellCommand(
