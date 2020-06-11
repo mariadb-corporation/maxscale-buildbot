@@ -17,7 +17,8 @@ def createBuildfactory():
         haltOnFailure=True
     ))
     factory.addSteps(common.downloadAndRunScript(
-        "build_maxscale_docker_image.py",
+        name=util.Interpolate("Build docker image for %(prop:target)s"),
+        scriptName="build_maxscale_docker_image.py",
         args=[
             "--repository", util.Interpolate("%(prop:ci_url)s/%(prop:target)s/mariadb-maxscale/ubuntu"),
             "--tag", util.Property("target"),
