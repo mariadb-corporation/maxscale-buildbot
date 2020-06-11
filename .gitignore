@@ -11,6 +11,7 @@ master/maxscale/config/google_auth_config.py
 master/maxscale/config/mailer_config.py
 master/maxscale/config/workers.py
 master/maxscale/config/server_config.py
+master/maxscale/secrets/
 __pycache__/
 *.pyc
 gitpoller-work

@@ -4,6 +4,7 @@
 import autoreload
 autoreload.ModuleTracker().install()
 
+from buildbot.plugins import secrets
 from maxscale.builders import MAXSCALE_BUILDERS
 from maxscale.config import environment
 from maxscale.schedulers import MAXSCALE_SCHEDULERS
@@ -13,6 +14,7 @@ from maxscale.change_source import MAXSCALE_POLLERS
 from maxscale import workers
 from maxscale.config.database_config import DATABASE_CONFIG
 from maxscale.config.server_config import SERVER_URI
+import os
 
 # This is the dictionary that the buildmaster pays attention to. We also use
 # a shorter alias to save typing.
@@ -39,6 +41,13 @@ c['builders'] = MAXSCALE_BUILDERS
 # BUILDBOT SERVICES
 
 c['services'] = MAXSCALE_SERVICES
+
+# Secrets providers
+currentDirectory = os.path.dirname(os.path.realpath(__file__))
+secretsDirectory = os.path.join(currentDirectory, "maxscale", "secrets")
+c['secretsProviders'] = [
+    secrets.SecretInAFile(dirname=secretsDirectory)
+]
 
 # PROJECT IDENTITY
 

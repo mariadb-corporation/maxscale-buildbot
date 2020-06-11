@@ -130,17 +130,15 @@ PERF_PORTS = [
 # Definitions for the Docker product creation
 MAXSCALE_CI_DOCKER_PRODUCT_NAME = 'mariadb/maxscale-ci'
 
-DOCKER_REGISTRY = 'https://maxscale-docker-registry.mariadb.net:5000'
-
-MAXSCALE_DOCKER_REPOSITORY = 'https://github.com/mariadb-corporation/maxscale-docker'
+DOCKER_REGISTRY = 'https://maxscale-docker-registry.mariadb.net'
 
 MAXSCALE_DOCKER_CODEBASE = {
-    "": {
-        "branch": "master",
-        "revision": "",
-        "repository": MAXSCALE_DOCKER_REPOSITORY
-    },
+    "branch": "master",
+    "revision": "",
+    "repository": 'https://github.com/mariadb-corporation/maxscale-docker',
 }
+
+DOCKER_REGISTRY_USER_NAME = "ci.servers"
 
 HOST_USERS = {
     "max-tst-01": "vagrant",
