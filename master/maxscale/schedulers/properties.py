@@ -363,22 +363,6 @@ def dockerRegistryURL():
     )
 
 
-def maxscaleDockerRepository():
-    return util.StringParameter(
-        name="maxscale_docker_repository",
-        label="MaxScale Docker generation repository",
-        default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]
-    )
-
-
-def maxscaleDockerRepositoryBranch():
-    return util.StringParameter(
-        name="maxscale_docker_repository_branch",
-        label="Branch of MaxScale Docker generation repo",
-        default=constants.MAXSCALE_DOCKER_CODEBASE[""]["branch"]
-    )
-
-
 def upload_server():
     return util.StringParameter(
         name="upload_server",
@@ -392,12 +376,12 @@ def maxscaleDockerCodebase():
         "",
         label="Main repository",
         branch=util.StringParameter(name="branch",
-                                    default=constants.MAXSCALE_DOCKER_CODEBASE[""]["branch"]),
+                                    default=constants.MAXSCALE_DOCKER_CODEBASE["branch"]),
         revision=util.FixedParameter(name="revision",
-                                     default=constants.MAXSCALE_DOCKER_CODEBASE[""]["revision"]),
+                                     default=constants.MAXSCALE_DOCKER_CODEBASE["revision"]),
         project=util.FixedParameter(name="project", default=""),
         repository=util.StringParameter(name="repository",
-                                        default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]),
+                                        default=constants.MAXSCALE_DOCKER_CODEBASE["repository"]),
     )
 
 

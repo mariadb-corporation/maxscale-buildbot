@@ -45,8 +45,9 @@ ALTER TABLE steps MODIFY name varchar(300);
 8. Configure authorization rights for users in `master/maxscale/config/auth_config.py` file. The template for this file can be found in `master/maxscale/config/auth_config_example.py` file.
 9. Configure the list of workers that are allowed to access BuildBot master in `master/maxscale/config/workers.py` file. The template for this file can be found in `master/maxscale/config/workers_example.py` file.
 10. Configure the access name of the server in `master/maxscale/conifg/server_config.py` file. The template for this file can be found in `master/maxscale/config/server_config_example.py` file.
-11. Create or update BuildBot master configuration: `buildbot upgrade-master master`
-12. Start the BuildBot master service: `buildbot start master`.
+11. Put the password for MaxScale docker registry in `master/maxscale/secrets/dockerRegistryPassword` file.
+12. Create or update BuildBot master configuration: `buildbot upgrade-master master`
+13. Start the BuildBot master service: `buildbot start master`.
 
 ### GitHub authentication
 

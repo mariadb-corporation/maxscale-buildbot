@@ -1,17 +1,22 @@
 from buildbot.config import BuilderConfig
 from buildbot.plugins import steps, util
 from maxscale import workers
+from maxscale.config import constants
 from .support import common
 
 
-def createBuildSteps():
-    buildSteps = []
-    buildSteps.append(steps.Git(
-        repourl=util.Property("maxscale_docker_repository"),
-        branch=util.Property("maxscale_docker_repository_branch"),
-        mode="full",
+def createBuildfactory():
+    factory = util.BuildFactory()
+    factory.addSteps(common.cloneRepository())
+    factory.addStep(steps.ShellCommand(
+        name=util.Interpolate("Register in the Docker Registry %(prop:docker_registry_url)s"),
+        command=["docker", "login", util.Property("docker_registry_url"),
+                 "--username", constants.DOCKER_REGISTRY_USER_NAME,
+                 "--password", util.Secret("dockerRegistryPassword")
+                 ],
+        haltOnFailure=True
     ))
-    buildSteps.extend(common.downloadAndRunScript(
+    factory.addSteps(common.downloadAndRunScript(
         "build_maxscale_docker_image.py",
         args=[
             "--repository", util.Interpolate("%(prop:ci_url)s/%(prop:target)s/mariadb-maxscale/ubuntu"),
@@ -21,13 +26,6 @@ def createBuildSteps():
         ],
         workdir=util.Interpolate("%(prop:builddir)s/build/maxscale/"),
     ))
-    return buildSteps
-
-
-def createBuildfactory():
-    factory = util.BuildFactory()
-    buildSteps = createBuildSteps()
-    factory.addSteps(buildSteps)
     return factory
 
 
