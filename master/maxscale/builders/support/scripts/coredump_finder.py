@@ -41,13 +41,13 @@ def findCoreDumps(directory, prefix):
 
 def storeCoreDumps(coreDumps, fileName):
     with open(fileName, "w") as file:
-        file.write("COREDUMPS \\\n")
+        file.write("COREDUMPS\n")
 
         if len(coreDumps) == 0:
             file.write("Coredumps were not found")
         else:
             for dump in coreDumps:
-                file.write("{} \\\n".format(dump))
+                file.write("{}\n".format(dump))
 
 
 if os.path.samefile(__file__, sys.argv[0]):
