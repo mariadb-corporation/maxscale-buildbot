@@ -1,5 +1,4 @@
 import datetime
-from collections import defaultdict
 from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
 from buildbot.process.results import SKIPPED
@@ -140,8 +139,11 @@ class SetDefaultPropertiesStep(ShellMixin, steps.BuildStep):
 class StdoutShellCommand(ShellCommand):
     """
     Runs single shell command on a remote worker
-    and outputs stdout into a separate logfile
+    and outputs stdout into the stdout
     """
+    def __init__(self, *args, **kwargs):
+        ShellCommand.__init__(self, *args, collectStdout=True, **kwargs)
+
     def commandComplete(self, cmd):
         self.addCompleteLog('stdout', cmd.stdout)
 
