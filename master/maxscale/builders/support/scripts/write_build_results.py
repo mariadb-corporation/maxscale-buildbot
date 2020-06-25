@@ -14,6 +14,7 @@ from configparser import ConfigParser
 INPUT_FILE_OPTION = 'file'
 ENV_FILE_OPTION = '--env-file'
 HELP_OPTION = '--help'
+RUN_ID_OPTION = '--run-id'
 
 # Db parameters
 DEFAULT_FILE = '{}/build_parser_db_password'.format(os.environ['HOME'])
@@ -32,15 +33,17 @@ DB_WRITE_ERROR = 'DB_WRITE_ERROR'
 
 options = argparse.ArgumentParser(description="write_build_results usage:")
 options.add_argument(INPUT_FILE_OPTION, help="parse_ctest_log.rb result json file")
+options.add_argument("-r", RUN_ID_OPTION, help="id of main task (run id)")
 options.add_argument("-e", ENV_FILE_OPTION,
                      help="ENVIRONMENT VARIABLES FILE, WHERE POSSIBLE DB_WRITING_ERROR CAN BE REPORTED")
 
 
 class BuildResultsWriter:
 
-    def __init__(self):
+    def __init__(self, runId):
         self.client = None
         self.parsedContent = None
+        self.runId = runId
 
     def writeResultsFromInputFile(self, inputFilePath):
         self.parseInputFile(inputFilePath)
@@ -68,18 +71,68 @@ class BuildResultsWriter:
             raise Exception("{} not found in the {} file".format(section, filename))
         return db
 
-    def writeTestRunTable(self, jenkinsId, startTime, targat, box, product, mariadbVersion,
+    def findTargetBuild(self, runId):
+        cursor = self.client.cursor(dictionary=True)
+        query = """
+                SELECT id FROM target_builds
+                WHERE run_id=%s
+                """
+        cursor.execute(query, (runId,))
+        target_build = cursor.fetchone()
+        cursor.close()
+        if target_build is None:
+            return None
+        else:
+            return target_build["id"]
+
+    def writeTargetBuildsTable(self, runId, startTime, target, box, product, mariadbVersion,
+                          testCodeCommitId, maxscaleCommitId, cmakeFlags, maxscaleSource):
+        target_build_id = self.findTargetBuild(runId)
+        if target_build_id:
+            return target_build_id
+        cursor = self.client.cursor()
+        query = ("INSERT INTO target_builds (run_id, "
+                 "start_time, target, box, product, mariadb_version, "
+                 "test_code_commit_id, maxscale_commit_id, "
+                 "cmake_flags, maxscale_source) "
+                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        values = (runId, startTime, target, box, product, mariadbVersion,
+                  testCodeCommitId, maxscaleCommitId,
+                  cmakeFlags, maxscaleSource)
+        cursor.execute(query, values)
+        id = cursor.lastrowid
+        self.client.commit()
+        cursor.close()
+        print("Performed insert (target_build, id = {}: {}".format(id, query % values))
+        return id
+
+    def writeTargetBuildStartTime(self, targetBuildId):
+        query = f"""
+        UPDATE target_builds
+        SET start_time = (
+                SELECT MIN(start_time) AS start_time
+                FROM test_run
+                WHERE target_build_id = %(id)s
+            )
+        WHERE id = %(id)s
+        """
+        cursor = self.client.cursor()
+        cursor.execute(query, {"id": targetBuildId})
+        self.client.commit()
+        cursor.close()
+
+    def writeTestRunTable(self, targetBuildId, jenkinsId, startTime, targat, box, product, mariadbVersion,
                           testCodeCommitId, maxscaleCommitId, jobName,
                           cmakeFlags, maxscaleSource, logsDir):
         cursor = self.client.cursor()
         query = ("INSERT INTO test_run (jenkins_id, "
                  "start_time, target, box, product, mariadb_version, "
                  "test_code_commit_id, maxscale_commit_id, job_name, "
-                 "cmake_flags, maxscale_source, logs_dir) "
-                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                 "cmake_flags, maxscale_source, logs_dir, target_build_id) "
+                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         values = (jenkinsId, startTime, targat, box, product, mariadbVersion,
                   testCodeCommitId, maxscaleCommitId, jobName,
-                  cmakeFlags, maxscaleSource, logsDir)
+                  cmakeFlags, maxscaleSource, logsDir, targetBuildId)
         cursor.execute(query, values)
         id = cursor.lastrowid
         self.client.commit()
@@ -87,11 +140,11 @@ class BuildResultsWriter:
         print("Performed insert (test_run, id = {}: {}".format(id, query % values))
         return id
 
-    def writeResultsTable(self, id, test, result, testTime, coreDumpPath, leakSummary):
+    def writeResultsTable(self, id, test, result, testTime, coreDumpPath, leakSummary, targetBuildId):
         cursor = self.client.cursor()
-        query = ("INSERT INTO results (id, test, result, test_time, core_dump_path, leak_summary) "
-                 "VALUES (%s, %s, %s, %s, %s, %s)")
-        values = (id, test, result, testTime, coreDumpPath, leakSummary)
+        query = ("INSERT INTO results (id, test, result, test_time, core_dump_path, leak_summary, target_build_id) "
+                 "VALUES (%s, %s, %s, %s, %s, %s, %s)")
+        values = (id, test, result, testTime, coreDumpPath, leakSummary, targetBuildId)
         cursor.execute(query, values)
         self.client.commit()
         cursor.close()
@@ -119,12 +172,17 @@ class BuildResultsWriter:
                 })
         testsLeakSummary = results["leak_summary"]
 
-        id = self.writeTestRunTable(*(results[key] for key in (
+        targetBuildId = self.writeTargetBuildsTable(self.runId, None, *(results[key] for key in (
+            "target", "box", "product", "version", "maxscale_system_test_commit",
+            "maxscale_commit", "cmake_flags", "maxscale_source"
+        )))
+        id = self.writeTestRunTable(targetBuildId, *(results[key] for key in (
             "job_build_number", "timestamp", "target", "box",
             "product", "version", "maxscale_system_test_commit",
             "maxscale_commit", "job_name", "cmake_flags", "maxscale_source",
             "logs_dir"
         )))
+        self.writeTargetBuildStartTime(targetBuildId)
 
         if not results.get(ERROR):
             for test in tests:
@@ -137,13 +195,13 @@ class BuildResultsWriter:
                     leakSummary = ";\n".join(testsLeakSummary[name])
                 else:
                     leakSummary = None
-                self.writeResultsTable(id, name, result, testTime, coreDumpPath, leakSummary)
+                self.writeResultsTable(id, name, result, testTime, coreDumpPath, leakSummary, targetBuildId)
 
 
 def main(args=None):
     args = options.parse_args(args=args)
     try:
-        writer = BuildResultsWriter()
+        writer = BuildResultsWriter(args.run_id)
         writer.writeResultsFromInputFile(args.file)
     except Exception as e:
         print(e)
