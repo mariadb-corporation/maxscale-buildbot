@@ -4,7 +4,7 @@ from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
-from maxscale.builders.support import common
+from .support import common
 
 COMMON_PROPERTIES = {
     "big": util.Property("big"),
@@ -77,6 +77,7 @@ def create_factory():
     factory = BuildFactory()
     factory.addSteps(common.initTargetProperty())
     factory.addSteps(common.initNameProperty())
+    factory.addStep(common.determineBuildId())
     buildProperties = COMMON_PROPERTIES.copy()
     buildProperties.update({
         'virtual_builder_name': util.Interpolate('Build for %(prop:box)s'),
@@ -90,10 +91,11 @@ def create_factory():
     runTestProperties = COMMON_PROPERTIES.copy()
     runTestProperties.update({
         "backend_ssl": util.Property("backend_ssl"),
+        "buildHosts": ["max-gcloud-01", "max-gcloud-02"],
+        "buildId": util.Property("buildId"),
         "test_branch": util.Property('branch'),
         "use_callgrind": util.Property("use_callgrind"),
         "use_valgrind": util.Property("use_valgrind"),
-        "buildHosts": ["max-gcloud-01", "max-gcloud-02"],
     })
     factory.addStep(ParallelRunTestTrigger(
         name="Call the 'run_test' for each test set",

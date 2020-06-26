@@ -1,6 +1,6 @@
 from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
-from maxscale.builders.support import common, support
+from .support import common
 from maxscale import workers
 from maxscale.config import constants
 
@@ -48,20 +48,21 @@ def configureCommonProperties(properties):
     }
 
 
-def createRunTestSteps():
-    testSteps = []
-    testSteps.extend(common.configureMdbciVmPathProperty())
-    testSteps.extend(common.cloneRepository())
-    testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    testSteps.append(common.generateMdbciRepositoryForTarget())
-    testSteps.extend(common.remoteRunScriptAndLog(
+def createTestFactory():
+    factory = util.BuildFactory()
+    factory.addSteps(common.configureMdbciVmPathProperty())
+    factory.addSteps(common.cloneRepository())
+    factory.addStep(common.determineBuildId())
+    factory.addStep(steps.SetProperties(properties=configureCommonProperties))
+    factory.addStep(common.generateMdbciRepositoryForTarget())
+    factory.addSteps(common.remoteRunScriptAndLog(
         name="Run MaxScale tests",
         scriptName="run_test.sh",
         logFile=util.Property("buildLogFile"),
         resultFile=util.Property("resultFile"),
     ))
-    testSteps.extend(common.parseCtestLog())
-    testSteps.extend(common.downloadAndRunScript(
+    factory.addSteps(common.parseCtestLog())
+    factory.addSteps(common.downloadAndRunScript(
         name="Find core dumps and record information into the file",
         scriptName="coredump_finder.py",
         args=[
@@ -74,14 +75,14 @@ def createRunTestSteps():
         flunkOnFailure=False,
         alwaysRun=True
     ))
-    testSteps.extend(common.writeBuildsResults())
-    testSteps.append(
+    factory.addSteps(common.writeBuildsResults())
+    factory.addStep(
         common.StdoutShellCommand(
             name="test_result",
             command=util.Interpolate("cat %(prop:builddir)s/results_%(prop:buildnumber)s %(prop:coreDumpsLog)s"),
             alwaysRun=True)
     )
-    testSteps.append(common.rsyncViaSsh(
+    factory.addStep(common.rsyncViaSsh(
         name="Rsync test logs to the logs server",
         local=util.Property("logDirectory"),
         remote=util.Interpolate(
@@ -89,7 +90,7 @@ def createRunTestSteps():
         alwaysRun=True,
         flunkOnFailure=False,
     ))
-    testSteps.append(common.runSshCommand(
+    factory.addStep(common.runSshCommand(
         name="Fix permissions on remote server",
         host=util.Property("upload_server"),
         command=["chmod", "777", "-R",
@@ -97,20 +98,13 @@ def createRunTestSteps():
         alwaysRun=True,
         flunkOnFailure=False,
     ))
-    testSteps.append(steps.ShellCommand(
+    factory.addStep(steps.ShellCommand(
         name="Remove logs from worker host",
         command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s")],
         alwaysRun=True,
     ))
-    testSteps.extend(common.destroyVirtualMachine())
-    testSteps.extend(common.cleanBuildDir())
-    return testSteps
-
-
-def createTestFactory():
-    factory = util.BuildFactory()
-    testSteps = createRunTestSteps()
-    factory.addSteps(testSteps)
+    factory.addSteps(common.destroyVirtualMachine())
+    factory.addSteps(common.cleanBuildDir())
     return factory
 
 

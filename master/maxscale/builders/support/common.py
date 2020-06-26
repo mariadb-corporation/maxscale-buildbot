@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from buildbot.plugins import util, steps
 from buildbot.process.buildstep import ShellMixin
 from buildbot.process.results import SKIPPED
@@ -397,6 +398,7 @@ def writeBuildResultsToDatabase(**kwargs):
     return [steps.SetPropertyFromCommand(
         name="Save test results to the database",
         command=[util.Interpolate("%(prop:builddir)s/scripts/write_build_results.py"),
+                 "-r", util.Property("buildId"),
                  util.Property("jsonResultsFile")],
         extract_fn=extractDatabaseBuildid,
         **kwargs)]
@@ -536,4 +538,26 @@ def rsyncViaSsh(name="", local="", remote="", timeout=1800, **kwargs):
         command=rsyncCommand,
         timeout=timeout,
         **kwargs
+    )
+
+
+def shouldGenerateBuildId(properties):
+    return not (properties.hasProperty("buildId")) or not properties.getProperty("buildId")
+
+
+@util.renderer
+def generateBuildId(properties):
+    if not shouldGenerateBuildId(properties):
+        return {}
+
+    return {
+        "buildId": str(uuid.uuid4())
+    }
+
+
+def determineBuildId():
+    return steps.SetProperties(
+        name="Automatically set buildId property",
+        doStepIf=shouldGenerateBuildId,
+        properties=generateBuildId
     )
