@@ -33,16 +33,16 @@ ENVIRONMENT = {
 
 @util.renderer
 def configureCommonProperties(properties):
-    buildId = "{}-{}".format(properties.getProperty("buildername"), properties.getProperty("buildnumber"))
-    logDirectory = "{}/LOGS/{}/".format(properties.getProperty("HOME"), buildId)
-    coreDumpsLog = "{}/coredumps_{}".format(logDirectory, buildId)
+    testId = "{}-{}".format(properties.getProperty("buildername"), properties.getProperty("buildnumber"))
+    logDirectory = "{}/LOGS/{}/".format(properties.getProperty("HOME"), testId)
+    coreDumpsLog = "{}/coredumps_{}".format(logDirectory, testId)
     return {
         "buildLogFile": util.Interpolate("%(prop:builddir)s/build_log_%(prop:buildnumber)s"),
         "resultFile": util.Interpolate("result_%(prop:buildnumber)s"),
         "jsonResultsFile": util.Interpolate("%(prop:builddir)s/json_%(prop:buildnumber)s"),
         "mdbciConfig": util.Interpolate("%(prop:MDBCI_VM_PATH)s/%(prop:name)s"),
         "upload_server": constants.UPLOAD_SERVERS[properties.getProperty("host")],
-        "buildId": buildId,
+        "testId": testId,
         "logDirectory": logDirectory,
         "coreDumpsLog": coreDumpsLog,
     }
@@ -67,7 +67,7 @@ def createTestFactory():
         scriptName="coredump_finder.py",
         args=[
             "--directory", util.Property("logDirectory"),
-            "--remote-prefix", util.Interpolate("%(kw:server)s%(prop:buildId)s/",
+            "--remote-prefix", util.Interpolate("%(kw:server)s%(prop:testId)s/",
                                                 server=constants.CI_SERVER_LOGS_URL),
             "--output-file", util.Property("coreDumpsLog"),
         ],
@@ -86,7 +86,7 @@ def createTestFactory():
         name="Rsync test logs to the logs server",
         local=util.Property("logDirectory"),
         remote=util.Interpolate(
-            "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/%(prop:buildId)s/"),
+            "%(prop:upload_server)s:/srv/repository/bb-logs/Maxscale/%(prop:testId)s/"),
         alwaysRun=True,
         flunkOnFailure=False,
     ))
@@ -94,13 +94,13 @@ def createTestFactory():
         name="Fix permissions on remote server",
         host=util.Property("upload_server"),
         command=["chmod", "777", "-R",
-                 util.Interpolate("/srv/repository/bb-logs/Maxscale/%(prop:buildId)s/")],
+                 util.Interpolate("/srv/repository/bb-logs/Maxscale/%(prop:testId)s/")],
         alwaysRun=True,
         flunkOnFailure=False,
     ))
     factory.addStep(steps.ShellCommand(
         name="Remove logs from worker host",
-        command=["rm", "-rf", util.Interpolate("%(prop:HOME)s/LOGS/%(prop:buildId)s")],
+        command=["rm", "-rf", util.Property("logDirectory")],
         alwaysRun=True,
     ))
     factory.addSteps(common.destroyVirtualMachine())
