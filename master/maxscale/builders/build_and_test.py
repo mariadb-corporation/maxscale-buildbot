@@ -4,7 +4,7 @@ from buildbot.plugins import util, steps
 from buildbot.config import BuilderConfig
 from buildbot.process.factory import BuildFactory
 from maxscale import workers
-from maxscale.builders.support import common
+from .support import common
 
 COMMON_PROPERTIES = [
     "name",
@@ -29,6 +29,7 @@ def createFactory():
     factory = BuildFactory()
     factory.addSteps(common.initTargetProperty())
     factory.addSteps(common.initNameProperty())
+    factory.addStep(common.determineBuildId())
     factory.addStep(steps.Trigger(
         name="Call the 'build' scheduler",
         schedulerNames=['build'],
@@ -46,12 +47,13 @@ def createFactory():
         waitForFinish=True,
         copy_properties=COMMON_PROPERTIES,
         set_properties={
-            'test_branch': util.Property('branch'),
-            "test_set": common.renderTestSet,
-            "use_valgrind": util.Property("use_valgrind"),
-            "use_callgrind": util.Property("use_callgrind"),
             "backend_ssl": util.Property("backend_ssl"),
+            "buildId": util.Property("buildId"),
             "host": util.Property("host"),
+            "test_branch": util.Property("branch"),
+            "test_set": common.renderTestSet,
+            "use_callgrind": util.Property("use_callgrind"),
+            "use_valgrind": util.Property("use_valgrind"),
         }
     ))
 
