@@ -13,6 +13,7 @@ COMMON_PROPERTIES = [
     properties.ci_url(),
     properties.backend_use_ssl(),
     properties.use_valgrind(),
+    properties.appendTestRunId(),
 ]
 
 DEFAULT_PROPERTIES = properties.extractDefaultValues(COMMON_PROPERTIES)

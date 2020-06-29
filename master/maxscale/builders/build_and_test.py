@@ -47,6 +47,7 @@ def createFactory():
         waitForFinish=True,
         copy_properties=COMMON_PROPERTIES,
         set_properties={
+            "appendTestRunId": util.Property("appendTestRunId"),
             "backend_ssl": util.Property("backend_ssl"),
             "buildId": util.Property("buildId"),
             "host": util.Property("host"),

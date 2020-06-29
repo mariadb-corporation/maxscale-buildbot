@@ -399,3 +399,11 @@ def maxscaleDockerCodebase():
         repository=util.StringParameter(name="repository",
                                         default=constants.MAXSCALE_DOCKER_CODEBASE[""]["repository"]),
     )
+
+
+def appendTestRunId(default=True):
+    return util.BooleanParameter(
+        name="appendTestRunId",
+        label="Append test run id to the name of the test",
+        default=default
+    )

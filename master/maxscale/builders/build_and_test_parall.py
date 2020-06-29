@@ -90,6 +90,7 @@ def create_factory():
     ))
     runTestProperties = COMMON_PROPERTIES.copy()
     runTestProperties.update({
+        "appendTestRunId": util.Property("appendTestRunId"),
         "backend_ssl": util.Property("backend_ssl"),
         "buildHosts": ["max-gcloud-01", "max-gcloud-02"],
         "buildId": util.Property("buildId"),
