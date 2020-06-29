@@ -559,5 +559,28 @@ def determineBuildId():
     return steps.SetProperties(
         name="Automatically set buildId property",
         doStepIf=shouldGenerateBuildId,
-        properties=generateBuildId
+        properties=generateBuildId,
+    )
+
+
+def shouldAppendTestRunId(properties):
+    return not (properties.hasProperty("appendTestRunId")) or properties.getProperty("appendTestRunId")
+
+
+@util.renderer
+def generateTestRunId(properties):
+    if not shouldAppendTestRunId(properties):
+        return {}
+
+    return {
+        "name": "{}-{}-{}".format(properties.getProperty("name"), properties.getProperty("buildername"),
+                                  properties.getProperty("buildnumber"))
+    }
+
+
+def determineTestRunName():
+    return steps.SetProperties(
+        name="Add test run id to the name of the build",
+        doStepIf=shouldAppendTestRunId,
+        properties=generateTestRunId,
     )

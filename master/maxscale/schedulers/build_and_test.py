@@ -9,6 +9,7 @@ from maxscale.builders.support.common import TargetInitOptions
 
 BUILD_AND_TEST_PROPERTIES = [
     properties.build_name(),
+    properties.appendTestRunId(),
     properties.build_target(),
     properties.build_experimental_features(),
     properties.build_box(),
@@ -28,7 +29,7 @@ BUILD_AND_TEST_PROPERTIES = [
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test",
-    label="Build and test",
+    buttonName="Build and test",
     builderNames=["build_and_test"],
     codebases=properties.codebaseParameter(),
     properties=BUILD_AND_TEST_PROPERTIES

@@ -5,6 +5,7 @@ from . import properties
 
 RUN_TEST_PROPERTIES = [
     properties.build_name(),
+    properties.appendTestRunId(),
     properties.build_target(),
     properties.build_box(),
     properties.backend_database(),

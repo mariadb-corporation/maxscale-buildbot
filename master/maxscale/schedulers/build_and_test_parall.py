@@ -3,6 +3,7 @@ from . import properties
 
 BUILD_AND_TEST_PROPERTIES = [
     properties.build_name(),
+    properties.appendTestRunId(),
     properties.build_target(),
     properties.build_experimental_features(),
     properties.build_box(),
@@ -22,7 +23,7 @@ BUILD_AND_TEST_PROPERTIES = [
 
 MANUAL_SCHEDULER = schedulers.ForceScheduler(
     name="build_and_test_parall",
-    label="Build and test parallel",
+    buttonName="Build and test parallel",
     builderNames=["build_and_test_parall"],
     codebases=properties.codebaseParameter(),
     properties=BUILD_AND_TEST_PROPERTIES

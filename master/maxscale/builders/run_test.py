@@ -51,9 +51,13 @@ def configureCommonProperties(properties):
 def createTestFactory():
     factory = util.BuildFactory()
     factory.addSteps(common.configureMdbciVmPathProperty())
-    factory.addSteps(common.cloneRepository())
     factory.addStep(common.determineBuildId())
-    factory.addStep(steps.SetProperties(properties=configureCommonProperties))
+    factory.addStep(common.determineTestRunName())
+    factory.addStep(steps.SetProperties(
+        name="Configure build properties",
+        properties=configureCommonProperties,
+    ))
+    factory.addSteps(common.cloneRepository())
     factory.addStep(common.generateMdbciRepositoryForTarget())
     factory.addSteps(common.remoteRunScriptAndLog(
         name="Run MaxScale tests",
