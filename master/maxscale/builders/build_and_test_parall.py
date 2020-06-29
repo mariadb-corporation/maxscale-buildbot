@@ -52,8 +52,7 @@ class ParallelRunTestTrigger(steps.Trigger):
     Special trigger that allows to spawn a run_test task with "test_set" and "name"
     arguments specified for each of the triggered task.
     """
-    def __init__(self, testSetAmount=1, **kwargs):
-        self.testSetAmount = testSetAmount
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def getSchedulersAndProperties(self):
@@ -100,7 +99,6 @@ def create_factory():
     })
     factory.addStep(ParallelRunTestTrigger(
         name="Call the 'run_test' for each test set",
-        testSetAmount=4,
         schedulerNames=['run_test'],
         waitForFinish=True,
         set_properties=runTestProperties,
