@@ -71,6 +71,34 @@ class BuildResultsWriter:
             raise Exception("{} not found in the {} file".format(section, filename))
         return db
 
+    def findTestCase(self, name):
+        cursor = self.client.cursor(dictionary=True)
+        query = """
+                SELECT id FROM test_cases
+                WHERE name=%s
+                """
+        cursor.execute(query, (name,))
+        test_case = cursor.fetchone()
+        cursor.close()
+        if test_case is None:
+            return None
+        else:
+            return test_case["id"]
+
+    def writeTestCasesTable(self, name):
+        test_case_id = self.findTestCase(name)
+        if test_case_id:
+            return test_case_id
+        cursor = self.client.cursor()
+        query = "INSERT INTO test_cases (name) VALUES (%s)"
+        values = (name,)
+        cursor.execute(query, values)
+        id = cursor.lastrowid
+        self.client.commit()
+        cursor.close()
+        print("Performed insert (test_case, id = {}: {}".format(id, query % values))
+        return id
+
     def findTargetBuild(self, runId):
         cursor = self.client.cursor(dictionary=True)
         query = """
@@ -140,11 +168,12 @@ class BuildResultsWriter:
         print("Performed insert (test_run, id = {}: {}".format(id, query % values))
         return id
 
-    def writeResultsTable(self, id, test, result, testTime, coreDumpPath, leakSummary, targetBuildId):
+    def writeResultsTable(self, id, test, result, testTime, coreDumpPath, leakSummary, targetBuildId, testCaseId):
         cursor = self.client.cursor()
-        query = ("INSERT INTO results (id, test, result, test_time, core_dump_path, leak_summary, target_build_id) "
-                 "VALUES (%s, %s, %s, %s, %s, %s, %s)")
-        values = (id, test, result, testTime, coreDumpPath, leakSummary, targetBuildId)
+        query = ("INSERT INTO results (id, test, result, test_time, core_dump_path, "
+                 "leak_summary, target_build_id, test_case_id) "
+                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
+        values = (id, test, result, testTime, coreDumpPath, leakSummary, targetBuildId, testCaseId)
         cursor.execute(query, values)
         self.client.commit()
         cursor.close()
@@ -195,7 +224,8 @@ class BuildResultsWriter:
                     leakSummary = ";\n".join(testsLeakSummary[name])
                 else:
                     leakSummary = None
-                self.writeResultsTable(id, name, result, testTime, coreDumpPath, leakSummary, targetBuildId)
+                testCaseId = self.writeTestCasesTable(name)
+                self.writeResultsTable(id, name, result, testTime, coreDumpPath, leakSummary, targetBuildId, testCaseId)
 
 
 def main(args=None):
