@@ -1,0 +1,4 @@
+
+        [buildbot.www]
+        ws_keepalive_plugin = buildbot_ws_keepalive_plugin:ep
+    

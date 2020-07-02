@@ -1,0 +1,11 @@
+Metadata-Version: 1.1
+Name: buildbot-ws-keepalive-plugin
+Version: 2020.6.30
+Summary: Make websocket keepalive requests
+Home-page: https://github.com/mariadb-corporation/maxscale-buildbot
+Author: Evgeny Vlasov
+Author-email: evgeny.vlasov@fruct.org
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)

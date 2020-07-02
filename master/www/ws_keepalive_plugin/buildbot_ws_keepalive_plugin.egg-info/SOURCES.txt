@@ -1,0 +1,14 @@
+README.md
+setup.cfg
+setup.py
+buildbot_ws_keepalive_plugin/VERSION
+buildbot_ws_keepalive_plugin/__init__.py
+buildbot_ws_keepalive_plugin.egg-info/PKG-INFO
+buildbot_ws_keepalive_plugin.egg-info/SOURCES.txt
+buildbot_ws_keepalive_plugin.egg-info/dependency_links.txt
+buildbot_ws_keepalive_plugin.egg-info/entry_points.txt
+buildbot_ws_keepalive_plugin.egg-info/top_level.txt
+buildbot_ws_keepalive_plugin/static/scripts.js
+buildbot_ws_keepalive_plugin/static/scripts.js.map
+buildbot_ws_keepalive_plugin/static/styles.css
+buildbot_ws_keepalive_plugin/static/styles.css.map
