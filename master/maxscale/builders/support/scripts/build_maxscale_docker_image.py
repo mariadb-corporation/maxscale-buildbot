@@ -67,7 +67,8 @@ def buildAndPublishDockerImage(baseImage, name, tag, registry):
     logging.info("Removing old version of the Docker image")
     subprocess.run(["docker", "image", "rm", "-f", imageName], check=False)
     logging.info("Creating the new Docker image")
-    subprocess.run(["docker", "image", "build", "--force-rm", "-t", imageName, "."], check=True)
+    subprocess.run(["docker", "image", "build", "--force-rm", "--build-arg", "REMOVE_MAXSCALE_REPOSITORY=yes",
+                    "-t", imageName, "."], check=True)
     logging.info("Publishing image to registry: %s", registry)
     subprocess.run(["docker", "image", "push", imageName], check=True)
     logging.info("Removing build image from the local Docker cache")
