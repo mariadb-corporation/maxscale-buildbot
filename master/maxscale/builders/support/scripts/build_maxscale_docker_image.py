@@ -32,6 +32,7 @@ def parseArguments():
     options.add_argument("--name", help="Name of the image to generate", default="mariadb/maxscale-ci")
     options.add_argument("--tag", help="The tag for the image to be generated", required=True)
     options.add_argument("--registry", help="The Docker registry to publish the image to", required=True)
+    options.add_argument("--base-image", help="Name of the base image to update", default="ubuntu:bionic")
     return options.parse_args()
 
 
@@ -55,7 +56,9 @@ def placeRepositoryFile(repository):
     repoFile.close()
 
 
-def buildAndPublishDockerImage(name, tag, registry):
+def buildAndPublishDockerImage(baseImage, name, tag, registry):
+    logging.info("Updating the base image '%s'", baseImage)
+    subprocess.run(["docker", "image", "pull", baseImage], check=True)
     logging.info("Generating the Docker image")
     cutRegistry = registry.replace('https://', '', 1).strip('/')
     fixedTag = tag.replace(':', '-')
@@ -64,9 +67,11 @@ def buildAndPublishDockerImage(name, tag, registry):
     logging.info("Removing old version of the Docker image")
     subprocess.run(["docker", "image", "rm", "-f", imageName], check=False)
     logging.info("Creating the new Docker image")
-    subprocess.run(["docker", "image", "build", "-t", imageName, "."], check=True)
+    subprocess.run(["docker", "image", "build", "--force-rm", "-t", imageName, "."], check=True)
     logging.info("Publishing image to registry: %s", registry)
     subprocess.run(["docker", "image", "push", imageName], check=True)
+    logging.info("Removing build image from the local Docker cache")
+    subprocess.run(["docker", "image", "rm", "-f", imageName], check=False)
 
 
 def main():
@@ -80,7 +85,7 @@ def main():
         logging.error("Unable to find repository information")
         sys.exit(1)
     placeRepositoryFile(repository)
-    buildAndPublishDockerImage(arguments.name, arguments.tag, arguments.registry)
+    buildAndPublishDockerImage(arguments.base_image, arguments.name, arguments.tag, arguments.registry)
 
 
 if __name__ == "__main__":
