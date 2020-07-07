@@ -42,7 +42,6 @@ def extractRepositoryInformation(product, product_version, platform, platform_ve
          "--platform", platform, "--platform-version", platform_version, "--silent"],
         stdout=subprocess.PIPE
     )
-    print(process.stdout)
     if process.returncode != 0:
         return None
     return process.stdout.strip().decode('utf-8')
