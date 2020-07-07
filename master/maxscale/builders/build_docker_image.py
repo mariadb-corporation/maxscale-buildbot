@@ -9,8 +9,8 @@ def createBuildfactory():
     factory = util.BuildFactory()
     factory.addSteps(common.cloneRepository())
     factory.addStep(steps.ShellCommand(
-        name=util.Interpolate("Register in the Docker Registry %(prop:docker_registry_url)s"),
-        command=["docker", "login", util.Property("docker_registry_url"),
+        name=util.Interpolate("Register in the Docker Registry %(prop:dockerRegistryUkrl)s"),
+        command=["docker", "login", util.Property("dockerRegistryUrl"),
                  "--username", constants.DOCKER_REGISTRY_USER_NAME,
                  "--password", util.Secret("dockerRegistryPassword")
                  ],
