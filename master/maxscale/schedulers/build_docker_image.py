@@ -2,8 +2,8 @@ from buildbot.plugins import schedulers
 from . import properties
 
 BUILD_DOCKER_IMAGE_PROPERTIES = [
+    properties.mdbciProductName(),
     properties.build_target(),
-    properties.ci_url(),
     properties.dockerProductName(),
     properties.dockerRegistryURL(),
     properties.host(),
