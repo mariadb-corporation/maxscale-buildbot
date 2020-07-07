@@ -20,10 +20,11 @@ def createBuildfactory():
         name=util.Interpolate("Build docker image for %(prop:target)s"),
         scriptName="build_maxscale_docker_image.py",
         args=[
-            "--repository", util.Interpolate("%(prop:ci_url)s/%(prop:target)s/mariadb-maxscale/ubuntu"),
+            "--product", util.Property("mdbciProductName"),
+            "--product-version", util.Property("target"),
+            "--name", util.Property("dockerProductName"),
             "--tag", util.Property("target"),
-            "--name", util.Property("docker_product_name"),
-            "--registry", util.Property("docker_registry_url")
+            "--registry", util.Property("dockerRegistryUrl")
         ],
         workdir=util.Interpolate("%(prop:builddir)s/build/maxscale/"),
     ))

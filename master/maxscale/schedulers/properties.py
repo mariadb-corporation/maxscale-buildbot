@@ -349,7 +349,7 @@ def version_number():
 
 def dockerProductName():
     return util.StringParameter(
-        name="docker_product_name",
+        name="dockerProductName",
         label="Docker product name",
         default=constants.MAXSCALE_CI_DOCKER_PRODUCT_NAME
     )
@@ -357,9 +357,17 @@ def dockerProductName():
 
 def dockerRegistryURL():
     return util.StringParameter(
-        name="docker_registry_url",
+        name="dockerRegistryUrl",
         label="Docker registry to put images to",
         default=constants.DOCKER_REGISTRY
+    )
+
+
+def mdbciProductName(default="maxscale_ci"):
+    return util.StringParameter(
+        name="mdbciProductName",
+        label="MDBCI Product name",
+        default=default,
     )
 
 
