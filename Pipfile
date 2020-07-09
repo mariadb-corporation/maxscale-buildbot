@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-
 paver = "*"
 pycodestyle = "*"
 
@@ -18,7 +17,6 @@ paramiko = "*"
 pyOpenSSL = "*"
 requests = "*"
 service_identity = "*"
-
-[packages.buildbot]
-extras = [ "bundle",]
-version = "==2.7.0"
+buildbot-pkg = "*"
+buildbot = {extras = [ "bundle",],version = "==2.7.0"}
+buildbot-ws-keepalive-plugin = "*"
