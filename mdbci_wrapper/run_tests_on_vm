@@ -25,6 +25,6 @@ mkdir ub_vms
 
 
 
-#ssh -i $key $user@$ip ./MaxScale/BUILD/install_test_build_deps.sh
-#ssh -i $key $user@$ip box=centos_7_gcp backend_box=centos_7_gcp $user@$ip./MaxScale/maxscale-system-test/mdbci/run_test.sh
+ssh -i $key $sshopt $me@$ip ./MaxScale/BUILD/install_test_build_deps.sh
+ssh -i $key $sshopt $me@$ip target=maxscale-2.4.11-debug box=centos_7_gcp backend_box=centos_7_gcp ./MaxScale/maxscale-system-test/mdbci/run_test.sh
 

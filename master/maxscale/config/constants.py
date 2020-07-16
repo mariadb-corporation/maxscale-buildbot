@@ -49,7 +49,6 @@ BOXES = [
 
 BUILD_ALL_BOXES = [
     "centos_7_gcp",
-    "centos_6_gcp",
     "centos_8_gcp",
     "ubuntu_xenial_gcp",
     "ubuntu_bionic_gcp",
@@ -96,7 +95,7 @@ CI_SERVER_URL = 'https://mdbe-ci-repo.mariadb.net/Maxscale/'
 CI_SERVER_LOGS_URL = 'https://mdbe-ci-repo.mariadb.net/bb-logs/Maxscale/'
 
 # Define branches for nightly build_all builds
-NIGHTLY_SCHEDS = ['2.4', '2.3', 'develop']
+NIGHTLY_SCHEDS = ['2.5', '2.4', '2.3', 'develop']
 
 NIGHTLY_MAIL_LIST = ['markus.makela@mariadb.com', 'johan.wikman@mariadb.com', 'esa.korhonen@mariadb.com',
                      'niclas.antti@mariadb.com']

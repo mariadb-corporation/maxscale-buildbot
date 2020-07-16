@@ -14,6 +14,10 @@ MAXSCALE_BRANCHES_LIST = [
     {
         "branch": r"^2\.4$",
         "test_set": "-LE UNSTABLE"
+    },
+    {
+        "branch": r"^2\.5$",
+        "test_set": "-LE UNSTABLE"
     }
 ]
 
@@ -56,7 +60,12 @@ NIGHTLY_BRANCHES_LIST = [
     {
         "branch": "2.4",
         "test_set": "-LE UNSTABLE"
+    },
+    {
+        "branch": "2.5",
+        "test_set": "-LE UNSTABLE"
     }
+
 ]
 
 DIFF_DISTRO_BRANCHES_LIST = [
