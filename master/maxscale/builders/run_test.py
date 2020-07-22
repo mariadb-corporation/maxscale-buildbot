@@ -61,7 +61,7 @@ def createTestFactory():
     factory.addStep(common.generateMdbciRepositoryForTarget())
     factory.addSteps(common.remoteRunScriptAndLog(
         name="Run MaxScale tests",
-        scriptName="run_test.sh",
+        scriptName="run_test_vm.sh",
         logFile=util.Property("buildLogFile"),
         resultFile=util.Property("resultFile"),
     ))
