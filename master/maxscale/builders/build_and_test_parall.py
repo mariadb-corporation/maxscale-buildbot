@@ -91,7 +91,7 @@ def create_factory():
     runTestProperties.update({
         "appendTestRunId": util.Property("appendTestRunId"),
         "backend_ssl": util.Property("backend_ssl"),
-        "buildHosts": ["max-gcloud-01", "max-gcloud-02"],
+        "buildHosts": ["bb-host"],
         "buildId": util.Property("buildId"),
         "test_branch": util.Property('branch'),
         "use_callgrind": util.Property("use_callgrind"),
