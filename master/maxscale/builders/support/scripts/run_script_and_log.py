@@ -10,7 +10,7 @@ import subprocess
 def main():
     logging.basicConfig(level=logging.INFO)
     arguments = parseArguments()
-    scriptPath = os.path.join("maxscale-system-test/mdbci/", arguments.script_name)
+    scriptPath = os.path.join("system-test/mdbci/", arguments.script_name)
     if not os.path.exists(scriptPath):
         logging.error("The script '%s' doest not exist. Unable to execute it", scriptPath)
         sys.exit(1)
