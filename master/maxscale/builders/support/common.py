@@ -85,7 +85,8 @@ def destroyVirtualMachine():
             print("MDBCI configuration does not exist")
             sys.exit(0)
 
-        os.system("$HOME/mdbci/mdbci destroy {}".format(mdbciConfig))
+        os.system("$HOME/mdbci/mdbci destroy --all $HOME/{}".format(mdbciVMPath))
+        os.system("rm -rf $HOME/{}".format(mdbciVMPath))
 
     def shouldRun(step):
         if step.getProperty("try_already_running") == "yes" or step.getProperty("do_not_destroy_vm") == "yes":

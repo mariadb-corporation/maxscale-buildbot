@@ -45,6 +45,7 @@ def configureCommonProperties(properties):
         "testId": testId,
         "logDirectory": logDirectory,
         "coreDumpsLog": coreDumpsLog,
+        "mdbciVMPath": util.Interpolate("%(prop:name)s_vms"),
     }
 
 

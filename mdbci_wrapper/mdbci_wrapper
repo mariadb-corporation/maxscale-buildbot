@@ -1,8 +1,0 @@
-# sudo apt install libcurl4-gnutls-dev
-export user=timofey_turenko_mariadb_com 2>&1 >/dev/null
-export ip=10.166.15.223 2>&1 >/dev/null
-export host=$user@$ip 2>&1 >/dev/null
-
-rsync  -avz  --progress -e ssh ~/vms/ $host:~/ub_vms/ 2>&1 >/dev/null
-ssh $host "MDBCI_VM_PATH=/home/$user/ub_vms/ /home/$user/mdbci/mdbci $*"
-rsync  -avz  --progress -e ssh $host:~/ub_vms/ ~/vms/ 2>&1 >/dev/null
