@@ -71,31 +71,35 @@ def getWorkerHomeDirectory():
         variables=["HOME"])]
 
 
-def cleanBuildIntermediates():
-    """Add steps to clean build intermediats created by the scripts and tools"""
-    cleanSteps = []
-    cleanSteps.extend(destroyVirtualMachine())
-    return cleanSteps
+def shouldDestroyVirtualMachines(step):
+    """Helper method that checks whether the VM destruction step should be run or not"""
+    if step.getProperty("try_already_running") == "yes" or step.getProperty("do_not_destroy_vm") == "yes":
+        return False
+    return True
 
 
-def destroyVirtualMachine():
-    """Destroy virtual machine if it was not destroied after the build"""
-    def remoteCode():
-        if not os.path.exists(mdbciConfig):
-            print("MDBCI configuration does not exist")
-            sys.exit(0)
+def destroyVirtualMachine(configurationName=util.Property("mdbciConfig")):
+    """Destroy virtual machine if it was not destroyed after the build"""
+    return downloadAndRunScript(
+        scriptName="destroy_vm.py",
+        extraFiles=["common.py"],
+        args=["--configuration-name", configurationName],
+        name="Destroy leftover VMs using MDBCI",
+        alwaysRun=True,
+        doStepIf=shouldDestroyVirtualMachines,
+    )
 
-        os.system("$HOME/mdbci/mdbci destroy --all $HOME/{}".format(mdbciVMPath))
-        os.system("rm -rf $HOME/{}".format(mdbciVMPath))
 
-    def shouldRun(step):
-        if step.getProperty("try_already_running") == "yes" or step.getProperty("do_not_destroy_vm") == "yes":
-            return False
-        return True
-
-    return support.executePythonScript(
-        "Destroy leftover virtual machines", remoteCode,
-        haltOnFailure=False, alwaysRun=True, doStepIf=shouldRun)
+def destroyAllConfigurations(configurationsPath):
+    """Destroy all configurations in the specified path and remove it"""
+    return downloadAndRunScript(
+        scriptName="destroy_vm.py",
+        extraFiles=["common.py"],
+        args=["--destroy-all", "--configuration-dir", configurationsPath],
+        alwaysRun=True,
+        name="Destroy VMs created by the system tests",
+        doStepIf=shouldDestroyVirtualMachines,
+    )
 
 
 def save_env_to_property(rc, stdout, stderr):
@@ -442,25 +446,33 @@ def writeBuildsResults():
     return downloadScript("write_build_results.py", alwaysRun=True) + writeBuildResultsToDatabase(alwaysRun=True)
 
 
-def downloadAndRunScript(scriptName, args=(), **kwargs):
+def downloadAndRunScript(scriptName, extraFiles=(), args=(), **kwargs):
     """
     Downloads the script to remote location and executes it
     :param: scriptName name of the local script to execute
+    :param: extraFiles name of extra files that should be transferred to the remote host
+    :param: args list of arguments to pass to the remote script
+    :param: kwargs parameters of the executeStep
     """
+    taskSteps = []
+    allFiles = list(extraFiles)
+    allFiles.append(scriptName)
+    for file in allFiles:
+        taskSteps.append(steps.FileDownload(
+            name="Transferring {} to worker".format(file),
+            mastersrc="maxscale/builders/support/scripts/{}".format(file),
+            workerdest=util.Interpolate("%(prop:builddir)s/scripts/{}".format(file)),
+            hideStepIf=True,
+            alwaysRun=True,
+            mode=0o755,
+        ))
     remoteScriptName = util.Interpolate("%(prop:builddir)s/scripts/{}".format(scriptName))
-    downloadStep = steps.FileDownload(
-        name="Transferring {} to worker".format(scriptName),
-        mastersrc="maxscale/builders/support/scripts/{}".format(scriptName),
-        workerdest=remoteScriptName,
-        hideStepIf=True,
-        mode=0o755
-    )
-    executeStep = steps.ShellCommand(
+    taskSteps.append(steps.ShellCommand(
         command=[remoteScriptName, *args],
         timeout=1800,
         **kwargs
-    )
-    return [downloadStep, executeStep]
+    ))
+    return taskSteps
 
 
 @util.renderer

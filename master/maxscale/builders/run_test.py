@@ -108,7 +108,7 @@ def createTestFactory():
         command=["rm", "-rf", util.Property("logDirectory")],
         alwaysRun=True,
     ))
-    factory.addSteps(common.destroyVirtualMachine())
+    factory.addSteps(common.destroyAllConfigurations(util.Interpolate("%(prop:HOME)s/%(prop:name)s_vms")))
     factory.addSteps(common.cleanBuildDir())
     return factory
 
