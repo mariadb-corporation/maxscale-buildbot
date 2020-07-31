@@ -38,6 +38,5 @@ def get_test_set_by_branch(branch):
 POLLERS = [
     GitPoller(repourl=constants.MAXSCALE_REPOSITORY,
               branches=check_branch_fn, pollinterval=600, project=constants.MAXSCALE_PRODUCT,
-              gitbin='git-buildbot-patch',  # See https://github.com/buildbot/buildbot/issues/4211
               pollAtLaunch=False)
 ]
