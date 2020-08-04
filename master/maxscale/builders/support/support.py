@@ -5,52 +5,11 @@ from buildbot.interfaces import IRenderable
 from zope.interface import implementer
 
 
-# Following methods are internal and used to beautify the rest of the code above
-def executeScript(name, script, args=(), haltOnFailure=True, flunkOnFailure=True, alwaysRun=False, env={}, **kwargs):
-    """Download the executable script onto the worker and execute it"""
-    shellScriptPath = util.Interpolate("%(prop:builddir)s/scripts/%(kw:fileName)s",
-                                       fileName=createScriptFileName(name))
-
-    kwargs["haltOnFailure"] = haltOnFailure
-    kwargs["flunkOnFailure"] = flunkOnFailure
-    kwargs["alwaysRun"] = alwaysRun
-
-    downloadScript = steps.StringDownload(
-        script,
-        workerdest=shellScriptPath,
-        name="Download script to the worker: {}".format(name),
-        mode=0o755,
-        hideStepIf=True,
-        **kwargs)
-
-    runScript = steps.ShellCommand(
-        name="Execute script: {}".format(name),
-        command=[shellScriptPath, *args],
-        env=env,
-        timeout=1800,
-        **kwargs)
-
-    kwargs["alwaysRun"] = True
-
-    removeScript = steps.ShellCommand(
-        name="Remove script from worker: {}".format(name),
-        command=["rm", "-f", shellScriptPath],
-        hideStepIf=True,
-        **kwargs)
-
-    return [downloadScript, runScript, removeScript]
-
-
 def createScriptFileName(stepName):
     """Convert step name into a valid file name"""
     parts = stepName.split(' ')
     nonEmptyParts = filter(lambda part: part != "", parts)
     return "_".join(nonEmptyParts)
-
-
-def executePythonScript(name, function, modules=(), **kwargs):
-    """Convert passed function to the text, prepend properties and execute in on the server"""
-    return executeScript(name, PythonFunctionRenderer(function, modules), **kwargs)
 
 
 @implementer(IRenderable)

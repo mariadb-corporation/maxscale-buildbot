@@ -25,28 +25,18 @@ def configureBuildProperties(properties):
     }
 
 
-def remoteBuildMaxscale():
-    """This script will be run on the worker"""
-    if not os.path.exists("BUILD/mdbci"):
-        os.mkdir("default-maxscale-branch")
-        os.chdir("default-maxscale-branch")
-        subprocess.run(["git", "clone", repository])
-        os.chdir("..")
-    if not os.path.isdir("BUILD"):
-        shutil.copytree("default-maxscale-branch/MaxScale/BUILD", ".")
-    if not os.path.isdir("BUILD/mdbci"):
-        shutil.copytree("default-maxscale-branch/MaxScale/BUILD/mdbci", "BUILD/")
-    results = subprocess.run(["BUILD/mdbci/create_full_repo.sh"])
-    sys.exit(results.returncode)
-
-
 def createBuildSteps():
     buildSteps = []
     buildSteps.extend(common.configureMdbciVmPathProperty())
     buildSteps.append(steps.SetProperties(properties=configureBuildProperties))
     buildSteps.extend(common.cloneRepository())
-    buildSteps.extend(support.executePythonScript(
-        "Create full repo", remoteBuildMaxscale))
+    buildSteps.extend(common.downloadAndRunScript(
+        name="Create full repo",
+        scriptName="remote_build_maxscale.py",
+        args=[
+            "--repository", util.Property("ci_url")
+        ]
+    ))
     buildSteps.extend(common.cleanBuildDir())
     buildSteps.extend(common.destroyVirtualMachine())
     return buildSteps

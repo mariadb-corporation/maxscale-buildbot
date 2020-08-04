@@ -32,37 +32,6 @@ def configureCommonProperties(properties):
     }
 
 
-def runPerformanceTest():
-
-    def remoteCode():
-        os.chdir('{}/maxscale-performance-test/'.format(os.environ['HOME']))
-        if 'COMP_WORDBREAKS' in os.environ:
-            del os.environ['COMP_WORDBREAKS']
-
-        logFile = open('{}/results_{}'.format(builddir, buildnumber), 'w')
-        process = subprocess.Popen(['./bin/performance_test', '-v',
-                                    '--server-config', '{}/{}'.format(os.environ['HOME'], networkConfigPath),
-                                    '--remote-test-app',
-                                    '{}/.config/performance_test/run_sysbench.sh'.format(os.environ['HOME']),
-                                    '--db-server-2-config', 'slave-config.sql.erb',
-                                    '--db-server-3-config', 'slave-config.sql.erb',
-                                    '--db-server-4-config', 'slave-config.sql.erb',
-                                    '--mariadb-version', version,
-                                    '--maxscale-config', perf_cnf_template,
-                                    '--maxscale-version', target,
-                                    '--keep-servers', 'true'],
-                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        for byteLine in process.stdout:
-            line = byteLine.decode("utf-8", "replace")
-            sys.stdout.write(line)
-            logFile.write(line)
-        process.wait()
-        logFile.close()
-        sys.exit(process.returncode)
-
-    return support.executePythonScript('Run performance tests', remoteCode)
-
-
 def parsePerformanceTestResults(**kwargs):
     return steps.ShellCommand(
         name="Parsing performance tests results",
@@ -90,7 +59,18 @@ def createRunTestSteps():
     testSteps = []
     testSteps.extend(common.configureMdbciVmPathProperty())
     testSteps.append(steps.SetProperties(properties=configureCommonProperties))
-    testSteps.extend(runPerformanceTest())
+    testSteps.extend(common.downloadAndRunScript(
+        name="Run performance tests",
+        scriptName="run_performance_test.py",
+        args=[
+            "--build_dir", util.Property("builddir"),
+            "--build_number", util.Property("buildnumber"),
+            "--network_config_path", util.Property("networkConfigPath"),
+            "--version", util.Property("version"),
+            "--perf_cnf_template", util.Property("perf_cnf_template"),
+            "--target", util.Property("target")
+        ]
+    ))
     testSteps.append(parsePerformanceTestResults(alwaysRun=True))
     testSteps.append(writePerformanceTestResults(alwaysRun=True))
     testSteps.extend(common.cleanBuildDir())
