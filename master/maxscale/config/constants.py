@@ -60,8 +60,8 @@ BUILD_ALL_BOXES = [
 ]
 
 DB_VERSIONS = [
-    '10.3',
     '10.4',
+    '10.3',
     '10.2',
     '10.1',
     '10.0',
@@ -98,7 +98,7 @@ CI_SERVER_LOGS_URL = 'https://mdbe-ci-repo.mariadb.net/bb-logs/Maxscale/'
 NIGHTLY_SCHEDS = ['2.5', '2.4', '2.3', 'develop']
 
 NIGHTLY_MAIL_LIST = ['markus.makela@mariadb.com', 'johan.wikman@mariadb.com', 'esa.korhonen@mariadb.com',
-                     'niclas.antti@mariadb.com']
+                     'niclas.antti@mariadb.com', 'thien.ly@mariadb.com']
 
 # Define dictionary with maxscale repositories
 MAXSCALE_CODEBASE = {
@@ -141,15 +141,15 @@ DOCKER_REGISTRY_USER_NAME = "ci.servers"
 
 HOST_USERS = {
     "max-tst-01": "vagrant",
-    "max-gcloud-01": "timofey_turenko_mariadb_com",
-    "max-gcloud-02": "timofey_turenko_mariadb_com",
+#    "max-gcloud-01": "timofey_turenko_mariadb_com",
+#    "max-gcloud-02": "timofey_turenko_mariadb_com",
     "bb-host": "timofey_turenko_mariadb_com",
 }
 
 HOST_FULL = {
     "max-tst-01": "max-tst-01.mariadb.com",
-    "max-gcloud-01": "max-gcloud-01",
-    "max-gcloud-02": "max-gcloud-02",
+#    "max-gcloud-01": "max-gcloud-01",
+#    "max-gcloud-02": "max-gcloud-02",
     "bb-host": "mariadbenterprise-buildbot",
 }
 
@@ -157,8 +157,8 @@ UPLOAD_SERVER = "vagrant@max-tst-01.mariadb.com"
 
 UPLOAD_SERVERS = {
     "max-tst-01": "timofey_turenko_mariadb_com@35.228.225.110",
-    "max-gcloud-01": "timofey_turenko_mariadb_com@10.166.0.24",
-    "max-gcloud-02": "timofey_turenko_mariadb_com@10.166.0.24",
+#    "max-gcloud-01": "timofey_turenko_mariadb_com@10.166.0.24",
+#    "max-gcloud-02": "timofey_turenko_mariadb_com@10.166.0.24",
     "bb-host": "timofey_turenko_mariadb_com@10.166.0.24",
 }
 

@@ -34,7 +34,7 @@ def build_target(default="develop"):
         default=default)
 
 
-def major_ver(default="2.3"):
+def major_ver(default="2.4"):
     return util.StringParameter(
         name="major_ver",
         label="major_ver",
@@ -270,7 +270,7 @@ def versionNumber():
     )
 
 
-def host(default="max-gcloud-01"):
+def host(default="bb-host"):
     """Host of the used group of workers"""
     return util.ChoiceStringParameter(
         name="host",

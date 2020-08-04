@@ -49,7 +49,7 @@ for branch_item in NIGHTLY_BRANCHES_LIST:
     nightlyProperties = DEFAULT_NIGHTLY_PROPERTIES.copy()
     nightlyProperties["name"] = "nightly_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"]
+    nightlyProperties['buildHosts'] = ["bb-host"]
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
     nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
@@ -74,7 +74,7 @@ for branch_item in VALGRIND_BRANCHES_LIST:
     nightlyProperties = DEFAULT_NIGHTLY_PROPERTIES.copy()
     nightlyProperties["name"] = "valgrind_test_{}".format(branch_item["branch"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"]
+    nightlyProperties['buildHosts'] = ["bb-host"]
     nightlyProperties['use_valgrind'] = "yes"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
@@ -99,9 +99,10 @@ BUILD_INTERVAL = 8
 launchTime = 8
 for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties = DEFAULT_NIGHTLY_PROPERTIES.copy()
-    nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"], box=branch_item["box"])
+    nightlyProperties["name"] = "diff_distro_test_{branch}_{box}".format(branch=branch_item["branch"],
+                                                                         box=branch_item["box"])
     nightlyProperties['owners'] = constants.NIGHTLY_MAIL_LIST
-    nightlyProperties['buildHosts'] = ["max-gcloud-01", "max-gcloud-02"]
+    nightlyProperties['buildHosts'] = ["bb-host"]
     nightlyProperties['use_valgrind'] = "no"
     nightlyProperties['test_set'] = branch_item["test_set"]
     nightlyProperties['box'] = branch_item["box"]
@@ -109,7 +110,8 @@ for branch_item in DIFF_DISTRO_BRANCHES_LIST:
     nightlyProperties["targetInitMode"] = TargetInitOptions.GENERATE
 
     nightlyScheduler = schedulers.Nightly(
-        name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"], box=branch_item["box"]),
+        name="build_and_test_distros_{branch}_{box}_weekly".format(branch=branch_item["branch"],
+                                                                   box=branch_item["box"]),
         builderNames=["build_and_test_parall"],
         hour=launchTime % 24, minute=0,
         dayOfWeek=6,

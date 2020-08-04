@@ -20,7 +20,7 @@ DEFAULT_PROPERTIES = properties.extractDefaultValues(COMMON_PROPERTIES)
 DEFAULT_PROPERTIES['cmake_flags'] = constants.DEFAULT_DAILY_TEST_CMAKE_FLAGS
 DEFAULT_PROPERTIES["targetInitMode"] = TargetInitOptions.GENERATE
 DEFAULT_PROPERTIES["nameInitMode"] = NameInitOptions.GENERATE
-DEFAULT_PROPERTIES["buildHosts"] = ["max-gcloud-01", "max-gcloud-02"]
+DEFAULT_PROPERTIES["buildHosts"] = ["bb-host"]
 
 CHANGE_SOURCE_SCHEDULER = schedulers.SingleBranchScheduler(
     name="build_and_test_on_push",
