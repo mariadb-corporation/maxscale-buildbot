@@ -9,7 +9,8 @@ def buildMdbci():
     """This script will be run on the worker"""
     return steps.ShellCommand(
         name="Build MDBCI",
-        command=["./package/build.sh", util.Property("buildnumber")]
+        command=["./package/build.sh", util.Property("buildnumber")],
+        haltOnFailure=True,
     )
 
 
@@ -24,7 +25,7 @@ def publishMdbci():
             ssh %(prop:upload_server)s unlink /srv/repository/MDBCI/mdbci;
             ssh %(prop:upload_server)s ln -s /srv/repository/MDBCI/${mdbci_file} /srv/repository/MDBCI/mdbci
             """),
-        alwaysRun=False)
+    )
 
 
 @util.renderer
