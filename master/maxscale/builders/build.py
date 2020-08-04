@@ -17,7 +17,10 @@ ENVIRONMENT = {
     "try_already_running": util.Property('try_already_running'),
     "run_upgrade_test": util.Property('run_upgrade_test'),
     "old_target": util.Property('old_target'),
-    "ci_url": util.Property('ci_url')
+    "ci_url": util.Property('ci_url'),
+    "repo_path": util.Interpolate("%(prop:builddir)s/repository/"),
+    "pre_repo_dir": util.Interpolate("%(prop:builddir)s/pre-repo/"),
+    "unsorted_repo_dir": util.Interpolate("%(prop:builddir)s/repo/"),
 }
 
 
@@ -49,7 +52,7 @@ def createBuildSteps():
     ))
     buildSteps.append(common.rsyncViaSsh(
         name="Rsync builds results to the repo server",
-        local=util.Interpolate("%(prop:HOME)s/repository/%(prop:target)s/mariadb-maxscale/"),
+        local=util.Interpolate("%(prop:builddir)s/repository/%(prop:target)s/mariadb-maxscale/"),
         remote=util.Interpolate("%(prop:upload_server)s:" + constants.UPLOAD_PATH + "/%(prop:target)s/")
     ))
     buildSteps.append(common.generateMdbciRepositoryForTarget())
