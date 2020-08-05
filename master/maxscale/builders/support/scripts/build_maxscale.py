@@ -2,14 +2,12 @@
 
 import os
 import argparse
-import logging
 import subprocess
 import sys
 import shutil
 
 
 def parseArguments():
-    logging.info("Parsing command line arguments")
     parser = argparse.ArgumentParser(description="Tool for running the script for creating a full repository")
     parser.add_argument("--repository", help="Name of the MaxScale repository", required=True)
     return parser.parse_args()

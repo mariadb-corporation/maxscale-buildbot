@@ -72,11 +72,11 @@ def createTestFactory():
         scriptName="parse_ctest_log.py",
         args=[
             util.Property("buildLogFile"),
-            "-o", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s"),
-            "-r", "-f",
-            "-j", util.Property("jsonResultsFile"),
-            "-s", util.Interpolate("%(prop:builddir)s/%(prop:buildername)s-%(prop:buildnumber)s/ctest_sublogs"),
-            "-st", util.Interpolate("%(prop:HOME)s/LOGS/results_%(prop:buildnumber)s/LOGS")
+            "--output-log-file", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s"),
+            "--human-readable", "--only-failed",
+            "--output-log-json-file", util.Property("jsonResultsFile"),
+            "--ctest-sublogs-path", util.Interpolate("%(prop:builddir)s/%(prop:buildername)s-%(prop:buildnumber)s/ctest_sublogs"),
+            "--store-directory", util.Interpolate("%(prop:HOME)s/LOGS/results_%(prop:buildnumber)s/LOGS")
         ],
         alwaysRun=True
     ))

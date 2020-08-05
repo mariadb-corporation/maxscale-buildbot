@@ -3,12 +3,10 @@
 import os
 import subprocess
 import sys
-import logging
 import argparse
 
 
 def parseArguments():
-    logging.info("Parsing command line arguments")
     parser = argparse.ArgumentParser(description="Tool for running the performance test")
     parser.add_argument("--build_dir", help="Format for recording results. Build directory", required=True)
     parser.add_argument("--build_number", help="Format for recording results. Build number", required=True)

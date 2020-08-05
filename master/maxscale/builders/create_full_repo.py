@@ -32,7 +32,7 @@ def createBuildSteps():
     buildSteps.extend(common.cloneRepository())
     buildSteps.extend(common.downloadAndRunScript(
         name="Create full repo",
-        scriptName="remote_build_maxscale.py",
+        scriptName="build_maxscale.py",
         args=[
             "--repository", util.Property("ci_url")
         ]
