@@ -1,6 +1,5 @@
-import os
-from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
+from buildbot.plugins import steps, util
 from .support import common
 from maxscale import workers
 from maxscale.config import constants
