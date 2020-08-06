@@ -374,30 +374,6 @@ def downloadScript(scriptName, hideStepIf=True, **kwargs):
     )]
 
 
-def remoteParseCtestLogAndStoreIt():
-    """Parse ctest results and store them in the LOGS directory"""
-    def remote():
-        buildId = "{}-{}".format(buildername, buildnumber)
-        outputDirectory = os.path.join(builddir, buildId, "ctest_sublogs")
-        subprocess.run(["{}/scripts/parse_ctest_log.py".format(builddir),
-                        buildLogFile,
-                        "-o", os.path.join(builddir, "results_{}".format(buildnumber)),
-                        "-r", "-f",
-                        "-j", jsonResultsFile,
-                        "-s", outputDirectory])
-
-        storeDirectory = os.path.join(HOME, "LOGS", buildId, "LOGS")
-        for logDirectory in os.listdir(outputDirectory):
-            targetDirectory = os.path.join(storeDirectory, logDirectory)
-            os.umask(0o002)
-            os.makedirs(targetDirectory, exist_ok=True)
-            shutil.copy(os.path.join(outputDirectory, logDirectory, "ctest_sublog"), targetDirectory)
-
-    return support.executePythonScript(
-        "Parse ctest results log and save it to logs directory",
-        remote, alwaysRun=True)
-
-
 def writeBuildResultsToDatabase(**kwargs):
     """Call the script to save results to the database"""
     return [steps.SetPropertyFromCommand(
@@ -434,11 +410,6 @@ def remoteRunScriptAndLog(scriptName, logFile, resultFile, **kwargs):
             **kwargs)
     )
     return actions
-
-
-def parseCtestLog():
-    """Downloads and runs ctect log parser"""
-    return downloadScript("parse_ctest_log.py", alwaysRun=True) + remoteParseCtestLogAndStoreIt()
 
 
 def writeBuildsResults():

@@ -1,5 +1,5 @@
-from buildbot.plugins import steps, util
 from buildbot.config import BuilderConfig
+from buildbot.plugins import steps, util
 from .support import common
 from maxscale import workers
 from maxscale.config import constants
@@ -66,7 +66,19 @@ def createTestFactory():
         logFile=util.Property("buildLogFile"),
         resultFile=util.Property("resultFile"),
     ))
-    factory.addSteps(common.parseCtestLog())
+    factory.addSteps(common.downloadAndRunScript(
+        name="Parse ctest results log and save it to logs directory",
+        scriptName="parse_ctest_log.py",
+        args=[
+            util.Property("buildLogFile"),
+            "--output-log-file", util.Interpolate("%(prop:builddir)s/results_%(prop:buildnumber)s"),
+            "--human-readable", "--only-failed",
+            "--output-log-json-file", util.Property("jsonResultsFile"),
+            "--ctest-sublogs-path", util.Interpolate("%(prop:builddir)s/%(prop:buildername)s-%(prop:buildnumber)s/ctest_sublogs"),
+            "--store-directory", util.Interpolate("%(prop:HOME)s/LOGS/results_%(prop:buildnumber)s/LOGS")
+        ],
+        alwaysRun=True
+    ))
     factory.addSteps(common.downloadAndRunScript(
         name="Find core dumps and record information into the file",
         scriptName="coredump_finder.py",

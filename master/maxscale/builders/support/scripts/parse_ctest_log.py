@@ -6,6 +6,7 @@ import re
 import sys
 import subprocess
 import argparse
+import shutil
 
 LOG_FILE_OPTION = 'log_file'
 OUTPUT_LOG_FILE_OPTION = '--output-log-file'
@@ -14,6 +15,7 @@ ONLY_FAILED_OPTION = '--only-failed'
 HUMAN_READABLE_OPTION = '--human-readable'
 CTEST_SUBLOGS_PATH = '--ctest-sublogs-path'
 HELP_OPTION = '--help'
+STORE_DIRECTORY = '--store-directory'
 
 TEST_INDEX_NUMBER = 'test_index_number'
 TEST_NUMBER = 'test_number'
@@ -103,6 +105,7 @@ options.add_argument("-j", OUTPUT_LOG_JSON_FILE_OPTION, metavar="json_file_path"
                      help="CTEST PARSER OUTPUT LOG JSON FILE (there will be "
                           "saved all test results - passed and failed)")
 options.add_argument("-s", CTEST_SUBLOGS_PATH, help="Path to ctest sublogs")
+options.add_argument("-st", STORE_DIRECTORY, help="Path to the store directory")
 
 
 class CTestParser:
@@ -428,11 +431,19 @@ class CTestParser:
         if self.args.output_log_json_file:
             self.saveAllResultsToJsonFile()
 
+    def copyLogs(self):
+        for logDirectory in os.listdir(self.args.ctest_sublogs_path):
+            targetDirectory = os.path.join(self.args.store_directory, logDirectory)
+            os.umask(0o002)
+            os.makedirs(targetDirectory, exist_ok=True)
+            shutil.copy(os.path.join(self.args.ctest_sublogs_path, logDirectory, "ctest_sublog"), targetDirectory)
+
 
 def main(args=None):
     args = options.parse_args(args=args)
     parser = CTestParser(args)
     parser.parse()
+    parser.copyLogs()
 
 
 if os.path.samefile(__file__, sys.argv[0]):
