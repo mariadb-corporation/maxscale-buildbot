@@ -7,7 +7,6 @@ import sys
 import subprocess
 import argparse
 import mysql.connector
-from configparser import ConfigParser
 
 
 # Command line options
@@ -15,10 +14,7 @@ INPUT_FILE_OPTION = 'file'
 ENV_FILE_OPTION = '--env-file'
 HELP_OPTION = '--help'
 RUN_ID_OPTION = '--run-id'
-
-# Db parameters
-DEFAULT_FILE = '{}/build_parser_db_password'.format(os.environ['HOME'])
-DB_NAME = 'test_results_db'
+DB_INFO_OPTION = '--database-info'
 
 # parse_ctest_log.rb keys definition
 TEST_NAME = 'test_name'
@@ -36,6 +32,7 @@ options.add_argument(INPUT_FILE_OPTION, help="parse_ctest_log.rb result json fil
 options.add_argument("-r", RUN_ID_OPTION, help="id of main task (run id)")
 options.add_argument("-e", ENV_FILE_OPTION,
                      help="ENVIRONMENT VARIABLES FILE, WHERE POSSIBLE DB_WRITING_ERROR CAN BE REPORTED")
+options.add_argument("-db", DB_INFO_OPTION, help="database information (database, host, password, user) in json format")
 
 
 class BuildResultsWriter:
@@ -45,9 +42,9 @@ class BuildResultsWriter:
         self.parsedContent = None
         self.runId = runId
 
-    def writeResultsFromInputFile(self, inputFilePath):
+    def writeResultsFromInputFile(self, inputFilePath, dataBaseInfo):
         self.parseInputFile(inputFilePath)
-        self.connectMdb(DEFAULT_FILE, DB_NAME)
+        self.connectMdb(dataBaseInfo)
         self.writeBuildResultsToDb(self.parsedContent)
         self.client.close()
 
@@ -55,21 +52,9 @@ class BuildResultsWriter:
         with open(inputFilePath, "r") as file:
             self.parsedContent = json.load(file)
 
-    def connectMdb(self, defaultFile, dbName):
-        self.client = mysql.connector.connect(database=dbName, **self.readDatabaseConfiguration(defaultFile))
-        print("Successfully connected to database {} using configuration {}"
-              .format(dbName, defaultFile))
-
-    def readDatabaseConfiguration(self, filename, section="client"):
-        config = ConfigParser()
-        config.read(filename)
-        db = {}
-        if config.has_section(section):
-            for item in config.items(section):
-                db[item[0]] = item[1]
-        else:
-            raise Exception("{} not found in the {} file".format(section, filename))
-        return db
+    def connectMdb(self, content):
+        self.client = mysql.connector.connect(**json.loads(content))
+        print("Successfully connected to database")
 
     def findTestCase(self, name):
         cursor = self.client.cursor(dictionary=True)
@@ -232,7 +217,7 @@ def main(args=None):
     args = options.parse_args(args=args)
     try:
         writer = BuildResultsWriter(args.run_id)
-        writer.writeResultsFromInputFile(args.file)
+        writer.writeResultsFromInputFile(args.file, args.database_info)
     except Exception as e:
         print(e)
         if args.env_file:
