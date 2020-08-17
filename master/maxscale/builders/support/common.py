@@ -379,8 +379,9 @@ def writeBuildResultsToDatabase(**kwargs):
     return [steps.SetPropertyFromCommand(
         name="Save test results to the database",
         command=[util.Interpolate("%(prop:builddir)s/scripts/write_build_results.py"),
-                 "-r", util.Property("buildId"),
-                 util.Property("jsonResultsFile")],
+                 "--run-id", util.Property("buildId"),
+                 util.Property("jsonResultsFile"),
+                 "--database-info", util.Secret("dataBaseInfo.json")],
         extract_fn=extractDatabaseBuildid,
         **kwargs)]
 
