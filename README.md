@@ -31,7 +31,7 @@ In order to mitigate the issue of short build step names, the database schema mu
 ALTER TABLE steps MODIFY name varchar(300);
 ```
 
-### Structure of the dataBaseInfo.json file
+### Structure of the `dataBaseInfo.json` file
 
 ```json
 {
@@ -57,7 +57,7 @@ ALTER TABLE steps MODIFY name varchar(300);
 9. Configure the list of workers that are allowed to access BuildBot master in `master/maxscale/config/workers.py` file. The template for this file can be found in `master/maxscale/config/workers_example.py` file.
 10. Configure the access name of the server in `master/maxscale/conifg/server_config.py` file. The template for this file can be found in `master/maxscale/config/server_config_example.py` file.
 11. Put the password for MaxScale docker registry in `master/maxscale/secrets/dockerRegistryPassword` file.
-12. put JSON data about the database to record information about tests in `master/maxscale/secrets/dataBaseInfo.json` file.
+12. Put JSON data about the database to record information about tests in `master/maxscale/secrets/dataBaseInfo.json` file.
 13. Create or update BuildBot master configuration: `buildbot upgrade-master master`
 14. Start the BuildBot master service: `buildbot start master`.
 
