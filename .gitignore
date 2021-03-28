@@ -18,3 +18,10 @@ gitpoller-work
 master.cfg.sample
 worker-dev
 worker/
+node_modules/
+build/
+*.lock
+.DS_Store
+.vscode/
+coverage/
+dist/
