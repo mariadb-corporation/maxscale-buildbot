@@ -1,0 +1,4 @@
+
+        [buildbot.www]
+        maxscale_plugin = buildbot_maxscale_plugin:ep
+    

@@ -1,0 +1,13 @@
+setup.cfg
+setup.py
+buildbot_maxscale_plugin/VERSION
+buildbot_maxscale_plugin/__init__.py
+buildbot_maxscale_plugin.egg-info/PKG-INFO
+buildbot_maxscale_plugin.egg-info/SOURCES.txt
+buildbot_maxscale_plugin.egg-info/dependency_links.txt
+buildbot_maxscale_plugin.egg-info/entry_points.txt
+buildbot_maxscale_plugin.egg-info/top_level.txt
+buildbot_maxscale_plugin/static/scripts.js
+buildbot_maxscale_plugin/static/scripts.js.map
+buildbot_maxscale_plugin/static/styles.css
+buildbot_maxscale_plugin/static/styles.css.map

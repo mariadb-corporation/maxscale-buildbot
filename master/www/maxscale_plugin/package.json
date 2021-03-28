@@ -1,0 +1,23 @@
+{
+    "name": "buildbot-maxscale-plugin",
+    "plugin_name": "maxscale_plugin",
+    "private": true,
+    "main": "buildbot_maxscale_plugin/static/scripts.js",
+    "style": "buildbot_maxscale_plugin/static/styles.css",
+    "scripts": {
+        "build": "rimraf buildbot_maxscale_plugin/static && webpack --bail --progress --profile --env prod",
+        "build-dev": "rimraf buildbot_maxscale_plugin/static && webpack --bail --progress --profile --env dev",
+        "dev": "webpack --bail --progress --profile --watch --env dev"
+    },
+    "devDependencies": {
+        "buildbot-build-common": "file:../build_common",
+        "rimraf": "^2.6.3",
+        "webpack-shell-plugin": "^0.5.0",
+        "lodash": "^4.17.11"
+    },
+    "dependencies": {
+        "@uirouter/angularjs": "^1.0.15",
+        "angular": "^1.7.9",
+        "jquery": "^3.4.0"
+    }
+}
