@@ -15,10 +15,10 @@ def main():
     arguments = parse_arguments()
     common.setupMdbciEnvironment()
     if arguments.destroy_all:
-        result = common.runMdbci('destroy', '--all', os.path.expanduser(arguments.config_dir))
+        result = common.runMdbci('destroy', '--all', os.path.expanduser(arguments.config_dir), '--force')
         shutil.rmtree(arguments.config_dir, ignore_errors=True)
     else:
-        result = common.runMdbci('destroy', arguments.config_name)
+        result = common.runMdbci('destroy', arguments.config_name, '--force')
     sys.exit(result)
 
 
